@@ -6,12 +6,11 @@ type AudioContextType = ReturnType<typeof useAudio>;
 const AudioContext = createContext<AudioContextType | null>(null);
 
 type AudioProviderProps = {
-  src: string;
   children: React.ReactNode;
 };
 
-export function AudioProvider({ src, children }: AudioProviderProps) {
-  const audio = useAudio(src);
+export function AudioProvider({ children }: AudioProviderProps) {
+  const audio = useAudio();
 
   return (
     <AudioContext.Provider value={audio}>{children}</AudioContext.Provider>
