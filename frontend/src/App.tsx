@@ -1,30 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import CustomTooltipWrapper from "./components/CustomTooltipWrapper";
-import Playlist from "./pages/Playlist";
+
+import CustomTooltipWrapper from "./components/ui/CustomTooltipWrapper";
+import useRoutes from "./hooks/useRoutes";
 
 function App() {
-  const routes = [
-    {
-      path: "/",
-      element: <Home />,
-    },
-    {
-      path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "/signup",
-      element: <Signup />,
-    },
-    {
-      path: "/playlist",
-      element: <Playlist />,
-    },
-  ];
-
+  const { routes } = useRoutes();
   return (
     <>
       <BrowserRouter>
