@@ -1,12 +1,14 @@
 import { Heart, X, Play, Pause, RotateCcw, MicVocal } from "lucide-react";
-import Button from "./Button";
+import Button from "./ui/Button";
 import { useAudioContext } from "../contexts/AudioContext";
 export function MusicCover({
   toggleLyricsVisibilty,
   isLyricsVisible,
+  showExtraControls = true, // Default to true for backward compatibility
 }: {
   isLyricsVisible: boolean;
   toggleLyricsVisibilty: () => void;
+  showExtraControls?: boolean;
 }) {
   const {
     togglePlayPause,
@@ -28,10 +30,10 @@ export function MusicCover({
 
   return (
     <div
-      style={{ maxHeight: "calc(100vh - 84px - 100px)" }}
+      style={{ maxHeight: "calc(100dvh - 84px - 100px)" }}
       className={`relative  ${
         isLyricsVisible ? "max-w-[60%]" : "max-w-full"
-      } w-full min-h-[600px] "`}
+      } w-full min-h-150 "`}
     >
       <div className="absolute  right-2 top-2">
         <Button
@@ -43,18 +45,25 @@ export function MusicCover({
         />
       </div>
       <img
-        src="music-cover-mock.png"
+        src="/music-cover-mock.png"
         className="border border-neutral-900 object-cover w-full h-full shadow-xl rounded-2xl "
         alt="Music Cover"
         onClick={togglePlayPause}
       />
 
-      <div className="absolute w-full px-2 top-[50%]">
-        <div className="justify-between w-full flex items-center ">
-          <Button size="md" roundedValue="full" icon={<X />} title="Close" />
-          <Button size="md" roundedValue="full" icon={<Heart />} title="Like" />
+      {showExtraControls && (
+        <div className="absolute w-full px-2 top-[50%]">
+          <div className="justify-between w-full flex items-center ">
+            <Button size="md" roundedValue="full" icon={<X />} title="Close" />
+            <Button
+              size="md"
+              roundedValue="full"
+              icon={<Heart />}
+              title="Like"
+            />
+          </div>
         </div>
-      </div>
+      )}
       <div className="absolute bottom-2 px-2 w-full">
         <div className=" w-full bg-neutral-950 border border-neutral-900 rounded-2xl h-auto px-4 py-2 bottom-2 flex flex-col gap-2">
           <div className="flex justify-between items-center gap-2">
