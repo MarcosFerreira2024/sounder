@@ -34,7 +34,7 @@ export const TooltipProvider = ({ children }: TooltipProviderProps) => {
   });
 
   const timeoutRef = useRef<number | null>(null);
-  const isActiveRef = useRef(false); // To track if tooltip is actively shown (passed initial delay)
+  const isActiveRef = useRef(false);
 
   const showTooltip = useCallback((e: React.MouseEvent, text: string) => {
     const offset = 15;
@@ -58,7 +58,7 @@ export const TooltipProvider = ({ children }: TooltipProviderProps) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    isActiveRef.current = false; // Reset active state
+    isActiveRef.current = false;
     setTooltip({ text: "", visible: false, x: 0, y: 0 });
   }, []);
 
