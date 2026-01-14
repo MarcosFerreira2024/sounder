@@ -1,11 +1,12 @@
-import React from "react";
 import AuthLayout from "../layouts/AuthLayout";
-import { Link } from "react-router-dom";
-import InputLabel from "../components/InputLabel";
-import Button from "../components/Button";
-import AuthProviders from "../components/AuthProviders";
+import InputLabel from "../components/ui/InputLabel";
+import Button from "../components/ui/Button";
+import AuthProviders from "../components/auth/AuthProviders";
+import useAuth from "../hooks/useAuth";
 
 function Login() {
+  const { email, password, setEmail, setPassword, handleSubmit } =
+    useAuth("login");
   return (
     <AuthLayout
       title={"Efetue seu Login"}
@@ -14,21 +15,23 @@ function Login() {
       linkText={"Registre-se"}
       isTyping={false}
     >
-      <form className="w-full flex flex-col gap-6">
+      <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
         <InputLabel
           text="Email"
           name="email"
-          onChange={() => {}}
+          value={email}
+          onChange={setEmail}
           placeholder="Digite seu Email"
           type="email"
         />
         <InputLabel
           text="Senha"
           name="password"
-          onChange={() => {}}
+          onChange={setPassword}
           placeholder="Digite sua senha"
-          type="text"
-        />{" "}
+          type="password"
+          value={password}
+        />
         <Button title="Entrar" size="lg" roundedValue="md">
           Entrar
         </Button>
