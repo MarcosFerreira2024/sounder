@@ -6,17 +6,20 @@ function PlayerLayout({
   children,
   toggleLyricsVisibilty,
   isLyricsVisible,
+  showExtraControls = true,
 }: {
   children: React.ReactNode;
   isLyricsVisible: boolean;
   toggleLyricsVisibilty: () => void;
+  showExtraControls?: boolean;
 }) {
   return (
-    <AudioProvider src="Joji -  Glimpse of Us.mp3">
+    <AudioProvider>
       <div className=" flex gap-2 ">
         <MusicCover
           isLyricsVisible={isLyricsVisible}
           toggleLyricsVisibilty={toggleLyricsVisibilty}
+          showExtraControls={showExtraControls}
         />
 
         {children}
@@ -26,3 +29,4 @@ function PlayerLayout({
 }
 
 export default PlayerLayout;
+
