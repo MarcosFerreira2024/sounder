@@ -1,5 +1,5 @@
 import { useGoogleLogin } from '@react-oauth/google';
-import React, { useEffect } from 'react'
+import  { useEffect } from 'react'
 import { getGoogleUserInfo } from '../actions/getGoogleUserInfo';
 import { useNavigate } from 'react-router-dom';
 import { GITHUB_CLIENT_ID } from '../main';
