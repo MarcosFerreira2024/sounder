@@ -1,11 +1,10 @@
 import MainLayout from "../layouts/MainLayout";
 import PlayerLayout from "../layouts/PlayerLayout";
-import Sidebar from "../components/Sidebar";
 import { useState } from "react";
 import { SidePanel } from "../components/SidePanel";
 
 function Playlist() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   const toggleLyricsVisibilty = () => {
     setIsVisible(!isVisible);
@@ -14,15 +13,13 @@ function Playlist() {
 
   return (
     <MainLayout>
-      <div className="text-neutral-100 grid gap-4">
-        <PlayerLayout
-          toggleLyricsVisibilty={toggleLyricsVisibilty}
-          isLyricsVisible={isVisible}
-        >
-          <SidePanel lyricsVisible={isVisible} showPlaylistMusic={true} />
-        </PlayerLayout>
-        <Sidebar />
-      </div>
+      <PlayerLayout
+        toggleLyricsVisibilty={toggleLyricsVisibilty}
+        isLyricsVisible={isVisible}
+        showExtraControls={false}
+      >
+        <SidePanel lyricsVisible={isVisible} showPlaylistMusic={true} />
+      </PlayerLayout>
     </MainLayout>
   );
 }
