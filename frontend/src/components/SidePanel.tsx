@@ -1,6 +1,5 @@
 import LyricsSection from "./LyricsSection";
-import PlaylistSection from "./PlaylistSection";
-import { motion } from "framer-motion";
+import PlaylistSection from "./playlist/PlaylistSection";
 
 type SidePanelProps = {
   lyricsVisible: boolean;
@@ -15,12 +14,12 @@ export function SidePanel({
 
   return (
     <section
-      style={{ maxHeight: "calc(100vh - 84px - 100px)" }}
+      style={{ maxHeight: "calc(100dvh - 84px - 100px)" }}
       className="
         relative
         w-full
         max-w-[40%]
-        min-h-[600px]
+        min-h-150
         bg-neutral-900
         rounded-2xl
         border border-neutral-800
