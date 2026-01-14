@@ -1,5 +1,5 @@
 import React from "react";
-import AuthCarousel from "../components/AuthCarousel";
+import AuthCarousel from "../components/auth/AuthCarousel";
 import { Link, useNavigate } from "react-router-dom";
 
 type AuthLayoutProps = {
