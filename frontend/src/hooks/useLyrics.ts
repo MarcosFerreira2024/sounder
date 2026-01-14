@@ -14,7 +14,7 @@ interface UseLyricsProps {
 
 }
 
-export const useLyrics = ({ lyrics, currentTime, seek, play}: UseLyricsProps) => {
+export const useLyrics = ({ lyrics = [], currentTime, seek, play}: UseLyricsProps) => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [isManualScrolling, setIsManualScrolling] = useState(false);
     const lineRefs = useRef<(HTMLHeadingElement | null)[]>([]);
