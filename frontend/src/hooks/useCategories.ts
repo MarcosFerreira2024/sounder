@@ -6,27 +6,27 @@ function useCategories() {
     {
       name: "teste1",
       photo: "artist-mock-photo.jpeg",
-      to: "/playlist/teste1",
+      to: "profile/214/playlist/124",
     },
     {
       name: "teste2",
       photo: "music-cover-mock.png",
-      to: "/playlist/teste2",
+      to: "profile/214/playlist/124",
     },
     {
       name: "teste3",
       photo: "artist-mock-photo.jpeg",
-      to: "/playlist/teste3",
+      to: "profile/214/playlist/124",
     },
     {
       name: "teste3",
       photo: "artist-mock-photo.jpeg",
-      to: "/playlist/teste3",
+      to: "profile/214/playlist/124",
     },
     {
       name: "teste3",
       photo: "artist-mock-photo.jpeg",
-      to: "/playlist/teste3",
+      to: "profile/214/playlist/124",
     },
   ];
   const containerRef = useRef<HTMLDivElement | null>(null);
