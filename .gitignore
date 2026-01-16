@@ -45,7 +45,7 @@ db.db
 
 # vercel
 .vercel
-
+generated
 **/*.trace
 **/*.zip
 **/*.tar.gz
