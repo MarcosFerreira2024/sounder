@@ -1,28 +1,31 @@
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import {openAPI } from "better-auth/plugins";
 import { betterAuth } from "better-auth";
 import { prisma } from "../libs/prismaClient";
-
-
-
-
+import { openAPI } from "better-auth/plugins"
 
 export const auth = betterAuth({
+    secret: process.env.AUTH_SECRET as string,
     database: prismaAdapter(prisma, {
         provider: "sqlite",
-         
+    
+
     }),
+
+    advanced:{
+        database:{
+            generateId:"uuid",
+
+        },
+    },
+
+    plugins: [ 
+        openAPI(), 
+    ] ,
     
     emailAndPassword:{
         enabled:true,
         requireEmailVerification:false
     },
-    plugins: [
-        openAPI({
-            path:"/docs",
-        }),
-
-    ], 
     appName: "Sounder",
     socialProviders: {
         google: { 
@@ -35,7 +38,4 @@ export const auth = betterAuth({
         }, 
     },
     trustedOrigins:["http://localhost:5173"],
-    
-
-
 });
