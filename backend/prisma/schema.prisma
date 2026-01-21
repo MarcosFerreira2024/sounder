@@ -105,21 +105,7 @@ model Lyrics {
   id      String @id @default(uuid())
   musicId String @unique
   text    String
-
-  music Music        @relation(fields: [musicId], references: [id])
-  lines LyricLines[]
-}
-
-model LyricLines {
-  id        String @id @default(uuid())
-  lyricsId  String
-  text      String
-  startTime Float
-  endTime   Float
-
-  lyrics Lyrics @relation(fields: [lyricsId], references: [id])
-
-  @@index([lyricsId])
+  music   Music  @relation(fields: [musicId], references: [id])
 }
 
 model UserFavoriteMusics {
@@ -134,7 +120,7 @@ model UserFavoriteMusics {
 }
 
 model Session {
-  id        String   @id
+  id        String   @id @default(uuid())
   expiresAt DateTime
   token     String   @unique
   createdAt DateTime @default(now())
@@ -150,7 +136,7 @@ model Session {
 }
 
 model Account {
-  id                    String    @id
+  id                    String    @id @default(uuid())
   accountId             String
   providerId            String
   userId                String
@@ -171,7 +157,7 @@ model Account {
 }
 
 model Verification {
-  id         String   @id
+  id         String   @id @default(uuid())
   identifier String
   value      String
   expiresAt  DateTime
