@@ -1,4 +1,10 @@
-import Elysia from "elysia";
+import "reflect-metadata";
+import "./shared/container";
 import { Server } from "./configs/server";
+import dotenv from "dotenv";
 
-new Server(Number(Bun.env.PORT), new Elysia()).run()
+dotenv.config();
+
+
+
+new Server(Number(process.env.PORT)).run()
