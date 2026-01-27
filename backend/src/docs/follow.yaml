@@ -1,0 +1,118 @@
+paths:
+  /users/{id}/follow:
+    post:
+      summary: /users/{id}/follow
+      description: Follow a user by their UUID.
+      tags:
+        - Follow
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The user's UUID to follow.
+      responses:
+        '200':
+          description: User followed successfully.
+        '401':
+          description: Unauthorized.
+        '404':
+          description: User not found.
+
+  /users/{id}/unfollow:
+    post:
+      summary: /users/{id}/unfollow
+      description: Unfollow a user by their UUID.
+      tags:
+        - Follow
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The user's UUID to unfollow.
+      responses:
+        '200':
+          description: User unfollowed successfully.
+        '401':
+          description: Unauthorized.
+        '404':
+          description: User not found.
+
+  /users/{id}/followers:
+    get:
+      summary: /users/{id}/followers
+      description: Get the followers of a user by their UUID.
+      tags:
+        - Follow
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The user's UUID.
+      responses:
+        '200':
+          description: List of followers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '404':
+          description: User not found.
+
+  /users/{id}/following:
+    get:
+      summary: /users/{id}/following
+      description: Get the users that a user is following by their UUID.
+      tags:
+        - Follow
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The user's UUID.
+      responses:
+        '200':
+          description: List of users being followed.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '404':
+          description: User not found.
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+      example:
+        id: "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+        name: "John Doe"
+        email: "johndoe@example.com"
