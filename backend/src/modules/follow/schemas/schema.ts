@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { userId } from "../../../shared/schema/schema";
 
 export const followSchema = z.object({
-    id: z.uuid({error:"Invalid ID, provide a valid ID"}),
+    userId:userId
 
     
 });
