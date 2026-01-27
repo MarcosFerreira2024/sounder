@@ -1,7 +1,7 @@
 import { container } from "tsyringe";
 import { Follow } from "../useCases/Follow";
 import { Request, Response } from "express";
-import { handleAppError } from "../../../helpers/handleAppError";
+import { handleAppError } from "../../../shared/helpers/handleAppError";
 import { Unfollow } from "../useCases/Unfollow";
 import { GetFollowingById } from "../useCases/GetFollowingById";
 import { GetFollowersById } from "../useCases/GetFollowersById";
@@ -10,7 +10,7 @@ class FollowController {
 
     async getFollowers(req: Request, res: Response) {
         try {
-            const { id } = req.params as { id: string };
+            const { userId:id } = req.params as { userId: string };
 
             const followers = await container.resolve(GetFollowersById).execute(id);
             return res.status(200).json({data:followers, message:"Followers fetched successfully"});
@@ -23,7 +23,7 @@ class FollowController {
 
     async getFollowing(req: Request, res: Response) {
         try {
-            const { id } = req.params as { id: string };
+            const { userId:id } = req.params as { userId: string };
 
             const following = await container.resolve(GetFollowingById).execute(id);
             return res.status(200).json({data:following, message:"Following fetched successfully"});
@@ -38,7 +38,7 @@ class FollowController {
     async unfollow (req: Request, res: Response) {
 
         try {
-            const { id } = req.params as {id: string };
+            const { userId:id } = req.params as {userId: string };
 
             const followerId = req.user!.id
 
@@ -61,7 +61,7 @@ class FollowController {
     async follow (req: Request, res: Response) {
 
         try {
-            const { id } = req.params as {id: string };
+            const { userId:id } = req.params as {userId: string };
 
             const followerId = req.user!.id
 
