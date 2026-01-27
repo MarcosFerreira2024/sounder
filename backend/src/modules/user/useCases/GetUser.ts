@@ -3,7 +3,7 @@ import { User } from "../../../generated/prisma/client";
 import { IUserRepository } from "../interfaces/IUserRepository";
 
 @injectable()
-class GetUserUseCase {
+class GetUser {
   constructor(
     @inject("UserRepository") private userRepository: IUserRepository
   ) {}
@@ -20,4 +20,4 @@ class GetUserUseCase {
     };
   }
 }
-export { GetUserUseCase };
+export { GetUser };

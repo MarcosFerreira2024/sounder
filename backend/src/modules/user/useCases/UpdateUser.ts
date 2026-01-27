@@ -3,7 +3,7 @@ import { IUserRepository } from "../interfaces/IUserRepository";
 import { User } from "better-auth/types";
 
 @injectable()
- class UpdateUserUseCase {
+ class UpdateUser {
   constructor(
     @inject("UserRepository") private userRepository: IUserRepository
   ) {}
@@ -25,4 +25,4 @@ import { User } from "better-auth/types";
   }
 }
 
-export { UpdateUserUseCase };
+export { UpdateUser };

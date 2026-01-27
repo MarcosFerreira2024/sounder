@@ -1,18 +1,20 @@
 import { injectable, inject } from "tsyringe";
 import { IUserRepository } from "../interfaces/IUserRepository";
-import { User } from "better-auth/types";
+import { isAdmin } from "../../../shared/rules/isAdmin";
+import { AppUser } from "../../../shared/types/user";
 
 @injectable()
-class DeleteUserUseCase {
+class DeleteUser{
   constructor(
     @inject("UserRepository") private userRepository: IUserRepository
   ) {}
 
-  async execute(user:User,id: string): Promise<void> {
+  async execute(user:AppUser,id: string): Promise<void> {
 
 
 
-    if (user.id !== id) throw new Error("You can only delete your own account");
+    if (!isAdmin(user) && user.id !== id) throw new Error("Unauthorized");
+
 
     const userFound = await this.userRepository.findById(id);
 
@@ -22,4 +24,4 @@ class DeleteUserUseCase {
   }
 }
 
-export { DeleteUserUseCase };
+export { DeleteUser};
