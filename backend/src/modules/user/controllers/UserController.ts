@@ -1,18 +1,18 @@
 import { container } from "tsyringe";
-import { UpdateUserUseCase } from "../useCases/UpdateUserUseCase";
-import { GetUserUseCase } from "../useCases/GetUserUseCase";
-import { DeleteUserUseCase } from "../useCases/DeleteUserUseCase";
+import { UpdateUser } from "../useCases/UpdateUser";
+import { GetUser } from "../useCases/GetUser";
+import { DeleteUser } from "../useCases/DeleteUser";
 import { Request, Response } from "express";
-import { handleAppError } from "../../../helpers/handleAppError";
+import { handleAppError } from "../../../shared/helpers/handleAppError";
 
 class UserController {
 
     async update(req: Request, res: Response): Promise<Response> {
         try {
-            const { id } = req.params as { id: string };
+            const { userId:id } = req.params as { userId: string };
 
 
-            const user = await container.resolve(UpdateUserUseCase).execute(req.user!,id, req.body);
+            const user = await container.resolve(UpdateUser).execute(req.user!,id, req.body);
             
             return res.status(200).json({
                 data: user,
@@ -25,9 +25,9 @@ class UserController {
 
     async getUser(req: Request, res: Response): Promise<Response> {
         try {
-            const { id } = req.params as { id: string };
+            const { userId:id } = req.params as { userId: string };
 
-            const user = await container.resolve(GetUserUseCase).execute(id);
+            const user = await container.resolve(GetUser).execute(id);
             return res.status(200).json({
                 data: user,
                 message: "User found successfully"
@@ -39,10 +39,10 @@ class UserController {
 
     async delete(req: Request, res: Response): Promise<Response> {
         try {
-            const { id } = req.params as { id: string };
+            const { userId:id } = req.params as { userId: string };
 
 
-            await container.resolve(DeleteUserUseCase).execute(req.user!,id);
+            await container.resolve(DeleteUser).execute(req.user!,id);
             return res.status(200).json({ message: "User deleted successfully" });
         } catch (error: any) {
             return handleAppError(res, error);
