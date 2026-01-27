@@ -1,7 +1,8 @@
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { betterAuth } from "better-auth";
 import { prisma } from "../libs/prismaClient";
-import { openAPI } from "better-auth/plugins"
+import { admin, openAPI } from "better-auth/plugins"
+import { sendVerificationEmail } from "better-auth/api";
 
 export const auth = betterAuth({
     secret: process.env.AUTH_SECRET as string,
@@ -11,20 +12,38 @@ export const auth = betterAuth({
 
     }),
 
+
     advanced:{
         database:{
             generateId:"uuid",
 
         },
+        
+    },
+
+    user: {
+        additionalFields: {
+            role : {
+                type: ["ADMIN", "USER", "ARTIST"],
+                defaultValue: "USER",
+                input: false,
+                required:false
+
+            }
+
+        
+        }
     },
 
     plugins: [ 
         openAPI(), 
+
+        
     ] ,
     
     emailAndPassword:{
         enabled:true,
-        requireEmailVerification:false
+        requireEmailVerification:false,
     },
     appName: "Sounder",
     socialProviders: {
@@ -37,5 +56,10 @@ export const auth = betterAuth({
             clientSecret: process.env.GITHUB_CLIENT_SECRET as string, 
         }, 
     },
+    passwordReset: {
+        redirectUrl: process.env.PASSWORD_RESET_REDIRECT_URL as string,
+    },
     trustedOrigins:["http://localhost:5173"],
 });
+type Session = typeof auth.$Infer.Session
+export type { Session };
