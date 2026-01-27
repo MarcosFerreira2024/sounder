@@ -5,6 +5,9 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from "../configs/auth";
 import { setupScalar } from "../libs/scalarSetup"; 
 import { userRoutes } from "../modules/user/routes/route";
+import { playlistRoutes } from "../modules/playlist/routes/routes";
+import { followRoutes } from "../modules/follow/routes/routes";
+import { musicRoutes } from "../modules/music/routes/routes";
 
 class Server {
     public app: Application;
@@ -14,8 +17,11 @@ class Server {
         this.config(); 
 
         this.app.use("/api/auth", toNodeHandler(auth));
-        this.app.use("/api/user", userRoutes());
-
+        
+        this.app.use("/api/users", userRoutes());
+        this.app.use("/api/users", playlistRoutes());
+        this.app.use("/api/users", followRoutes());
+        this.app.use("/api/music",musicRoutes())
         setupScalar(this.app);
     }
 
