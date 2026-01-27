@@ -23,6 +23,7 @@ model User {
   image         String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  role          UserRole @default(USER)
 
   sessions       Session[]
   accounts       Account[]
@@ -32,6 +33,9 @@ model User {
   followers      UserFollows[]        @relation("UserFollowers")
   musicActions   MusicAction[]
   music          Music[]
+  albums         MusicAlbum[]
+
+  @@map("user")
 }
 
 model UserFollows {
@@ -47,44 +51,79 @@ model UserFollows {
 }
 
 model Playlist {
-  id         String   @id @default(uuid())
-  name       String   @unique
+  id         String             @id @default(uuid())
+  name       String             @unique
   image      String?
-  visibility String   @default("PUBLIC")
+  visibility PlaylistVisibility @default(PUBLIC)
   ownerId    String
-  createdAt  DateTime @default(now())
+  createdAt  DateTime           @default(now())
 
   owner  User            @relation("UserPlaylists", fields: [ownerId], references: [id])
   musics PlaylistMusic[]
 }
 
 model Music {
-  id        String @id @default(uuid())
+  id        String     @id @default(uuid())
   name      String
   authorId  String
   audio     String
-  likeCount Int    @default(0)
+  albumId   String
+  album     MusicAlbum @relation(fields: [albumId], references: [id])
+  likeCount Int        @default(0)
 
-  author             User                 @relation(fields: [authorId], references: [id])
-  actions            MusicAction[]
-  playlists          PlaylistMusic[]
-  lyrics             Lyrics?
+  author    User            @relation(fields: [authorId], references: [id])
+  actions   MusicAction[]
+  playlists PlaylistMusic[]
+  lyrics    String
+
+  genres             MusicGenre[]
   userFavoriteMusics UserFavoriteMusics[]
 }
 
-model MusicAction {
+model MusicAlbum {
   id        String   @id @default(uuid())
-  viewed    Boolean  @default(false)
-  liked     Boolean  @default(false)
+  name      String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  cover     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  musics Music[]
+}
+
+model Genre {
+  id   String @id @default(uuid())
+  name String @unique
+
+  musics MusicGenre[]
+}
+
+model MusicGenre {
+  musicId String
+  genreId String
+
+  music Music @relation(fields: [musicId], references: [id])
+  genre Genre @relation(fields: [genreId], references: [id])
+
+  @@unique([musicId, genreId])
+  @@index([musicId])
+  @@index([genreId])
+}
+
+model MusicAction {
+  id        String        @id @default(uuid())
+  viewed    Boolean       @default(false)
+  reaction  MusicReaction @default(NONE)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
   musicId   String
   userId    String
 
   music Music @relation(fields: [musicId], references: [id])
   user  User  @relation(fields: [userId], references: [id])
 
-  @@unique([userId, musicId])
+  @@unique([musicId, userId])
   @@index([musicId])
   @@index([userId])
 }
@@ -99,13 +138,6 @@ model PlaylistMusic {
   music    Music    @relation(fields: [musicId], references: [id])
 
   @@unique([playlistId, musicId])
-}
-
-model Lyrics {
-  id      String @id @default(uuid())
-  musicId String @unique
-  text    String
-  music   Music  @relation(fields: [musicId], references: [id])
 }
 
 model UserFavoriteMusics {
@@ -166,4 +198,21 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+enum PlaylistVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum MusicReaction {
+  LIKE
+  DISLIKE
+  NONE
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  ARTIST
 }
