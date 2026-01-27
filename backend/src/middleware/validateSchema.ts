@@ -1,7 +1,7 @@
 import { z, ZodError } from "zod";
 import { NextFunction, Request, Response } from "express";
-import { appError } from "../helpers/appError";
-import { handleAppError } from "../helpers/handleAppError";
+import { appError } from "../shared/helpers/appError";
+import { handleAppError } from "../shared/helpers/handleAppError";
 
 type ValidateSchemas = {
   body?: z.ZodTypeAny;
