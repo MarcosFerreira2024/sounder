@@ -6,6 +6,8 @@ import { User } from "../../../generated/prisma/client";
   findByName(name: string): Promise<User[]>;
   findAll(page: number, limit: number): Promise<User[]>;
 
+  changeProfilePicture(userId: string, image: string): Promise<User>;
+
 
   update(id: string,data: Partial<{  name: string;  image: string; }>
   ): Promise<User>;
