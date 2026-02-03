@@ -32,37 +32,40 @@ class FollowRepository implements IFollowRepository {
     }
 
 
-    async getFollowers(userId: string): Promise<FollowDTO[]> {
+    async getFollowers(userId: string,page?:number, limit?:number): Promise<FollowDTO[]> {
+    const followers = await prisma.userFollows.findMany({
+        where: {
+        followingId: userId
+        },
+        include: {
+        follower: {
+            select: { id: true, name: true, image: true },
+        }
 
-        const followers = await prisma.userFollows.findMany({
-            where: { followerId: userId },
-            include: {
-            follower: {
-                select: { id: true, name: true, image: true },
+
+    },
+        skip: page && limit && (page - 1) * limit,
+        take: limit && limit,
+
+            orderBy: {
+                following:{
+                    name: "asc"
+                }
             }
-            
-            },
-            omit: {
-                followerId: true,
-                followingId: true,
-                id: true
-            }
-        });
+        }
 
 
+    );
 
-        const formattedFollowers = followers.map(follow => ({
-            id: follow.follower.id,
-            name: follow.follower.name,
-            image: follow.follower.image
-        }));
-
-        return formattedFollowers;
-
+    return followers.map(follow => ({
+        id: follow.follower.id,
+        name: follow.follower.name,
+        image: follow.follower.image
+    }));
     }
 
 
-    async getFollowing(userId: string): Promise<FollowDTO[]> {
+    async getFollowing(userId: string,page?:number, limit?:number): Promise<FollowDTO[]> {
 
         const following = await prisma.userFollows.findMany({
             where: { followerId: userId },
@@ -76,6 +79,15 @@ class FollowRepository implements IFollowRepository {
                 followerId: true,
                 followingId: true,
                 id: true
+            }
+            ,
+            skip: page && limit && (page - 1) * limit,
+            take: limit && limit,
+
+            orderBy: {
+                following:{
+                    name: "asc"
+                }
             }
         });
 
