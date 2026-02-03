@@ -14,6 +14,21 @@ class UserRepository implements IUserRepository {
         })
         
     }
+
+
+
+    async changeProfilePicture(userId: string, image: string): Promise<User> {
+
+        return await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                image
+            }
+        })
+    }
+
     async findAll(page: number, limit: number): Promise<User[]> {
 
         return await prisma.user.findMany({
