@@ -11,10 +11,10 @@ export function followRoutes(): Router {
     const router = Router();
     const followController = new FollowController();
 
-    router.post("/:userId/follow", validate({ params: followSchema }), deserializeUser, requireAuth,  followController.follow);
-    router.post("/:userId/unfollow", validate({ params: followSchema }), deserializeUser, requireAuth,  followController.unfollow);
-    router.get("/:userId/followers", validate({ params: followSchema }),followController.getFollowers);
-    router.get("/:userId/following", validate({ params: followSchema }),  followController.getFollowing);
+    router.post("/user/:userId/follow", validate({ params: followSchema }), deserializeUser, requireAuth,  followController.follow);
+    router.post("/user/:userId/unfollow", validate({ params: followSchema }), deserializeUser, requireAuth,  followController.unfollow);
+    router.get("/user/:userId/followers", validate({ params: followSchema }),followController.getFollowers);
+    router.get("/user/:userId/following", validate({ params: followSchema }),  followController.getFollowing);
 
 
     return router;
