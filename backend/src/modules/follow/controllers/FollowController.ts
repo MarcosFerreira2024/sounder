@@ -5,6 +5,7 @@ import { handleAppError } from "../../../shared/helpers/handleAppError";
 import { Unfollow } from "../useCases/Unfollow";
 import { GetFollowingById } from "../useCases/GetFollowingById";
 import { GetFollowersById } from "../useCases/GetFollowersById";
+import { normalizePagination } from "../../../shared/helpers/normalizePagination";
 
 class FollowController {
 
@@ -12,7 +13,14 @@ class FollowController {
         try {
             const { userId:id } = req.params as { userId: string };
 
-            const followers = await container.resolve(GetFollowersById).execute(id);
+            const { limit, page } = normalizePagination(
+                req.query.page as unknown as number,
+                req.query.limit! as unknown as number,
+                req.user!
+            );
+
+
+            const followers = await container.resolve(GetFollowersById).execute(id,page,limit);
             return res.status(200).json({data:followers, message:"Followers fetched successfully"});
         }
         catch (error: any) {
@@ -25,7 +33,13 @@ class FollowController {
         try {
             const { userId:id } = req.params as { userId: string };
 
-            const following = await container.resolve(GetFollowingById).execute(id);
+            const { limit, page } = normalizePagination(
+            req.query.page as unknown as number,
+            req.query.limit! as unknown as number,
+            req.user!
+            );
+
+            const following = await container.resolve(GetFollowingById).execute(id,page,limit);
             return res.status(200).json({data:following, message:"Following fetched successfully"});
         }
         catch (error: any) {
@@ -40,11 +54,8 @@ class FollowController {
         try {
             const { userId:id } = req.params as {userId: string };
 
-            const followerId = req.user!.id
 
-
-
-            await container.resolve(Unfollow).execute(followerId, id);
+            await container.resolve(Unfollow).execute(req.user!, id);
 
             return res.status(200).json({ message: "Successfully unfollowed the user." });
 
@@ -63,11 +74,10 @@ class FollowController {
         try {
             const { userId:id } = req.params as {userId: string };
 
-            const followerId = req.user!.id
 
 
 
-            await container.resolve(Follow).execute(followerId, id);
+            await container.resolve(Follow).execute(req.user!, id);
 
             return res.status(200).json({ message: "Successfully followed the user." });
 
