@@ -24,12 +24,21 @@ export const auth = betterAuth({
     user: {
         additionalFields: {
             role : {
-                type: ["ADMIN", "USER", "ARTIST"],
+                type: ["ADMIN", "USER"],
                 defaultValue: "USER",
                 input: false,
                 required:false
+            },
+            
+        
+            
+            artist: {
+                type: "json",
+                input:false,
+                required:false
 
             }
+            
 
         
         }
