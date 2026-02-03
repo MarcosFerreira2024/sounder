@@ -1,6 +1,6 @@
 import { injectable, inject } from "tsyringe";
 import { IAlbumRepository } from "../interfaces/IAlbumRepository";
-import { MusicAlbum } from "../../../generated/prisma/client";
+import { Album } from "../../../generated/prisma/client";
 
 @injectable()
 class GetAlbumById {
@@ -8,7 +8,7 @@ class GetAlbumById {
     @inject("AlbumRepository") private albumRepository: IAlbumRepository
   ) {}
 
-  async execute(id: string): Promise<MusicAlbum> {
+  async execute(id: string): Promise<Album> {
 
 
 
@@ -17,7 +17,6 @@ class GetAlbumById {
     const albumFound = await this.albumRepository.getAlbumById(id);
 
     if (!albumFound) throw new Error("Album not found");
-
 
 
     return albumFound
