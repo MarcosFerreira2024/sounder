@@ -12,9 +12,9 @@ interface IFollowRepository {
     unfollowUser(followerId: string, followingId: string): Promise<void>;
 
 
-    getFollowers(userId: string): Promise<FollowDTO[]>;
+    getFollowers(userId: string,page?:number, limit?:number): Promise<FollowDTO[]>;
 
-    getFollowing(userId: string): Promise<FollowDTO[]>;
+    getFollowing(userId: string,page?:number, limit?:number): Promise<FollowDTO[]>;
 
     
 
