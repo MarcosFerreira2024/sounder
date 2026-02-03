@@ -1,30 +1,37 @@
 import { z } from "zod";
+import { zodErrorMessages } from "../../../shared/constants/errors";
 
 export const musicId = z.object({
-    id: z.uuid("Invalid music ID, provide a valid music ID"),
-});
+    id: z.uuid(zodErrorMessages.invalid("music ID")),
+}).strict();
 
 export const createMusicBody = z.object({
-    name: z.string().min(1, "Music name is required"),
-    audio: z.url("Invalid audio URL").min(1, "Audio URL is required"),
-    albumId: z.uuid("Invalid album ID"),
-    lyrics: z.string().min(1, "Lyrics are required"),
-    genres: z.array(z.string().min(1, "Genre name cannot be empty")).min(1, "At least one genre is required"),
-});
+    name: z.string({ error: zodErrorMessages.required("Music name")}).min(1, zodErrorMessages.required("Music name")),
+    albumId: z.uuid(zodErrorMessages.invalid("album ID")),
+    genres: z.array(z.string({ error: zodErrorMessages.required("Genre name")}).min(1, zodErrorMessages.notEmpty("Genre name"))).min(1, zodErrorMessages.atLeastOne("genre")),
+    artistId: z.uuid(zodErrorMessages.invalid("artist ID")).optional(),
+}).strict();
 
 export const updateMusicBody = z.object({
-    name: z.string().min(1, "Music name cannot be empty").optional(),
-    audio: z.url("Invalid audio URL").min(1, "Audio URL cannot be empty").optional(),
-    albumId: z.uuid("Invalid album ID").optional(),
-    lyrics: z.string().min(1, "Lyrics cannot be empty").optional(),
-    genres: z.array(z.string().min(1, "Genre name cannot be empty")).min(1, "At least one genre is required").optional(),
-}).refine(data => Object.keys(data).length > 0, "At least one field must be provided for update"); // Ensure at least one field is provided
+    name: z.string().min(1, zodErrorMessages.notEmpty("Music name")).optional(),
+    audio: z.url(zodErrorMessages.invalidUrl("audio")).min(1, zodErrorMessages.notEmpty("Audio URL")).optional(),
+    albumId: z.uuid(zodErrorMessages.invalid("album ID")).optional(),
+    lyrics: z.string().min(1, zodErrorMessages.notEmpty("Lyrics")).optional(),
+    genres: z.array(z.string().min(1, zodErrorMessages.notEmpty("Genre name"))).min(1, zodErrorMessages.atLeastOne("genre")).optional(),
+}).refine(data => Object.keys(data).length > 0, zodErrorMessages.atLeastOneFieldForUpdate).strict(); 
 
 export const createMusicAndAlbumBody = z.object({
-    musicName: z.string().min(1, "Music name is required"),
-    audio: z.url("Invalid audio URL").min(1, "Audio URL is required"),
-    albumName: z.string().min(1, "Album name is required"),
-    lyrics: z.string().min(1, "Lyrics are required"),
-    albumCover: z.url("Invalid album cover URL").min(1, "Album cover URL is required"),
-    genres: z.array(z.string().min(1, "Genre name cannot be empty")).min(1, "At least one genre is required"),
-});
+    musicName: z.string().min(1, zodErrorMessages.required("Music name")),
+    audio: z.url(zodErrorMessages.invalidUrl("audio")).min(1, zodErrorMessages.required("Audio URL")),
+    albumName: z.string().min(1, zodErrorMessages.required("Album name")),
+    lyrics: z.string().min(1, zodErrorMessages.required("Lyrics")),
+    albumCover: z.url(zodErrorMessages.invalidUrl("album cover")).min(1, zodErrorMessages.required("Album cover URL")),
+    genres: z.array(z.string().min(1, zodErrorMessages.notEmpty("Genre name"))).min(1, zodErrorMessages.atLeastOne("genre")),
+}).strict();
+
+export const assignMusicToAlbum = z.object({
+    musicId:z.uuid(zodErrorMessages.invalid("Music ID")),
+    albumId:z.uuid(zodErrorMessages.invalid("Album ID")) ,
+    artistId:z.uuid(zodErrorMessages.invalid("ArtistId")).optional(),
+
+}).strict()
