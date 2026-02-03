@@ -1,12 +1,11 @@
-import { Playlist, PlaylistMusic } from "../../../generated/prisma/client";
-import { PlaylistVisibility } from "../../../generated/prisma/enums";
+import { Playlist} from "../../../generated/prisma/client";
 import { prisma } from "../../../libs/prismaClient";
 import { IPlaylistRepository, updatePayload } from "../interfaces/IPlaylistRepository";
 
 class PlaylistRepository implements IPlaylistRepository {
 
     async createPlaylist(userId: string, payload:Partial<{name:string, image:string}>): Promise<Playlist> {
-        const playlist = prisma.playlist.create({
+        const playlist = await prisma.playlist.create({
             data:{
                 ownerId: userId,
                 name: payload.name || "New Playlist",
@@ -20,7 +19,7 @@ class PlaylistRepository implements IPlaylistRepository {
         
     }
     async deletePlaylist(playlistId: string): Promise<void> {
-        prisma.playlist.delete({
+        await prisma.playlist.delete({
             where:{
                 id: playlistId
             }
@@ -30,8 +29,9 @@ class PlaylistRepository implements IPlaylistRepository {
     }
 
     async getPlaylistById(playlistId: string): Promise<Playlist | null> {
+
         
-        const playlist = prisma.playlist.findUnique({
+        const playlist = await prisma.playlist.findUnique({
             where:{
                 id: playlistId
             },
@@ -51,9 +51,11 @@ class PlaylistRepository implements IPlaylistRepository {
         })
 
         return playlist;
+
+
     }
 
-    async getMusicsByPlaylistId(playlistId: string): Promise<{id:string,name:string,audio:string}[]> {
+    async getMusicsByPlaylistId(playlistId: string, page?: number, limit?: number): Promise<{id:string,name:string,audio:string}[]> {
 
         const musics = await prisma.playlistMusic.findMany({
             where:{
@@ -68,6 +70,14 @@ class PlaylistRepository implements IPlaylistRepository {
                         
                     }
                 }
+            },
+
+            skip: page && limit && (page - 1) * limit,
+            take: limit && limit,
+
+
+            orderBy: {
+                position: "asc"
             }
 
                 
@@ -78,23 +88,21 @@ class PlaylistRepository implements IPlaylistRepository {
 
     }
 
-    async getPlaylistByUserId(userId: string): Promise<Playlist[]> {
-
-        const playlist = await prisma.playlist.findMany({
-            where:{
-                ownerId: userId
-            }
-        })
+  async getPlaylistByUserId(userId: string, page?: number, limit?: number): Promise<Playlist[]> {
 
 
-
-
-        return playlist;
-        
-    }
+    return await prisma.playlist.findMany({
+      where: {
+        ownerId: userId,
+      },
+      skip: page && limit && (page - 1) * limit,
+      take: limit,
+     
+    });
+  }
     async updatePlaylist(playlistId: string, payload:updatePayload): Promise<any> {
 
-        return prisma.playlist.update({
+        return await prisma.playlist.update({
             where:{
                 id: playlistId
             }

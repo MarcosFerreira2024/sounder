@@ -3,9 +3,8 @@ import { PlaylistController } from "../controllers/PlaylistController";
 import { requireAuth } from "../../../middleware/requireAuth";
 import { deserializeUser } from "../../../middleware/deserializeUser";
 import { validate } from "../../../middleware/validateSchema";
-import { playlistBodyUpdateSchema, playlistFullParamsSchema, playlistSchema } from "../schema/schema";
-import { userId } from "../../../shared/schema/schema";
-import z from "zod";
+import { playlistBodyUpdateSchema,  playlistSchema, playlistIdOnlyParamsSchema, playlistAndMusicParamsSchema } from "../schema/schema";
+import { optionalId } from "../../user/schemas/schema";
 
 export function playlistRoutes(): Router {
     const router = Router();
@@ -13,18 +12,26 @@ export function playlistRoutes(): Router {
 
 
     router.use(deserializeUser);
+    
 
 
-    router.get("/:userId/playlists",validate({ params: z.object({ userId }) }),  playlistController.getPlaylistsByUserId);
+    router.get("/playlists/:userId", requireAuth, validate({ params: optionalId.strict() }),  playlistController.getUserPlaylists);
 
-    router.get("/:userId/playlist/:playlistId",validate({ params: playlistFullParamsSchema }) , playlistController.getPlaylistMusics);
+    router.get("/playlist/:playlistId", requireAuth, validate({ params: playlistIdOnlyParamsSchema }) , playlistController.getPlaylistMusics);
 
-    router.delete("/:userId/playlists/:playlistId",validate({ params: playlistFullParamsSchema }), requireAuth,  playlistController.delete);
+    router.delete("/playlist/:playlistId", requireAuth, validate({ params: playlistIdOnlyParamsSchema }),  playlistController.delete);
 
-    router.patch("/:userId/playlists/:playlistId",validate({ body: playlistBodyUpdateSchema, params: playlistFullParamsSchema }),
-    requireAuth,  playlistController.update);
+    router.patch("/playlist/:playlistId", requireAuth, validate({ body: playlistBodyUpdateSchema, params: playlistIdOnlyParamsSchema }),
+      playlistController.update);
 
-    router.post("/playlist",validate({ body: playlistSchema }),requireAuth,  playlistController.create);
+    router.post("/playlist", requireAuth, validate({ body: playlistSchema }),  playlistController.create);
+
+    router.post("/playlist/:playlistId/:musicId", requireAuth, validate({ params: playlistAndMusicParamsSchema }),  playlistController.addMusicToPlaylist); 
+    
+    router.delete("/playlist/:playlistId/:musicId", requireAuth, validate({ params: playlistAndMusicParamsSchema }),  playlistController.removeMusicFromPlaylist);    
+    
+
+
 
 
 
