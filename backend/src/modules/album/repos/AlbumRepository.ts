@@ -1,14 +1,15 @@
-import { MusicAlbum } from "../../../generated/prisma/client";
+import { Album } from "../../../generated/prisma/client";
 import { prisma } from "../../../libs/prismaClient";
-import { albumQueryFilters, IAlbumRepository } from "../interfaces/IAlbumRepository";
+import { albumQueryFilters, AlbumWithAuthor, IAlbumRepository } from "../interfaces/IAlbumRepository";
 
 class AlbumRepository implements IAlbumRepository {
 
-    async createAlbum(data: { authorId: string; cover: string; name: string; }): Promise<MusicAlbum> {
+    async createAlbum(data: { authorId: string; cover: string; name: string; }): Promise<Album> {
+
 
         const { authorId, cover, name } = data;
 
-        return await prisma.musicAlbum.create({
+        return await prisma.album.create({
             data:{
                 authorId,
                 cover,
@@ -17,21 +18,59 @@ class AlbumRepository implements IAlbumRepository {
         })
 
     }
-
-    async getAlbumById(albumId: string): Promise<MusicAlbum | null> {
-
-        return await prisma.musicAlbum.findUnique({
-            where:{
+    async delete(albumId: string): Promise<void> {
+        await prisma.album.deleteMany({
+            where: {
                 id: albumId
             }
+
+            
         })
+    }
+
+    async update(albumId: string, data: { cover?: string; name?: string; authorId?: string; }): Promise<Album | null> {
+
+        return await prisma.album.update({
+            where: {
+                id: albumId,
+
+            },
+            data:{
+                name: data.name,
+                cover: data.cover,
+                authorId: data.authorId
+                
+            }
+        })
+    }
+
+    async getAlbumById(albumId: string): Promise<AlbumWithAuthor | null> {
+
+        const album = await prisma.album.findUnique({
+            where:{
+                id: albumId
+            },
+            include: {
+                author: {
+                    select: {
+                        user: {
+                            select: {
+                                name: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        return album
 
         
     }
 
-    async getAlbumByNameAndAuthorId(name: string, authorId: string): Promise<MusicAlbum | null> {
+    async getAlbumByNameAndAuthorId(name: string, authorId: string): Promise<Album | null> {
         
-        return await prisma.musicAlbum.findFirst({
+        return await prisma.album.findFirst({
             where:{
                 name,
                 authorId
@@ -41,15 +80,16 @@ class AlbumRepository implements IAlbumRepository {
     }
 
 
-    async getAlbums(page: number, limit: number,albumQueryFilters?:albumQueryFilters): Promise<MusicAlbum[]> {
+    async getAlbums(albumQueryFilters?:albumQueryFilters,page?: number, limit?: number): Promise<Album[]> {
         
 
-        return await prisma.musicAlbum.findMany({
-            take: limit,
-            skip: (page - 1) * limit,
+        return await prisma.album.findMany({
+            take: limit && limit,
+            skip: page && limit && (page - 1) * limit,
             where: {
                 ...(albumQueryFilters?.name && { name: { contains: albumQueryFilters.name } }),
                 ...(albumQueryFilters?.authorId && { authorId: albumQueryFilters.authorId })
+                
 
             }
         }
