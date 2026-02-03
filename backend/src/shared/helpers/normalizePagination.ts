@@ -6,7 +6,14 @@ function normalizePagination(
     limit?: number,
     user?: AppUser,
 ) {
+
+  if(isAdmin(user) && (!limit || !page) ) return {page:undefined, limit:undefined};
+
+
   const maxLimit = isAdmin(user) ? 100 : 20; // limit = take no prisma
+
+  
+
 
   return {
     page: Math.max(page ?? 1, 1),
