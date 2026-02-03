@@ -1,6 +1,8 @@
 import { inject, injectable } from "tsyringe";
 import { FollowDTO, IFollowRepository } from "../interfaces/IFollowRepository";
 import { IUserRepository } from "../../user/interfaces/IUserRepository";
+import { AppUser } from "../../../shared/types/user";
+import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse";
 
 @injectable()
 class GetFollowersById {
@@ -19,16 +21,18 @@ class GetFollowersById {
 
 
 
-    async execute(id:string): Promise<FollowDTO[]> {
+    async execute(id:string,page?:number, limit?:number): Promise<{items:FollowDTO[], page:number, totalItems:number}> {
+
+
 
         const userExists = await this.userRepository.findById(id);
 
         if (!userExists) {
             throw new Error("User does not exist");
         }
-        const followers = await this.followRepository.getFollowers(id);
+        const followers = await this.followRepository.getFollowers(id,page, limit);
 
-        return followers;
+        return normalizePaginatedResponse<FollowDTO>(followers, page);
 
 
 
