@@ -1,0 +1,18 @@
+model Genre {
+    id   String @id @default(uuid())
+    name String @unique
+
+    musics MusicGenre[]
+}
+
+model MusicGenre {
+    musicId String
+    genreId String
+
+    music Music @relation(fields: [musicId], references: [id])
+    genre Genre @relation(fields: [genreId], references: [id])
+
+    @@unique([musicId, genreId])
+    @@index([musicId])
+    @@index([genreId])
+}

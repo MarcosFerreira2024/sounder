@@ -1,0 +1,28 @@
+model Playlist {
+    id         String             @id @default(uuid())
+    name       String             @unique
+    image      String?
+    visibility PlaylistVisibility @default(PUBLIC)
+    ownerId    String
+    createdAt  DateTime           @default(now())
+
+    owner  User            @relation("UserPlaylists", fields: [ownerId], references: [id])
+    musics PlaylistMusic[]
+}
+
+model PlaylistMusic {
+    id         String @id @default(uuid())
+    playlistId String
+    musicId    String
+    position   Int
+
+    playlist Playlist @relation(fields: [playlistId], references: [id])
+    music    Music    @relation(fields: [musicId], references: [id])
+
+    @@unique([playlistId, musicId])
+}
+
+enum PlaylistVisibility {
+    PUBLIC
+    PRIVATE
+}

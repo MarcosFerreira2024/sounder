@@ -1,0 +1,87 @@
+model DailyGame {
+  id   String   @id @default(uuid())
+  date DateTime @unique
+
+  originalImage String
+  blur100       String
+  blur75        String
+  blur50        String
+  blur25        String
+
+  audio         String
+  musicName     String
+  artistName    String
+  correctAnswer String
+
+  games   Game[]
+  history DailyGameHistory[]
+}
+
+model GameMode {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+
+  games        Game[]
+  userStatuses UserGameStatus[]
+}
+
+model Game {
+  id String @id @default(uuid())
+
+  gamemodeId String
+  gamemode   GameMode @relation(fields: [gamemodeId], references: [id])
+
+  dailyGameId String?
+  dailyGame   DailyGame? @relation(fields: [dailyGameId], references: [id])
+
+  sessions GameSession[]
+}
+
+model GameSession {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  gameId String
+  game   Game   @relation(fields: [gameId], references: [id])
+
+  status        GameStatus @default(IN_PROGRESS)
+  tries         Int        @default(0)
+  correctAnswer Boolean?
+
+  @@unique([userId, gameId])
+}
+
+model UserGameStatus {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  gamemodeId String
+  gamemode   GameMode @relation(fields: [gamemodeId], references: [id])
+
+  streak     Int   @default(0)
+  wins       Int   @default(0)
+  matches    Int   @default(0)
+  loses      Int   @default(0)
+  timePlayed Int   @default(0)
+  winPercent Float @default(0)
+
+  @@unique([gamemodeId, userId])
+}
+
+model DailyGameHistory {
+  id          String    @id @default(uuid())
+  dailyGameId String
+  dailyGame   DailyGame @relation(fields: [dailyGameId], references: [id])
+
+  date DateTime
+}
+
+enum GameStatus {
+  IN_PROGRESS
+  FINISHED
+}

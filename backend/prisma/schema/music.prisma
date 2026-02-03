@@ -1,0 +1,50 @@
+model Music {
+  id        String  @id @default(uuid())
+  name      String
+  artistId  String
+  audio     String
+  albumId   String?
+  album     Album?  @relation(fields: [albumId], references: [id])
+  likeCount Int     @default(0)
+
+  artist             Artist               @relation(fields: [artistId], references: [id])
+  actions            MusicAction[]
+  playlists          PlaylistMusic[]
+  lyrics             String
+  genres             MusicGenre[]
+  userFavoriteMusics UserFavoriteMusics[]
+}
+
+model MusicAction {
+  id        String        @id @default(uuid())
+  viewed    Boolean       @default(false)
+  reaction  MusicReaction @default(NONE)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  musicId   String
+  userId    String
+
+  music Music @relation(fields: [musicId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@unique([musicId, userId])
+  @@index([musicId])
+  @@index([userId])
+}
+
+model UserFavoriteMusics {
+  id      String @id @default(uuid())
+  musicId String
+  userId  String
+
+  music Music @relation(fields: [musicId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@unique([musicId, userId])
+}
+
+enum MusicReaction {
+  LIKE
+  DISLIKE
+  NONE
+}
