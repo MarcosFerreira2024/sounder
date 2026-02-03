@@ -4,15 +4,19 @@ import { GetUser } from "../useCases/GetUser";
 import { DeleteUser } from "../useCases/DeleteUser";
 import { Request, Response } from "express";
 import { handleAppError } from "../../../shared/helpers/handleAppError";
+import { ChangeProfilePicture } from "../useCases/ChangeProfilePicture";
+import { userId } from "../../../shared/schema/schema";
 
 class UserController {
 
+
+
     async update(req: Request, res: Response): Promise<Response> {
         try {
-            const { userId:id } = req.params as { userId: string };
+            const { userId } = req.params as { userId: string };
 
 
-            const user = await container.resolve(UpdateUser).execute(req.user!,id, req.body);
+            const user = await container.resolve(UpdateUser).execute(req.user!, req.body,userId);
             
             return res.status(200).json({
                 data: user,
@@ -23,11 +27,28 @@ class UserController {
         }
     }
 
+    async changeProfilePicture(req: Request, res: Response): Promise<Response> {
+        try {
+
+        if(!req.file) throw new Error("Image is required");
+
+
+        const user = await container.resolve(ChangeProfilePicture).execute({image: {buffer: req.file.buffer, originalName: req.file.originalname, mimeType: req.file.mimetype}, user: req.user!, userId: req.params.userId as string??undefined});
+        return res.status(200).json({
+                data: user,
+                message: "User photo updated successfully"
+            });
+        } catch (error: any) {
+            return handleAppError(res, error);
+        }
+    }
+
     async getUser(req: Request, res: Response): Promise<Response> {
         try {
-            const { userId:id } = req.params as { userId: string };
+            const {userId} = req.params as { userId: string };
 
-            const user = await container.resolve(GetUser).execute(id);
+
+            const user = await container.resolve(GetUser).execute( req.user!, userId);
             return res.status(200).json({
                 data: user,
                 message: "User found successfully"
@@ -39,10 +60,10 @@ class UserController {
 
     async delete(req: Request, res: Response): Promise<Response> {
         try {
-            const { userId:id } = req.params as { userId: string };
+            const { userId } = req.params as { userId: string };
 
 
-            await container.resolve(DeleteUser).execute(req.user!,id);
+            await container.resolve(DeleteUser).execute(req.user!,userId);
             return res.status(200).json({ message: "User deleted successfully" });
         } catch (error: any) {
             return handleAppError(res, error);
