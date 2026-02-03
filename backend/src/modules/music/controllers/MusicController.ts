@@ -9,49 +9,42 @@ import { DeleteMusic } from "../useCases/DeleteMusic";
 import { handleAppError } from "../../../shared/helpers/handleAppError";
 import { LikeMusic } from "../useCases/LikeMusic";
 import { DeslikeMusic } from "../useCases/DeslikeMusic";
-import { CreateMusicAndAlbum } from "../useCases/CreateMusicAndAlbum";
-import { CreateAlbum } from "../../album/useCases/CreateAlbum";
+import { AssignMusicToAlbum } from "../useCases/AssignMusicToAlbum";
 
 class MusicController {
 
-    async createMusicAndAlbum(req: Request, res: Response) {
-        try {
-            const { albumCover, musicName, audio, lyrics, albumName, genres } = req.body;
+    async assignToAlbum (req:Request,res:Response){
+        try{
+            const assigned = await container.resolve(AssignMusicToAlbum).execute(req.body.musicId,req.body.albumId,req.user!,req.body.artistId)
 
-            const created = await
-                new CreateMusicAndAlbum(container.resolve(CreateAlbum), container.resolve(CreateMusic))
-                .execute(
-                    req.user!,
-                    albumName,
-                    albumCover,
-                    musicName,
-                    audio,
-                    genres,
-                    lyrics
-                );
 
-            return res.status(201).json({
-                data: created,
-                message: "Music and album created successfully"
-            });
-        } catch (error) {
+            res.status(200).json({data:assigned,message:"Music Assigned succesfully"})
+        }
+
+        catch (error) {
             return handleAppError(res, error);
         }
+
     }
 
-    async create(req: Request, res: Response) {
+
+
+    async create(req: Request, res: Response) { 
         try {
-            const { name, audio, lyrics, albumId,genres } = req.body;
+            const { name, albumId, artistId } = req.body;
+            const lyricsFile = req.file; 
+
+
 
             const created = await container
                 .resolve(CreateMusic)
                 .execute(
                     req.user!,
                     name,
-                    audio,
-                    lyrics,
-                    genres,
-                    albumId
+                    { buffer: lyricsFile!.buffer, originalName: lyricsFile!.originalname, mimeType: lyricsFile!.mimetype }, 
+                    req.body.genres as string[],
+                    albumId,
+                    artistId
                 );
 
             return res.status(201).json({

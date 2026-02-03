@@ -4,26 +4,40 @@ export type musicQueryFilters = {
     name?: string;
     audio?: string;
     id?: string;
-    authorId?: string;
+    artistId?: string;
     authorName?: string;
 
 }
+
+export type MusicWithCover = Music & {album: {
+        cover: string;
+    } | null; }
+
 
 
 interface IMusicRepository {
     getMusicById(musicId: string): Promise<Music | null>;
 
-    getMusics(page: number, limit: number, search?: musicQueryFilters): Promise<Music[]>;
+    getRandomMusic(exclude: string[]): Promise<MusicWithCover | null>;
 
-    createMusic(data: { name: string; audio: string; authorId: string, lyrics: string,genres:string[], albumId: string}): Promise<Music>;
+    deleteByAlbumId(albumId: string): Promise<void>;
+
+    updateMany(albumId: string, data: Partial<{ name: string; audio: string; artistId: string,albumId: string | null }>): Promise<void>
+
+    getMusics( search?: musicQueryFilters,page?: number, limit?: number): Promise<Music[]>;
+
+    createMusic(data: { name: string; audio: string; artistId: string, lyrics: string,genres:string[], albumId: string}): Promise<Music>;
 
     addLike(musicId: string): Promise<void>;
 
     removeLike(musicId: string): Promise<void>;
 
-    updateMusic(musicId: string, data: Partial<{ name: string; audio: string; authorId: string }>): Promise<Music>;
+
+    updateMusic(musicId: string, data: Partial<{ name: string; audio: string; artistId: string,albumId: string }>): Promise<Music>;
 
     deleteMusic(musicId: string): Promise<void>;
+
+    assignMusicToAlbum(musicId:string,albumId:string):Promise<Music>
 
 
 }

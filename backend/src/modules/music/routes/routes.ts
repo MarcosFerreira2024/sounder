@@ -3,7 +3,11 @@ import { MusicController } from "../controllers/MusicController";
 import { deserializeUser } from "../../../middleware/deserializeUser";
 import { requireAuth } from "../../../middleware/requireAuth";
 import { validate } from "../../../middleware/validateSchema";
-import { musicId, createMusicBody, updateMusicBody, createMusicAndAlbumBody } from "../schemas/schema";
+import { musicId, createMusicBody, updateMusicBody } from "../schemas/schema";
+import { z } from "zod";
+import { zodErrorMessages } from "../../../shared/constants/errors";
+import { upload } from "../../../libs/multer";
+import { uploadWithErrorHandler } from "../../../middleware/uploadWithErrorHandler";
 
 export function musicRoutes(): Router {
     const router = Router();
@@ -16,18 +20,24 @@ export function musicRoutes(): Router {
     router.get("/:id", validate({ params: musicId }), musicController.getById);
     router.get("/", musicController.get);
 
-    router.post("/", requireAuth, validate({ body: createMusicBody }), musicController.create);
-    router.post("/with-album", requireAuth, validate({ body: createMusicAndAlbumBody }), musicController.createMusicAndAlbum);
+    router.post("/",
+        requireAuth,
+        uploadWithErrorHandler(upload.single('lyricsFile')),
+        validate({ body: createMusicBody }),
+        musicController.create
+    );
+    
+    router.put("/album",requireAuth, validate({body: z.object({
+        musicId:z.uuid(zodErrorMessages.invalid("Music ID")),
+        albumId:z.uuid(zodErrorMessages.invalid("Album ID")) ,
+        artistId:z.uuid(zodErrorMessages.invalid("ArtistId")).optional(),
+    }).strict()}),musicController.assignToAlbum)
+
     router.put("/:id", requireAuth, validate({ params: musicId, body: updateMusicBody }), musicController.update);
     router.delete("/:id", requireAuth, validate({ params: musicId }), musicController.delete);
     
     router.post("/:id/like", requireAuth, validate({ params: musicId }), musicController.like);
     router.post("/:id/deslike", requireAuth, validate({ params: musicId }), musicController.deslike);
-
-
-
-    // MusicController routes
-
 
 
     return router;
