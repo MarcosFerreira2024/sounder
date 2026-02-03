@@ -5,4 +5,4 @@ export const followSchema = z.object({
     userId:userId
 
     
-});
+}).strict();
