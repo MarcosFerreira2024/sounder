@@ -1,17 +1,20 @@
 import { Request, Response } from "express";
-import { handleAppError } from "../../../shared/helpers/handleAppError";
+import { normalizePagination } from "../../../shared/helpers/normalizePagination";
 import { container } from "tsyringe";
 import { CreatePlaylist } from "../useCases/CreatePlaylist";
+import { handleAppError } from "../../../shared/helpers/handleAppError";
 import { DeletePlaylist } from "../useCases/DeletePlaylist";
-import { GetPlaylistsByUserId } from "../useCases/GetPlaylistsByUserId";
-import { UpdatePlaylist } from "../useCases/UpdatePlaylist";
 import { GetMusicsByPlaylistId } from "../useCases/GetMusicsByPlaylistId";
+import { UpdatePlaylist } from "../useCases/UpdatePlaylist";
+import { RemoveFromPlaylist } from "../useCases/RemoveFromPlaylist";
+import { AddMusicToPlaylist } from "../useCases/AddToPlaylist";
+import { GetUserPlaylists } from "../useCases/GetUserPlaylists";
+import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse";
 
 class PlaylistController {
   async create(req: Request, res: Response): Promise<Response> {
 
     try {
-      console.log({body:req.body,user:req.user})
       const playlist = await container.resolve(CreatePlaylist).execute(req.user!, {name: req.body.name, photo: req.body.photo});
 
       return res.status(201).json({ data:playlist,message: "Playlist created successfully" });
@@ -25,21 +28,30 @@ class PlaylistController {
 
   async delete(req: Request, res: Response): Promise<Response> {
     try {
-      await container.resolve(DeletePlaylist).execute(req.params.userId as string,req.user!);
+      await container.resolve(DeletePlaylist).execute(req.params.playlistId as string,req.user!);
 
-      return res.json({ message: "Playlist deleted successfully" });
+      return res.status(200).json({ message: "Playlist deleted successfully" });
     }
     catch (error: any) {
       return handleAppError(res, error);
     }
   }
 
-  async getPlaylistsByUserId(req: Request, res: Response): Promise<Response> {
+  async getUserPlaylists(req: Request, res: Response): Promise<Response> {
     try {
-      const playlists = await container.resolve(GetPlaylistsByUserId).execute(req.params.userId as string,req.user);
+      const { userId } = req.params as { userId: string | undefined };
+      const { limit, page } = normalizePagination(
+        req.query.page as unknown as number,
+        req.query.limit! as unknown as number,
+        req.user!
+      );
+
+      console.log(req)
+
+      const playlists = await container.resolve(GetUserPlaylists).execute(userId, req.user, page, limit);
 
 
-      return res.json({data:playlists, message:"Playlists fetched successfully"});
+      return res.status(200).json({data:playlists, message:"Playlists fetched successfully"});
     }
     catch (error: any) {
       return handleAppError(res, error);
@@ -48,9 +60,16 @@ class PlaylistController {
 
   async getPlaylistMusics(req: Request, res: Response): Promise<Response> {
     try {
-      const musics = await container.resolve(GetMusicsByPlaylistId).execute(req.params.userId as string,req.user!);
 
-      return res.json({data:musics, message:"Playlist musics fetched successfully"});
+      const { limit, page } = normalizePagination(
+        req.query.page as unknown as number,
+        req.query.limit! as unknown as number,
+        req.user!
+      );
+
+      const musics = await container.resolve(GetMusicsByPlaylistId).execute(req.params.playlistId as string,req.user!,page,limit);
+
+      return res.status(200).json({data:musics, message:"Playlist musics fetched successfully"});
 
     }
     catch (error: any) {
@@ -58,10 +77,36 @@ class PlaylistController {
     }
   }
 
+  async removeMusicFromPlaylist(req: Request, res: Response): Promise<Response> {
+    try {
+      const { musicId } = req.params as { musicId: string | undefined };
+      const { playlistId } = req.params as { playlistId: string | undefined };
+      await container.resolve(RemoveFromPlaylist).execute(playlistId!,musicId!,req.user!);
+      return res.status(200).json({ message: "Music removed from playlist successfully" });
+    }
+    catch (error: any) {
+      return handleAppError(res, error);
+    }
+  }
+
+  async addMusicToPlaylist(req:Request,res:Response): Promise<Response> {
+    try {
+      const { musicId } = req.params as { musicId: string | undefined };
+      const { playlistId } = req.params as { playlistId: string | undefined };
+
+      await container.resolve(AddMusicToPlaylist).execute(playlistId!,musicId!,req.user!);
+      return res.status(200).json({ message: "Music added to playlist successfully" });
+    }
+    catch (error: any) {
+      return handleAppError(res, error);
+    }
+
+  }
+
   async update(req: Request, res: Response): Promise<Response> {
     try {
       const updatedPlaylist = await container.resolve(UpdatePlaylist).execute( req.params.playlistId as string, req.body, req.user! );
-      return res.json({data:updatedPlaylist, message: "Playlist updated successfully" });
+      return res.status(200).json({data:updatedPlaylist, message: "Playlist updated successfully" });
     }
     catch (error: any) {
       return handleAppError(res, error);
