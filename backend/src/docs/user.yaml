@@ -1,54 +1,54 @@
 paths:
   /users:
     get:
-      summary: /users
+      summary: Get authenticated user's data
       description: Retrieves the authenticated user's data.
       tags:
         - User
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: The authenticated user's data.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '401':
+                $ref: "#/components/schemas/User"
+        "401":
           description: Unauthorized.
 
-  /users/{id}:
+  /users/{userId}:
     get:
-      summary: /users/{id}
+      summary: Get user by ID
       description: Retrieves a user's data by their UUID.
       tags:
         - User
       parameters:
         - in: path
-          name: id
+          name: userId
           required: true
           schema:
             type: string
             format: uuid
           description: The user's UUID.
       responses:
-        '200':
+        "200":
           description: The user data.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '404':
+                $ref: "#/components/schemas/User"
+        "404":
           description: User not found.
 
     put:
-      summary: /users/{id}
+      summary: Update user by ID
       description: Updates a user's data by their UUID.
       tags:
         - User
       parameters:
         - in: path
-          name: id
+          name: userId
           required: true
           schema:
             type: string
@@ -67,35 +67,69 @@ paths:
                   type: string
                   format: email
       responses:
-        '200':
+        "200":
           description: User updated successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '400':
+                $ref: "#/components/schemas/User"
+        "400":
           description: Invalid update data.
-        '404':
+        "404":
           description: User not found.
 
     delete:
-      summary: /users/{id}
+      summary: Delete user by ID
       description: Deletes a user by their UUID.
       tags:
         - User
       parameters:
         - in: path
-          name: id
+          name: userId
           required: true
           schema:
             type: string
             format: uuid
           description: The user's UUID.
       responses:
-        '204':
+        "204":
           description: User deleted successfully.
-        '404':
+        "404":
           description: User not found.
+
+  /users/profilePicture:
+    post:
+      summary: Update user profile picture
+      description: Updates a user's profile picture.
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                userId:
+                  type: string
+                  format: uuid
+
+      responses:
+        "200":
+          description: User photo updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid request.
+        "401":
+          description: Unauthorized.
 
 components:
   schemas:

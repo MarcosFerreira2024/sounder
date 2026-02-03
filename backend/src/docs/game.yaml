@@ -1,0 +1,447 @@
+paths:
+  /game/start:
+    post:
+      summary: Start a new game session
+      description: Initiates a new game session for the authenticated user.
+      tags:
+        - Game
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Game session started successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGame'
+        '401':
+          description: Unauthorized.
+        '500':
+          description: Internal server error.
+
+  /game/state:
+    get:
+      summary: Get current game state
+      description: Retrieves the current state of a specific game for the authenticated user.
+      tags:
+        - Game
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: gameId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The UUID of the game.
+      responses:
+        '200':
+          description: Game state fetched successfully.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/GameStateInProgress'
+                  - $ref: '#/components/schemas/GameStateFinished'
+        '401':
+          description: Unauthorized.
+        '400':
+          description: Invalid game ID provided.
+        '404':
+          description: Game not found.
+        '500':
+          description: Internal server error.
+
+  /game/answer:
+    post:
+      summary: Submit an answer for the current game
+      description: Submits an answer for the current game session for the authenticated user.
+      tags:
+        - Game
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnswerRequest'
+      responses:
+        '200':
+          description: Answer submitted successfully.
+        '401':
+          description: Unauthorized.
+        '400':
+          description: Invalid answer provided or game not in progress.
+        '500':
+          description: Internal server error.
+
+  /game/user-stats:
+    get:
+      summary: Get user game statistics
+      description: Retrieves game statistics for a specific game and game mode for the authenticated user.
+      tags:
+        - Game
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: gameId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The UUID of the game.
+        - in: query
+          name: gameMode
+          schema:
+            type: string
+            description: The game mode (e.g., "daily").
+          required: true
+      responses:
+        '200':
+          description: User game statistics fetched successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGameStatus'
+        '401':
+          description: Unauthorized.
+        '400':
+          description: Invalid game ID provided.
+        '404':
+          description: User game stats not found.
+        '500':
+          description: Internal server error.
+  
+  /game/today:
+    get:
+      summary: Get today's games
+      description: Retrieves a list of games scheduled for the current day.
+      tags:
+        - Game
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A list of today's games.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Game'
+        '401':
+          description: Unauthorized.
+        '500':
+          description: Internal server error.
+
+  /game/modes:
+    get:
+      summary: Get all game modes
+      description: Retrieves a list of all available game modes.
+      tags:
+        - Game
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A list of game modes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GameMode'
+        '401':
+          description: Unauthorized.
+        '500':
+          description: Internal server error.
+    post:
+      summary: Create a new game mode
+      description: Creates a new game mode. This is an admin-only route.
+      tags:
+        - Game
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameModeRequest'
+      responses:
+        '201':
+          description: Game mode created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameMode'
+        '401':
+          description: Unauthorized.
+        '400':
+          description: Invalid request body.
+        '500':
+          description: Internal server error.
+
+  /game/daily-game:
+    post:
+      summary: Create a new daily game
+      description: Creates a new daily game. This is an admin/test route and is not intended for production use by regular users.
+      tags:
+        - Game
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Daily game created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Daily game created successfully
+        '401':
+          description: Unauthorized. User is not authenticated.
+        '500':
+          description: Internal server error.
+    delete:
+      summary: Delete a daily game
+      description: Deletes a daily game by its ID. This is an admin/test route and is not intended for production use by regular users.
+      tags:
+        - Game
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - dailyGameId
+              properties:
+                dailyGameId:
+                  type: string
+                  format: uuid
+                  description: The UUID of the daily game to delete.
+              example:
+                dailyGameId: "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+      responses:
+        '200':
+          description: Daily game deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Daily game deleted successfully
+        '401':
+          description: Unauthorized. User is not authenticated.
+        '404':
+          description: Daily game not found.
+        '500':
+          description: Internal server error.
+
+components:
+  schemas:
+    GameIdRequest:
+      type: object
+      required:
+        - gameId
+      properties:
+        gameId:
+          type: string
+          format: uuid
+          description: The UUID of the game.
+      example:
+        gameId: "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+    
+    AnswerRequest:
+      type: object
+      required:
+        - answer
+      properties:
+        answer:
+          type: string
+          description: The user's answer to the current game question.
+      example:
+        answer: "My Answer"
+
+    UserGame:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the user's game session.
+        userId:
+          type: string
+          format: uuid
+          description: The ID of the user.
+        gameId:
+          type: string
+          format: uuid
+          description: The ID of the game.
+        status:
+          type: string
+          enum: ["IN_PROGRESS", "FINISHED"]
+          description: The current status of the game.
+        tries:
+          type: integer
+          description: The number of attempts made by the user.
+        correctAnswer:
+          type: boolean
+          nullable: true
+          description: Indicates if the last answer was correct (null if not yet answered).
+      example:
+        id: "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+        userId: "b1c2d3e4-f5a6-7890-1234-567890abcdef"
+        gameId: "c1d2e3f4-a5b6-7890-1234-567890abcdef"
+        status: "IN_PROGRESS"
+        tries: 1
+        correctAnswer: null
+
+    GameStateInProgress:
+      type: object
+      required:
+        - status
+        - image
+        - audio
+      properties:
+        status:
+          type: string
+          enum: ["IN_PROGRESS"]
+          description: The status of the game.
+        image:
+          type: string
+          description: URL or base64 encoded image of the game state.
+        audio:
+          type: string
+          description: URL or base64 encoded audio for the game.
+      example:
+        status: "IN_PROGRESS"
+        image: "https://example.com/image.jpg"
+        audio: "https://example.com/audio.mp3"
+
+    GameStateFinished:
+      type: object
+      required:
+        - status
+        - image
+        - audio
+        - musicName
+        - artistName
+      properties:
+        status:
+          type: string
+          enum: ["FINISHED"]
+          description: The status of the game.
+        image:
+          type: string
+          description: URL or base64 encoded image of the game state.
+        audio:
+          type: string
+          description: URL or base64 encoded audio for the game.
+        musicName:
+          type: string
+          description: The name of the music.
+        artistName:
+          type: string
+          description: The name of the artist.
+        correctAnswer:
+          type: boolean
+          nullable: true
+          description: Indicates if the final answer was correct.
+      example:
+        status: "FINISHED"
+        image: "https://example.com/image_final.jpg"
+        audio: "https://example.com/audio_final.mp3"
+        musicName: "Song Title"
+        artistName: "Artist Name"
+        correctAnswer: true
+
+    UserGameStatus:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the user's game status.
+        userId:
+          type: string
+          format: uuid
+          description: The ID of the user.
+        gamemodeId:
+          type: string
+          format: uuid
+          description: The ID of the game mode.
+        streak:
+          type: integer
+          description: Current winning streak.
+        wins:
+          type: integer
+          description: Total number of wins.
+        matches:
+          type: integer
+          description: Total number of matches played.
+        loses:
+          type: integer
+          description: Total number of losses.
+        timePlayed:
+          type: integer
+          description: Total time played in seconds.
+        winPercent:
+          type: number
+          format: float
+          description: Win percentage.
+      example:
+        id: "d1e2f3a4-b5c6-7890-1234-567890abcdef"
+        userId: "b1c2d3e4-f5a6-7890-1234-567890abcdef"
+        gamemodeId: "e1f2a3b4-c5d6-7890-1234-567890abcdef"
+        streak: 5
+        wins: 10
+        matches: 15
+        loses: 5
+        timePlayed: 3600
+        winPercent: 66.67
+
+    Game:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        dailyGameId:
+          type: string
+          format: uuid
+        gameModeId:
+          type: string
+          format: uuid
+
+    GameMode:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+
+    GameModeRequest:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+        description:
+          type: string

@@ -1,0 +1,219 @@
+paths:
+  /albums:
+    get:
+      summary: Get all albums
+      description: Retrieves a list of all albums.
+      tags:
+        - Album
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number for pagination.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items per page for pagination.
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Filter albums by name.
+        - in: query
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: Filter albums by ID.
+        - in: query
+          name: authorId
+          schema:
+            type: string
+            format: uuid
+          description: Filter albums by author ID.
+      responses:
+        "200":
+          description: A list of albums.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Album"
+        "401":
+          description: Unauthorized.
+
+    post:
+      summary: Create a new album
+      description: Creates a new album entry.
+      tags:
+        - Album
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "New Album"
+                cover:
+                  type: string
+                  format: binary
+                  description: Album cover image file.
+                artistId:
+                  type: string
+                  format: uuid
+                  description: Optional artist ID to assign as the album author.
+              required:
+                - name
+                - cover
+      responses:
+        "201":
+          description: Album created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Album"
+        "400":
+          description: Invalid input.
+        "401":
+          description: Unauthorized.
+
+  /albums/{id}:
+    get:
+      summary: Get album by ID
+      description: Retrieves a single album entry by its ID.
+      tags:
+        - Album
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The album's UUID.
+      responses:
+        "200":
+          description: Album data.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Album"
+        "404":
+          description: Album not found.
+        "401":
+          description: Unauthorized.
+
+    patch:
+      summary: Update an album by ID
+      description: Updates an existing album entry by its ID.
+      tags:
+        - Album
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The album's UUID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAlbumInput"
+      responses:
+        "200":
+          description: Album updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Album"
+        "400":
+          description: Invalid input.
+        "404":
+          description: Album not found.
+        "401":
+          description: Unauthorized.
+
+    delete:
+      summary: Delete an album by ID
+      description: Deletes an album entry by its ID.
+      tags:
+        - Album
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The album's UUID.
+      responses:
+        "204":
+          description: Album deleted successfully.
+        "404":
+          description: Album not found.
+        "401":
+          description: Unauthorized.
+
+components:
+  schemas:
+    Album:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+        name:
+          type: string
+          example: "My Awesome Album"
+        authorId:
+          type: string
+          format: uuid
+          example: "b2c3d4e5-f6a7-8901-2345-67890abcdef0"
+        cover:
+          type: string
+          example: "https://example.com/cover/myalbum.jpg"
+
+    CreateAlbumInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "New Album"
+
+    UpdateAlbumInput:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Updated Album Title"
+        cover:
+          type: string
+          example: "https://example.com/cover/updatedalbum.jpg"
+        authorId:
+          type: string
+          format: uuid
+          example: "b2c3d4e5-f6a7-8901-2345-67890abcdef0"

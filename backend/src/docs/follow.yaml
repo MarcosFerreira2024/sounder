@@ -1,7 +1,7 @@
 paths:
-  /users/{id}/follow:
+  /user/{userId}/follow:
     post:
-      summary: /users/{id}/follow
+      summary: Follow a user
       description: Follow a user by their UUID.
       tags:
         - Follow
@@ -9,7 +9,7 @@ paths:
         - bearerAuth: []
       parameters:
         - in: path
-          name: id
+          name: userId
           required: true
           schema:
             type: string
@@ -23,9 +23,9 @@ paths:
         '404':
           description: User not found.
 
-  /users/{id}/unfollow:
+  /user/{userId}/unfollow:
     post:
-      summary: /users/{id}/unfollow
+      summary: Unfollow a user
       description: Unfollow a user by their UUID.
       tags:
         - Follow
@@ -33,7 +33,7 @@ paths:
         - bearerAuth: []
       parameters:
         - in: path
-          name: id
+          name: userId
           required: true
           schema:
             type: string
@@ -47,61 +47,113 @@ paths:
         '404':
           description: User not found.
 
-  /users/{id}/followers:
+  /user/{userId}/followers:
     get:
-      summary: /users/{id}/followers
+      summary: Get user's followers
       description: Get the followers of a user by their UUID.
       tags:
         - Follow
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
-          name: id
+          name: userId
           required: true
           schema:
             type: string
             format: uuid
           description: The user's UUID.
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 1
+          description: Page number for pagination.
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 10
+          description: Number of items per page for pagination. Max 20 for regular users, 100 for admins.
       responses:
         '200':
           description: List of followers.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  message:
+                    type: string
+                    example: "Followers fetched successfully"
         '404':
           description: User not found.
 
-  /users/{id}/following:
+  /user/{userId}/following:
     get:
-      summary: /users/{id}/following
+      summary: Get users a user is following
       description: Get the users that a user is following by their UUID.
       tags:
         - Follow
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
-          name: id
+          name: userId
           required: true
           schema:
             type: string
             format: uuid
           description: The user's UUID.
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 1
+          description: Page number for pagination.
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 10
+          description: Number of items per page for pagination. Max 20 for regular users, 100 for admins.
       responses:
         '200':
           description: List of users being followed.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  message:
+                    type: string
+                    example: "Following fetched successfully"
         '404':
           description: User not found.
 
 components:
   schemas:
-    User:
+    User: # Assuming User schema is defined elsewhere or this is a placeholder
       type: object
       properties:
         id:

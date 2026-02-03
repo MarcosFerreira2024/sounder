@@ -1,7 +1,7 @@
 paths:
-  /users/{userId}/playlists:
+  /playlists/{userId}:
     get:
-      summary: /users/{userId}/playlists
+      summary: Get user's playlists
       description: Get all playlists for a specific user.
       tags:
         - Playlist
@@ -15,36 +15,53 @@ paths:
             type: string
             format: uuid
           description: The ID of the user.
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 1
+          description: Page number for pagination.
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 10
+          description: Number of items per page for pagination. Max 20 for regular users, 100 for admins.
       responses:
         "200":
-          description: An array of playlists.
+          description: A paginated list of playlists.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Playlist"
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Playlist"
+                  message:
+                    type: string
+                    example: "Playlists fetched successfully"
         "401":
           description: Unauthorized.
         "404":
           description: User not found.
 
-  /users/{userId}/playlist/{playlistId}:
+  /playlist/{playlistId}:
     get:
-      summary: /users/{userId}/playlist/{playlistId}
-      description: Get a specific playlist by ID for a user.
+      summary: Get musics by Playlist ID
+      description: Get all musics for a specific playlist by its ID.
       tags:
         - Playlist
       security:
         - bearerAuth: []
       parameters:
-        - in: path
-          name: userId
-          required: true
-          schema:
-            type: string
-            format: uuid
-          description: The ID of the user.
         - in: path
           name: playlistId
           required: true
@@ -52,34 +69,52 @@ paths:
             type: string
             format: uuid
           description: The ID of the playlist.
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 1
+          description: Page number for pagination.
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 10
+          description: Number of items per page for pagination. Max 20 for regular users, 100 for admins.
       responses:
         "200":
-          description: The playlist object.
+          description: A paginated list of musics in the playlist.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Playlist"
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Music"
+                  message:
+                    type: string
+                    example: "Playlist musics fetched successfully"
         "401":
           description: Unauthorized.
         "404":
           description: Playlist or User not found.
 
-  /users/{userId}/playlists/{playlistId}:
     delete:
-      summary: /users/{userId}/playlists/{playlistId}
-      description: Delete a specific playlist by ID for a user.
+      summary: Delete a playlist
+      description: Delete a specific playlist by its ID.
       tags:
         - Playlist
       security:
         - bearerAuth: []
       parameters:
-        - in: path
-          name: userId
-          required: true
-          schema:
-            type: string
-            format: uuid
-          description: The ID of the user.
         - in: path
           name: playlistId
           required: true
@@ -93,23 +128,16 @@ paths:
         "401":
           description: Unauthorized.
         "404":
-          description: Playlist or User not found.
+          description: Playlist not found.
 
     patch:
-      summary: /users/{userId}/playlists/{playlistId}
-      description: Update a specific playlist by ID for a user.
+      summary: Update a playlist
+      description: Update a specific playlist by its ID.
       tags:
         - Playlist
       security:
         - bearerAuth: []
       parameters:
-        - in: path
-          name: userId
-          required: true
-          schema:
-            type: string
-            format: uuid
-          description: The ID of the user.
         - in: path
           name: playlistId
           required: true
@@ -149,11 +177,11 @@ paths:
         "401":
           description: Unauthorized.
         "404":
-          description: Playlist or User not found.
+          description: Playlist not found.
 
-  /users/playlist:
+  /playlist:
     post:
-      summary: /users/playlist
+      summary: Create a new playlist
       description: Create a new playlist.
       tags:
         - Playlist
@@ -187,6 +215,83 @@ paths:
         "401":
           description: Unauthorized.
 
+  /playlist/{playlistId}/{musicId}:
+    post:
+      summary: Add music to playlist
+      description: Add a specific music track to a playlist.
+      tags:
+        - Playlist
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: playlistId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the playlist.
+        - in: path
+          name: musicId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the music track to add.
+      responses:
+        "200":
+          description: Music added to playlist successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Music added to playlist successfully"
+        "401":
+          description: Unauthorized.
+        "404":
+          description: Playlist or Music not found.
+
+    delete:
+      summary: Remove music from playlist
+      description: Remove a specific music track from a playlist.
+      tags:
+        - Playlist
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: playlistId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the playlist.
+        - in: path
+          name: musicId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the music track to remove.
+      responses:
+        "200":
+          description: Music removed from playlist successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Music removed from playlist successfully"
+        "401":
+          description: Unauthorized.
+        "404":
+          description: Playlist or Music not found.
+
 components:
   schemas:
     Playlist:
@@ -215,3 +320,35 @@ components:
         userId: "f1e2d3c4-b5a6-9876-5432-10fedcba9876"
         createdAt: "2023-01-01T12:00:00Z"
         updatedAt: "2023-01-01T12:00:00Z"
+    Music:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        artistId:
+          type: string
+          format: uuid
+        audio:
+          type: string
+          format: uri
+        albumId:
+          type: string
+          format: uuid
+          nullable: true
+        likeCount:
+          type: integer
+          format: int32
+        lyrics:
+          type: string
+          nullable: true
+      example:
+        id: "m1u2s3i4-c5a6-7890-1234-567890abcdef"
+        name: "My Awesome Song"
+        artistId: "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+        audio: "https://example.com/audio/song.mp3"
+        albumId: "l1b2u3m4-e5f6-7890-1234-567890abcdef"
+        likeCount: 123
+        lyrics: "This is a great song..."

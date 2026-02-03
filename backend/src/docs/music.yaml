@@ -61,7 +61,7 @@ paths:
 
     post:
       summary: Create a new music
-      description: Creates a new music entry.
+      description: Creates a new music entry, accepting an optional LRC lyrics file.
       tags:
         - Music
       security:
@@ -69,9 +69,34 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CreateMusicInput'
+              type: object
+              required:
+                - name
+                - albumId
+                - genres
+              properties:
+                name:
+                  type: string
+                  example: "New Song"
+                albumId:
+                  type: string
+                  format: uuid
+                  example: "c3d4e5f6-a7b8-9012-3456-7890abcdef01"
+                genres:
+                  type: array
+                  items:
+                    type: string
+                  example: ["Rock", "Pop"]
+                artistId:
+                  type: string
+                  format: uuid
+                  description: Optional artist ID if user is admin.
+                lyricsFile:
+                  type: string
+                  format: binary
+                  description: LRC lyrics file.
       responses:
         '201':
           description: Music created successfully.
@@ -83,6 +108,34 @@ paths:
           description: Invalid input.
         '401':
           description: Unauthorized.
+
+    CreateMusicInput:
+      type: object
+      required:
+        - name
+        - albumId
+        - genres
+      properties:
+        name:
+          type: string
+          example: "New Song"
+        albumId:
+          type: string
+          format: uuid
+          example: "c3d4e5f6-a7b8-9012-3456-7890abcdef01"
+        genres:
+          type: array
+          items:
+            type: string
+          example: ["Rock", "Pop"]
+        lyricsFile:
+          type: string
+          format: binary
+          description: LRC lyrics file.
+        artistId:
+          type: string
+          format: uuid
+          description: Optional artist ID if user is admin.
 
   /music/{id}:
     get:
@@ -252,6 +305,46 @@ paths:
         '401':
           description: Unauthorized.
 
+  /music/album:
+    put:
+      summary: Assign music to an album
+      description: Associates a music track with an album.
+      tags:
+        - Music
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - musicId
+                - albumId
+              properties:
+                musicId:
+                  type: string
+                  format: uuid
+                  description: The ID of the music to be assigned.
+                albumId:
+                  type: string
+                  format: uuid
+                  description: The ID of the album to which the music will be assigned.
+                artistId:
+                  type: string
+                  format: uuid
+                  description: The ID of the artist, if the user is an admin.
+      responses:
+        '200':
+          description: Music successfully assigned to the album.
+        '400':
+          description: Invalid input.
+        '401':
+          description: Unauthorized.
+        '404':
+          description: Music or album not found.
+
 components:
   schemas:
     Music:
@@ -306,6 +399,9 @@ components:
           items:
             type: string
           example: ["Rock", "Pop"]
+        lyrics:
+          type: string
+          example: "These are the lyrics of the new song."
 
     UpdateMusicInput:
       type: object
