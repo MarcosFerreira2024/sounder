@@ -1,6 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { IFollowRepository } from "../interfaces/IFollowRepository";
 import { IUserRepository } from "../../user/interfaces/IUserRepository";
+import { AppUser } from "../../../shared/types/user";
 
 
 @injectable()
@@ -11,8 +12,12 @@ class Follow {
 
 
 
-    async execute(followerId: string, followingId: string): Promise<void> {
+    async execute(user:AppUser, followingId: string): Promise<void> {
 
+        const followerId = user!.id
+
+
+        if(followerId === followingId) throw new Error("You cannot follow yourself.");
 
         const userFollowerExists = await this.userRepository.findById(followerId);
         const userFollowingExists = await this.userRepository.findById(followingId)
