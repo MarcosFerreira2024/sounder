@@ -1,202 +1,157 @@
-## Visão Geral
+# Visão Geral do Projeto
 
-Aplicação web de descoberta musical no estilo **Tinder**, onde o usuário interage com músicas por meio de **aprovação (like)** ou **rejeição (dislike)**. A partir dessas interações, o sistema constrói um **perfil de preferências por gênero**, utilizado para recomendações futuras.
 
-Esse Projeto tambem será uma plataforma estilo Spotify com playlist musicas etc... ( gamificada no futuro)
 
-O foco inicial é simplicidade, porém com uma base **bem estruturada e escalável**.
+Uma plataforma web de **descoberta musical com pegada social e gamificada**, construída com **Node.js + TypeScript no backend (inicialmente feito em Bun + Elysia)**  e **React + TypeScript no frontend**.
 
----
+A ideia central é simples: o usuário descobre músicas interagindo com elas (like / dislike), cria playlists, segue pessoas e artistas — e ao mesmo tempo participa de **modos de jogo já implementados**, que transformam a descoberta musical em algo mais envolvente e menos passivo.
 
-## Funcionalidades Principais
-
-### Descoberta de Músicas
-
-- Interface de swipe (aprovar / rejeitar)
-- Cada música possui:
-  - Gênero
-  - Preview de áudio
-  - Letra sincronizada com o tempo atual do preview
+Apesar do foco inicial ser simplicidade, o projeto já nasce com uma **arquitetura bem organizada**, pensada para crescer sem virar um código difícil de manter. Tudo aqui foi feito para evoluir, não para ser descartado depois.
 
 ---
 
-### Sistema de Preferências (Score por Gênero)
+## Índice
 
-- Cada usuário possui um **score por gênero musical**
-- Todos os gêneros iniciam com um **valor arbitrário padrão** (definido posteriormente)
-
-**Regras:**
-
-- Aprovação de música → `score[gênero] += 1`
-- Rejeição de música → `score[gênero] -= 1`
-
-Esse score será utilizado para:
-
-- Recomendação de músicas
-- Ordenação/priorização do feed
+1. [Visão Geral do Projeto](#visão-geral-do-projeto)
+2. [Stack Tecnológica](#stack-tecnológica)
+3. [Backend (Node.js + TypeScript)](#backend--nodejs--typescript)
+4. [Frontend (React + TypeScript)](#frontend--react--typescript)
+5. [Gamificação](#gamificação)
+6. [Organização do Código](#organização-do-código)
+7. [Design](#design)
+8. [Status do Projeto](#status)
 
 ---
 
-## Usuários e Perfis
+## Stack Tecnológica
 
-### Roles do Sistema
+### Backend – Node.js + TypeScript
 
-- `USER`
-- `ARTIST`
-- `ADMIN`
+O backend é construído em **Node.js** utilizando **TypeScript** como linguagem principal.
 
-Cada role possui permissões e visualizações distintas.
+Principais características:
 
----
+* **API  com Express**, organizada por módulos
+* **Arquitetura baseada em casos de uso**, com controllers finos e regras de negócio isoladas
+* **Prisma ORM** para acesso a dados e geração de tipos
+* **Injeção de dependências com Tsyringe**, promovendo desacoplamento e testabilidade
+* **Validação de dados com Zod**, aplicada em bordas da aplicação
+* **Autenticação centralizada**, com middlewares dedicados e uso de Better Auth.
+* **Cronjobs** para rotinas automáticas (ex: música do dia)
+* **Upload e processamento de arquivos**, com pipeline desacoplado
 
-### Perfil de Usuário (USER)
-
-Exibe:
-
-- Playlists públicas
-- Followers
-- Following
-
-Funcionalidades:
-
-- Criar playlists vazias
-- Criar playlists já com uma música inicial
-- Ordenação de playlists
-- Definir visibilidade da playlist:
-
-  - Pública
-  - Privada
-
-> A visibilidade pode ser alterada tanto na criação quanto posteriormente.
+A estrutura do backend reflete claramente os domínios da aplicação, como usuários, músicas, playlists, artistas, interações sociais e modos de jogo.
 
 ---
 
-### Perfil de Artista (ARTIST)
+### Frontend – React + TypeScript
 
-Exibe:
+O frontend é desenvolvido com **Vite**, **React** e **TypeScript**, focado em composição de componentes, reutilização de lógica e previsibilidade de estado.
 
-- Músicas publicadas
-- Followers
-- Following
-- Aba "Sobre"
+Principais características:
 
-Possível extensão futura:
+* **Arquitetura baseada em componentes e hooks**
+* **Context API** para gerenciamento de estado global 
+* **Separação clara entre UI, lógica e efeitos colaterais**
+* **Validação de formulários com Zod**, compartilhando contratos conceituais com o backend
+* **Animações e transições** para enriquecer a experiência de uso
+* **Layouts bem definidos**, permitindo múltiplos fluxos 
 
-- Exibir músicas relacionadas por gênero
-
----
-
-## Playlists e Categorias
-
-### Playlists
-
-- Podem existir sem músicas
-- Podem ser públicas ou privadas
-- São exibidas no perfil do usuário
+A organização do frontend prioriza escalabilidade, com divisão clara entre páginas, componentes reutilizáveis, hooks customizados e camadas de integração.
 
 ---
 
-### Categorias Criadas por Usuários
+## Organização do Backend
 
-- Usuário pode criar categorias personalizadas
-- Categoria pode possuir:
+O backend é estruturado por **módulos**, cada um contendo um padrão de:
 
-  - Nome
-  - Foto
+* Controllers (entrada HTTP)
+* Interfaces de repositório
+* Implementações de persistência
+* Casos de uso (regras de negócio)
+* Schemas de validação
+* Regras de autorização e domínio
 
-**Regra de segurança (inicial):**
+Cada modulo é independente e dependendo de suas necessidades pode apresentar seeds, services etc...
 
-- Ao visualizar o perfil de outro usuário, a imagem da categoria será substituída por um **mock padrão**
-- Motivo: evitar exibição de imagens impróprias, já que não há moderação ou algoritmo de detecção inicial
+Além disso, há camadas compartilhadas para:
 
----
+* Autenticação e autorização
+* Tratamento de erros
+* Normalização de paginação
+* Serviços 
 
-## Artistas e Músicas
-
-### Artistas
-
-- Músicas fazem referência direta ao `artistId`
-
-### Músicas
-
-- CRUD **não é responsabilidade do artista**
-- Apenas usuários com role `ADMIN` podem:
-
-  - Criar
-  - Editar
-  - Remover músicas
+Essa abordagem reduz acoplamento entre domínios e facilita a evolução independente de cada módulo.
 
 ---
 
-## Funcionalidades Futuras (Planejadas)
+## Organização do Frontend
 
-- Favoritar artista
-- Seguir artista
-- Notificações quando um artista publicar nova música
+O frontend segue uma organização orientada à responsabilidade:
 
----
+* **Pages**: representam rotas e fluxos de navegação
+* **Components**: UI reutilizável e específica de domínio
+* **Hooks**: encapsulam lógica reutilizável e efeitos colaterais
+* **Contexts**: estados globais
+* **Actions**: comunicação com o backend
+* **Layouts**: definição estrutural das telas
 
-## Princípios do Projeto
-
-- Começar simples
-- Arquitetura preparada para escalar
-- Separação clara de responsabilidades (roles)
-- Evolução incremental das funcionalidades
+Essa divisão favorece clareza, reuso e manutenção em médio e longo prazo.
 
 ---
 
----
+## Diretrizes Arquiteturais
+
+* Tipagem forte do início ao fim
+* Regras de negócio fora da camada de transporte
+* Domínios isolados e coesos
+* Infraestrutura desacoplada do core
+* Facilidade para introdução de novos modos e features
 
 ---
 
-## Ideias Adicionais (Podem não ser implementadas agora (apesar de que estou hypado com a gamificação))
+## Gamificação
 
-### Gamificação (Modo Alternativo)
+A gamificação **já é parte ativa do projeto**, não apenas uma ideia futura.
 
-Modo separado da experiência principal .
+Atualmente, o sistema conta com:
 
-Características:
+* Um modo de jogo independente do fluxo principal da aplicação
+* Sessões de jogo persistidas no backend
+* Histórico de partidas por usuário
+* Score e status de progresso
+* Música do dia com controle de repetição e histórico
 
-- Nome do artista oculto
-- Nome da música oculto
-- Cover da música revelado gradualmente conforme o tempo da música
-
-Objetivo:
-
-- Usuário tentar adivinhar a música
-- Gera um **score próprio de gamificação**
-- Score pode ou não ser exibido no perfil (configurável)
-
-> Esse modo possui identidade visual e fluxo diferentes do modo principal.
+Esses modos coexistem com a experiência principal sem interferir no core da aplicação, permitindo evoluir a parte de jogos sem quebrar funcionalidades existentes.
 
 ---
 
-### Música do Dia (Gamificação)
+## Organização do Código
 
-- Uma música única é selecionada por dia
-- Backend executa um **cronjob diário** para definir a música do dia
+O projeto é dividido por **domínios bem definidos**, tanto no backend quanto no frontend. Cada módulo é responsável por uma parte clara do negócio, evitando acoplamento desnecessário.
 
-Regras:
+Essa organização facilita:
 
-- Uma música só pode ser usada **uma única vez** como música do dia
-- Não é permitido repetir músicas em dias consecutivos
-
-- Antes de selecionar a música do dia:
-  - Verificar se já foi utilizada
-  - Excluir da lista de possibilidades
+* Evolução incremental
+* Testes isolados
+* Leitura e entendimento rápido do código
+* Inclusão de novas features sem refatorações grandes
 
 ---
 
-### Backend e Consistência
+## Design
 
-- Preferências do usuário são **mantidas no backend**
-- Garante consistência entre dispositivos
-- Front atua apenas como consumidor dessas preferências
+🔗 **Figma do projeto:** [https://www.figma.com/design/PuJapnf6vKLD10bG4r4uyJ/Untitled?node-id=0-1&t=5VAWwfZBE7tU5mVW-1](https://www.figma.com/design/PuJapnf6vKLD10bG4r4uyJ/Untitled?node-id=0-1&t=5VAWwfZBE7tU5mVW-1)
 
----
+> Me considero o dev backend q faz front bonito haha
 
-## Observação Geral
 
-- Todas essas ideias são opcionais
-- O projeto pode nascer simples e evoluir sem refatorações destrutivas
-- A estrutura deve permitir ativar/desativar modos sem impactar o core do sistema
+## Status 
+
+Atualmente o projeto esta em desenvolvimento.
+
+
+
+Last edited at: 03:36 03/02/2026
+> sim eu nao durmo
+
