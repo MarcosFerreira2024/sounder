@@ -5,7 +5,7 @@ function isArtist(user?:AppUser): boolean {
 
 
     if (!user) return false;
-    const isArtist = user.role === UserRole.ARTIST;
+    const isArtist = user.artist !== null;
 
     return isArtist;
 
