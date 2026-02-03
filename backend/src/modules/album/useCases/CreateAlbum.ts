@@ -1,39 +1,106 @@
-import { inject, injectable } from "tsyringe";
-import { AppUser } from "../../../shared/types/user";
-import { IAlbumRepository } from "../interfaces/IAlbumRepository";
-import { MusicAlbum } from "../../../generated/prisma/client";
-import { canCreateAlbum } from "../rules/canCreateAlbum";
+import { inject, injectable } from "tsyringe"
+import { isAdmin } from "../../../shared/rules/isAdmin"
+import { IAlbumRepository } from "../interfaces/IAlbumRepository"
+import { IArtistRepository } from "../../artist/interfaces/IArtistRepository"
+import { AppUser } from "../../../shared/types/user"
+import { Album } from "../../../generated/prisma/client"
+import { canCreateAlbum } from "../rules/canCreateAlbum"
+import { IFileStorage } from "../../../shared/storage/IFileStorage"
 
+type CreateAlbumDTO = {
+  user: AppUser
+  name: string
+  artistId?: string
+  coverImage: {
+    buffer: Buffer
+    originalName: string
+    mimeType: string
+  }
+}
 
 @injectable()
 class CreateAlbum {
+  constructor(
+    @inject("AlbumRepository")
+    private albumRepository: IAlbumRepository,
 
-    constructor(
-        @inject("AlbumRepository")
-        private albumRepository: IAlbumRepository
-    ) {}
+    @inject("ArtistRepository")
+    private artistRepository: IArtistRepository,
 
+    @inject("FileStorage")
+    private fileStorage: IFileStorage
+  ) {}
 
-    async execute(user: AppUser, name: string, cover: string): Promise<MusicAlbum> {
-        if (!canCreateAlbum(user)) {
-            throw new Error("Only artists or admins can create albums");
-        }
+  async execute({
+    user,
+    name,
+    artistId,
+    coverImage
+  }: CreateAlbumDTO): Promise<Album> {
 
-        const albumAlreadyExists = await this.albumRepository.getAlbumByNameAndAuthorId(name, user.id);
+    if (!canCreateAlbum(user)) {
+      throw new Error("Only artists or admins can create albums")
+    }
 
-        if (albumAlreadyExists) throw new Error("Album with this name already exists for this author");
-        
+    if (!coverImage) {
+      throw new Error("Cover image is required")
+    }
 
-        const album = await this.albumRepository.createAlbum({
-            authorId: user.id,
-            cover,
-            name
-        });
+    let targetArtistId: string
+    let artistName: string
 
-        return album
+    if (artistId) { 
+      if (!isAdmin(user)) {
+        throw new Error(
+          "You don't have permissions to create an album for another artist"
+        )
+      }
+
+      const artist = await this.artistRepository.getArtistById(artistId)
+      if (!artist) throw new Error("Author not found")
+
+      targetArtistId = artist.artistId
+      artistName = artist.name
+
+    } else {
+      if (!user.artist) {
+        throw new Error(
+          "This user is not an artist or it's not assigned to an artist"
+        )
+      }
+
+      targetArtistId = user.artist.id
+      artistName = user.name
     }
 
 
+
+    const albumAlreadyExists =
+      await this.albumRepository.getAlbumByNameAndAuthorId(
+        name,
+        targetArtistId
+      )
+
+
+    if (albumAlreadyExists) throw new Error("Album with this name already exists for this author")
+    
+
+    const cover = await this.fileStorage.save({
+      buffer: coverImage.buffer,
+      filename: coverImage.originalName,
+      folder: `albums/${artistName}`
+    })
+
+
+
+    const album = await this.albumRepository.createAlbum({
+      authorId: targetArtistId,
+      name,
+      cover: cover.path
+    })
+
+    return album
+  }
 }
 
-export { CreateAlbum };
+export { CreateAlbum }
