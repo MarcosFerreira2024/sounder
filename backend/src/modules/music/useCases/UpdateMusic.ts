@@ -9,7 +9,7 @@ class UpdateMusic{
 
     constructor(@inject("MusicRepository") private musicRepository: IMusicRepository) {}
 
-    async execute(user:AppUser,musicId:string,data:{name?:string;audio?:string;lyrics?:string;}):Promise<Music | null>{
+    async execute(user:AppUser,musicId:string,data:{name?:string;audio?:string;lyrics?:string,albumId?:string}):Promise<Music | null>{
 
         
         const musicExists = await this.musicRepository.getMusicById(musicId);
