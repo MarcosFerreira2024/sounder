@@ -7,6 +7,7 @@ import { isAdmin } from "../../../shared/rules/isAdmin";
 import { IArtistRepository } from "../../artist/interfaces/IArtistRepository";
 import { IFileStorage } from "../../../shared/storage/IFileStorage"; 
 import { normalizeString } from "../../../shared/helpers/normalizeString"; 
+import { IAlbumRepository } from "../../album/interfaces/IAlbumRepository";
 
 @injectable()
 class CreateMusic {
@@ -16,14 +17,20 @@ class CreateMusic {
         @inject("ArtistRepository")
         private artistRepository: IArtistRepository,
         @inject("FileStorage") 
-        private fileStorage: IFileStorage
+        private fileStorage: IFileStorage,
+        @inject("AlbumRepository")
+        private albumRepository: IAlbumRepository
     ) {}
 
     async execute(user: AppUser, name: string, lyricsFile: { buffer: Buffer; originalName: string; mimeType: string; }, genres: string[],albumId: string, artistId?: string): Promise<Music> {
         if (!canCreateMusic(user))  throw new Error("Only artists or admins can create music");
-        
+        const albumExists = await this.albumRepository.getAlbumById(albumId);
+        if(!albumExists) throw new Error("Album not found")
+
+            
         let actualArtistId: string;
         let artistName: string;
+
 
         if(isAdmin(user)){
             if(!artistId)throw new Error("Artists id is required");
