@@ -16,16 +16,17 @@ declare global {
         body?: unknown;
         params?: unknown;
         query?: unknown;
+        file?: unknown;
       };
     }
   }
 }
 
-
 type Schemas = {
   body?: z.ZodTypeAny;
   params?: z.ZodTypeAny;
   query?: z.ZodTypeAny;
+  file?: z.ZodTypeAny;
 };
 
 export function validate(schemas: Schemas) {
@@ -33,11 +34,9 @@ export function validate(schemas: Schemas) {
     try {
       req.validated = {};
 
-
-
-
-
-
+      if (schemas.file) {
+        req.validated.file = schemas.file.parse(req.file);
+      }
 
       if (schemas.body) {
         req.validated.body = schemas.body.parse(req.body);
@@ -53,7 +52,7 @@ export function validate(schemas: Schemas) {
 
       next();
     } catch (error) {
-      return handleAppError(res,error)
+      return handleAppError(res, error);
     }
   };
 }
