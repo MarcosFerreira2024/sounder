@@ -29,47 +29,73 @@ import { ImageProcessingService } from "./services/ImageProcessingService";
 import { IImageProcessingService } from "./services/IImageProcessingService";
 import { IGameModesRepository } from "../modules/game/interfaces/IGameModesRepository";
 import { GameModesRepository } from "../modules/game/repos/GameModesRepository";
+import { ISearchService } from "../modules/search/interfaces/ISearchService";
+import { SearchService } from "../modules/search/services/SearchService";
 
-container.registerSingleton<IUserRepository>(
-  "UserRepository",
-  UserRepository
-);
+container.registerSingleton<IUserRepository>("UserRepository", UserRepository);
 
 container.registerSingleton<IFollowRepository>(
   "FollowRepository",
-  FollowRepository
-)
-
+  FollowRepository,
+);
 
 container.registerSingleton<IPlaylistRepository>(
   "PlaylistRepository",
-  PlaylistRepository
+  PlaylistRepository,
 );
 
+container.registerSingleton<IMusicRepository>(
+  "MusicRepository",
+  MusicRepository,
+);
 
-container.registerSingleton<IMusicRepository>("MusicRepository", MusicRepository)
+container.registerSingleton<IMusicActionRepository>(
+  "MusicActionRepository",
+  MusicActionRepository,
+);
 
-container.registerSingleton<IMusicActionRepository>("MusicActionRepository", MusicActionRepository)
+container.registerSingleton<IAlbumRepository>(
+  "AlbumRepository",
+  AlbumRepository,
+);
 
-container.registerSingleton<IAlbumRepository>("AlbumRepository", AlbumRepository)
+container.registerSingleton<IDailyGameRepository>(
+  "DailyGameRepository",
+  DailyGameRepository,
+);
 
-container.registerSingleton<IDailyGameRepository>("DailyGameRepository", DailyGameRepository)
+container.registerSingleton<IGameHistoryRepository>(
+  "GameHistoryRepository",
+  GameHistoryRepository,
+);
 
-container.registerSingleton<IGameHistoryRepository>("GameHistoryRepository", GameHistoryRepository)
+container.registerSingleton<IGameSessionRepository>(
+  "GameSessionRepository",
+  GameSessionRepository,
+);
 
-container.registerSingleton<IGameSessionRepository>("GameSessionRepository", GameSessionRepository)
+container.registerSingleton<IGameUserRepository>(
+  "GameUserRepository",
+  GameUserRepository,
+);
 
-container.registerSingleton<IGameUserRepository>("GameUserRepository", GameUserRepository)
+container.registerSingleton<IArtistRepository>(
+  "ArtistRepository",
+  ArtistRepository,
+);
 
-container.registerSingleton<IArtistRepository>("ArtistRepository", ArtistRepository)
+container.registerSingleton<IFileStorage>("FileStorage", DiskFileStorage);
 
-container.registerSingleton<IFileStorage>("FileStorage", DiskFileStorage)
+container.registerSingleton<IGameRepository>("GameRepository", GameRepository);
 
-container.registerSingleton<IGameRepository>("GameRepository", GameRepository)
+container.registerSingleton<IGameModesRepository>(
+  "GameModesRepository",
+  GameModesRepository,
+);
 
-container.registerSingleton<IGameModesRepository>("GameModesRepository", GameModesRepository)
+container.registerSingleton<ISearchService>("SearchService", SearchService);
 
 container.registerSingleton<IImageProcessingService>(
   "ImageProcessingService",
-  ImageProcessingService
-)
+  ImageProcessingService,
+);
