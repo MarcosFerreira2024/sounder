@@ -41,6 +41,14 @@ export const TooltipProvider = ({ children }: TooltipProviderProps) => {
     let x = e.clientX + offset;
     let y = e.clientY + offset;
 
+    if (x + 200 > window.innerWidth) {
+      x = x - 100;
+    }
+
+    if (y + 100 > window.innerHeight) {
+      y = y - 100;
+    }
+
     if (!isActiveRef.current) {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
