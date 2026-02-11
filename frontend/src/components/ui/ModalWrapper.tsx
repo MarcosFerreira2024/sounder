@@ -8,12 +8,14 @@ type ModalWrapperProps = {
   onClose: () => void;
   children: React.ReactNode;
   subtitle?: string;
+  className?: string;
 };
 
 export function ModalWrapper({
   title,
   subtitle,
   onClose,
+  className,
   children,
 }: ModalWrapperProps) {
   return (
@@ -26,11 +28,9 @@ export function ModalWrapper({
         onClick={onClose}
       >
         <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
           exit={{ scale: 0 }}
-          transition={{ ease: "linear", duration: 0.2 }}
-          className="bg-neutral-900 border-neutral-800 shadow-2xl border rounded-lg p-2 w-full max-w-[460px] relative"
+          transition={{ ease: "easeInOut", duration: 0.1 }}
+          className={`${className ?? "max-w-[460px] w-full"} bg-neutral-900 border-neutral-800 shadow-md border rounded-lg p-2   relative`}
           onClick={(e) => e.stopPropagation()}
         >
           <Button
@@ -45,7 +45,7 @@ export function ModalWrapper({
               title || (subtitle && "gap-4")
             } bg-neutral-950 border border-neutral-900 rounded-2xl`}
           >
-            <div>
+            <div className="mb-2">
               <h2 className="text-2xl text-main ">{title}</h2>
               {subtitle && (
                 <h2 className=" text-opacity text-sm">{subtitle}</h2>
