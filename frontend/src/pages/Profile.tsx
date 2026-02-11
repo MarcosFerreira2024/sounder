@@ -1,55 +1,60 @@
-import { useSearchParams } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import { ProfileHeader } from "../components/profile/ProfileHeader";
 import { ProfileAboutSection } from "../components/profile/ProfileAboutSection";
-import { ProfilePublicPlaylistsSection } from "../components/profile/ProfilePublicPlaylistsSection";
 import { UserConnectionsSection } from "../components/profile/UserConnectionsSection";
 import useModalManager from "../hooks/useModalManager";
-import ProfilePlaylistModal from "../components/profile/ProfilePlaylistModal";
-import ProfileUpdateModal from "../components/profile/ProfileUpdateModal";
-import { followersMock } from "../data/followersMock";
-import { followingMock } from "../data/followingMock";
+import { ProfilePlaylists } from "../components/profile/ProfilePlaylists";
+import { useUserPlaylists } from "../hooks/useUserPlaylists";
+import { useParams } from "react-router-dom";
+import { usePermissions } from "../hooks/usePermissions";
+import { useProfile } from "../hooks/useProfile";
+import UserUpdateModal from "../components/profile/ProfileUpdateModal";
+import UserProfilePictureModal from "../components/UserProfilePictureModal";
+import { useFollow } from "../hooks/useFollow";
 
 export function Profile() {
-  const [searchParams] = useSearchParams();
-  const id = searchParams.get("id");
+  const { userId } = useParams();
 
-  if (id) {
-    return <div>{id}</div>;
-  }
+  const { isOwner } = usePermissions();
 
-  const modals = useModalManager<"profile" | "playlist">();
+  const { user } = useProfile(userId);
+
+  const { playlists } = useUserPlaylists(userId);
+  const { followers, following, isLoading, followCount } = useFollow(userId);
+
+  const modals = useModalManager<"profile" | "photo">();
+
+  const emptyStateMessage = () => {
+    if (!playlists && !following && !followers)
+      return "Esse usuario ainda nao possui playlists, followers e following.";
+  };
 
   return (
     <MainLayout>
-      {modals.activeModal === "playlist" && (
-        <ProfilePlaylistModal onClose={modals.close} />
+      {modals.activeModal === "profile" && isOwner(userId) && (
+        <UserUpdateModal
+          onClose={modals.close}
+          photo={user?.image ?? "/not-found.png"}
+          open={modals.open}
+        />
       )}
-      {modals.activeModal === "profile" && (
-        <ProfileUpdateModal onClose={modals.close} />
+
+      {modals.activeModal === "photo" && (
+        <UserProfilePictureModal onClose={modals.close} />
       )}
 
       <div className="flex  gap-4 ">
-        <aside className="p-2 w-1/3 bg-neutral-900 border   border-neutral-800 rounded-2xl shadow-2xl flex  flex-col gap-2 ">
+        <aside className="p-2 w-1/3 bg-neutral-900 border   border-neutral-800 rounded-2xl shadow-md flex  flex-col gap-2 ">
           <ProfileHeader
             showModal={() => modals.open("profile")}
-            subtitle="Perfil"
-            title="Joji"
-            image="/artist-mock-photo.jpeg"
+            subtitle={`Profile`}
+            title={user?.name ?? "User"}
+            image={user?.image ?? "/not-found.png"}
           />
 
           <ProfileAboutSection
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                  cupidatat non proident, sunt in culpa qui officia deserunt
-                  mollit anim id est laborum."
-            followerCount={6}
-            followingCount={6}
-            images={["/artist-mock-photo.jpeg"]}
+            description={user?.about ?? ""}
+            followCount={followCount}
           />
         </aside>
         <div
@@ -68,17 +73,21 @@ export function Profile() {
         overflow-hidden
       "
         >
-          <div className="p-4 space-y-4 bg-neutral-950 border border-neutral-900 shadow-2xl flex-1 rounded-2xl overflow-y-auto">
-            <ProfilePublicPlaylistsSection
-              playlists={[
-                {
-                  playlistName: "Rock",
-                  isPublic: true,
-                },
-              ]}
+          <div className="p-4 flex flex-col gap-y-10 bg-neutral-950 border border-neutral-800 shadow-md flex-1 rounded-2xl overflow-y-auto">
+            <ProfilePlaylists playlists={playlists} />
+            <UserConnectionsSection
+              isLoading={isLoading}
+              type="followers"
+              data={followers}
             />
-            <UserConnectionsSection type="followers" data={followersMock} />
-            <UserConnectionsSection type="following" data={followingMock} />
+            <UserConnectionsSection
+              isLoading={isLoading}
+              type="following"
+              data={following}
+            />
+            {emptyStateMessage() && (
+              <p className="text-neutral-400">{emptyStateMessage()}</p>
+            )}
           </div>
         </div>
       </div>
