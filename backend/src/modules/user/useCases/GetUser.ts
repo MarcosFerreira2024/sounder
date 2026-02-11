@@ -3,29 +3,39 @@ import { User } from "../../../generated/prisma/client";
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { isAdmin } from "../../../shared/rules/isAdmin";
 import { AppUser } from "../../../shared/types/user";
+import { normalizeImagePath } from "../../../shared/helpers/normalizeImagePath";
 
 @injectable()
 class GetUser {
   constructor(
-    @inject("UserRepository") private userRepository: IUserRepository
+    @inject("UserRepository") private userRepository: IUserRepository,
   ) {}
 
-  async execute(user: AppUser,userId:string): Promise<Partial<User>> {
+  async execute(user: AppUser, userId?: string): Promise<Partial<User>> {
+    const target = userId ?? user.id;
 
-    const target = isAdmin(user) && userId?userId:user.id
+    const found = await this.userRepository.findById(target);
+    if (!found) throw new Error("User not found");
 
-
-
-    const finded = await this.userRepository.findById(target);
-    if (!finded) throw new Error("User not found");
-
-    return {
-      id: finded.id,
-      name: finded.name,
-      image: finded.image,
-      email: finded.email,
-      role: finded.role
-    };
+    if (isAdmin(user)) {
+      return {
+        id: found.id,
+        name: found.name,
+        image: found.image,
+        email: found.email,
+        about: found.about,
+        role: found.role,
+        artistId: found.artistId,
+        emailVerified: found.emailVerified,
+      };
+    } else {
+      return {
+        id: found.id,
+        name: found.name,
+        image: found.image,
+        about: found.about,
+      };
+    }
   }
 }
 export { GetUser };
