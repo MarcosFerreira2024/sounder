@@ -13,7 +13,8 @@ import { gameRoutes } from "../modules/game/routes/routes";
 import { artistRoutes } from "../modules/artist/routes/routes";
 import { cwd } from "node:process";
 
-import path from "path"
+import path from "path";
+import { searchRoutes } from "../modules/search/routes/routes";
 
 class Server {
   public app: Application;
@@ -26,35 +27,35 @@ class Server {
     setupScalar(this.app);
   }
 
-
   private config(): void {
     this.app.use(
       cors({
         origin: ["http://localhost:5173"],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,
-        methods: ["GET", "POST", "PATCH", "DELETE"],
-      })
+        methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
+      }),
     );
 
     this.app.use(cookieParser());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(express.static(path.join(cwd(), 'src', 'storage', 'uploads','public')))
+    this.app.use(
+      "/src/storage/upload/public",
+      express.static(path.resolve("src/storage/upload/public")),
+    );
   }
 
-
   private routes(): void {
-
-
     this.app.use("/api/auth", toNodeHandler(auth));
-    this.app.use("/api/users", userRoutes());
+    this.app.use("/api/user", userRoutes());
     this.app.use("/api", playlistRoutes());
     this.app.use("/api", followRoutes());
     this.app.use("/api/music", musicRoutes());
     this.app.use("/api/albums", albumRoutes());
-    this.app.use("/api/game", gameRoutes())
-    this.app.use("/api/artists", artistRoutes())
+    this.app.use("/api/game", gameRoutes());
+    this.app.use("/api/artists", artistRoutes());
+    this.app.use("/api/search", searchRoutes());
   }
 
   public run(): void {
@@ -65,4 +66,3 @@ class Server {
 }
 
 export { Server };
-
