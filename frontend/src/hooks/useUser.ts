@@ -1,38 +1,38 @@
-import { useState } from "react";
-import { userMock } from "../data/userMock";
+import { useEffect, useState } from "react";
+import getUserInfo from "../actions/user/getUserInfo";
 
-export type User = {
-  id: string;
-  name: string;
-  surname: string;
-  email: string;
-  photo:string
+type User = {
+  id?: string;
+  name?: string;
+  email?: string;
+  image?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  about?: string;
+  role?: "ADMIN" | "USER";
 };
 
-function useUser() {
+export function useUser() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-
-
-
-
-
-  const [user, setUserState] = useState<User | null>(userMock);
-
-
-  function setUser(user: User) {
-    setUserState(user);
-  }
-
-
-
-
-
-
-
-  return {
-    user,
-    setUser,
+  const syncUserInfo = async () => {
+    const user = await getUserInfo();
+    setUser(user);
+    return;
   };
-}
 
-export { useUser };
+  useEffect(() => {
+    const load = async () => {
+      await syncUserInfo();
+    };
+    try {
+      load();
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { user, loading };
+}
