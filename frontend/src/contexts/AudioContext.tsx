@@ -10,10 +10,12 @@ type AudioProviderProps = {
 };
 
 export function AudioProvider({ children }: AudioProviderProps) {
-  const audio = useAudio();
+  const data = useAudio();
 
   return (
-    <AudioContext.Provider value={audio}>{children}</AudioContext.Provider>
+    <AudioContext.Provider value={{ ...data }}>
+      {children}
+    </AudioContext.Provider>
   );
 }
 
@@ -21,7 +23,7 @@ export function useAudioContext() {
   const context = useContext(AudioContext);
 
   if (!context) {
-    throw new Error("useAudioContext must be used within an AudioProvider");
+    throw new Error("useAudioContext must be used within a AudioProvider");
   }
 
   return context;

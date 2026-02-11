@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import { useError } from "../hooks/useError";
 import AppError from "../components/ui/AppError";
+import { AnimatePresence } from "framer-motion";
 
 type AppErrorContextType = ReturnType<typeof useError>;
 
@@ -26,11 +27,15 @@ export function AppErrorProvider({ children }: AppErrorProviderProps) {
     >
       {children}
 
-      <AppError
-        setIsHovering={setIsHovering}
-        message={error}
-        onClose={clearError}
-      />
+      <AnimatePresence>
+        {error && (
+          <AppError
+            setIsHovering={setIsHovering}
+            message={error}
+            onClose={clearError}
+          />
+        )}
+      </AnimatePresence>
     </AppErrorContext.Provider>
   );
 }
