@@ -1,13 +1,16 @@
-import React from "react";
 import MainLayout from "../layouts/MainLayout";
-import { ProfileDisplayCard } from "./profile/ProfileDisplayCard";
+import ImageDisplayCardList from "./ui/ImageDisplayCardList";
+import UserConnectionsListSkeleton from "./UserConnectionsListSkeleton";
 
-type UserConnectionsListProps = {
-  data: {
-    id: string;
-    name: string;
-    image: string;
-  }[];
+export type UserConnectionsListProps = {
+  data:
+    | {
+        id: string;
+        name: string;
+        image?: string;
+        onClick?: () => void;
+      }[]
+    | null;
 };
 function UserConnectionsList({ data }: UserConnectionsListProps) {
   return (
@@ -18,23 +21,20 @@ function UserConnectionsList({ data }: UserConnectionsListProps) {
       >
         <div
           className="
-            mx-auto
             grid
             pr-4
-            grid-cols-[repeat(auto-fit,minmax(270px,1fr))]
+            grid-cols-[repeat(auto-fill,minmax(280px,1fr))]
             gap-8
-
           "
         >
-          {data.map((profile) => (
-            <ProfileDisplayCard
-              className="rounded-full "
-              key={profile.id}
-              id={profile.id}
-              name={profile.name}
-              image={profile.image}
+          {data ? (
+            <ImageDisplayCardList
+              className={"min-w-70  rounded-full min-h-70 max-w-70 max-h-70 "}
+              data={data}
             />
-          ))}
+          ) : (
+            <UserConnectionsListSkeleton />
+          )}
         </div>
       </div>
     </MainLayout>
