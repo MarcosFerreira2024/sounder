@@ -1,36 +1,37 @@
-import React, { useContext } from "react";
 import { ModalWrapper } from "../ui/ModalWrapper";
-import { useUserContext } from "../../contexts/UserContext";
 import InputLabel from "../ui/InputLabel";
-import useProfileUpdateModal from "../../hooks/useProfileUpdateModal";
 import Button from "../ui/Button";
+import useUserUpdateModal from "../../hooks/useUserUpdateModal";
 
-type ProfileUpdateModalProps = {
+type UserUpdateModalProps = {
   onClose: () => void;
+  photo: string;
+  open: (modal: "photo") => void;
 };
 
-function ProfileUpdateModal({ onClose }: ProfileUpdateModalProps) {
-  const { user } = useUserContext();
-
-  const { fullName, handleSubmit, setFullName, setPhoto } =
-    useProfileUpdateModal({
-      initialFullName: user!.name + " " + user!.surname,
-      initialPhoto: user!.photo,
-    });
+function UserUpdateModal({ onClose, photo, open }: UserUpdateModalProps) {
+  const {
+    fullName,
+    handleSubmit,
+    setFullName,
+    setAbout,
+    aboutPlaceholder,
+    about,
+  } = useUserUpdateModal(onClose);
 
   return (
-    <ModalWrapper onClose={onClose}>
-      <div className="flex relative">
-        <div className="flex gap-4">
-          <div>
-            <img
-              className="rounded-full hover:opacity-90 object-cover border-neutral-800 border"
-              src={user!.photo}
-              onClick={() => alert("preciso implementar isso aq ...")}
-              alt={user!.name}
-            />
-          </div>
-          <div>
+    <>
+      <ModalWrapper className={`w-full max-w-[800px] `} onClose={onClose}>
+        <div className="flex flex-1 flex-col gap-4">
+          <div className="flex flex-1 gap-4 ">
+            <div>
+              <img
+                className="rounded-full max-w-[150px] max-h-[150px] min-w-[150px] min-h-[150px]  hover:opacity-90 object-cover border-neutral-800 border"
+                src={photo}
+                onClick={() => open("photo")}
+                alt={fullName}
+              />
+            </div>
             <InputLabel
               text="Nome"
               name="fullName"
@@ -40,18 +41,33 @@ function ProfileUpdateModal({ onClose }: ProfileUpdateModalProps) {
               type="text"
             />
           </div>
+          <label className="flex flex-col gap-2" htmlFor="about">
+            <h1 className="text-main text-2xl ">Sobre</h1>
+            <div className="p-2 bg-neutral-950 rounded-2xl w-full border border-neutral-900 flex flex-1 ">
+              <textarea
+                value={about}
+                id="about"
+                name="about"
+                contentEditable={false}
+                placeholder={aboutPlaceholder}
+                onChange={(e) => setAbout(e.target.value)}
+                className="text-opacity flex-1 p-2  bg-neutral-900 min-h-[200px] max-h-[300px] border border-neutral-800 outline-none  rounded-2xl"
+              />
+            </div>
+          </label>
+          <Button
+            onClick={handleSubmit}
+            variant="opacity"
+            className="text-lg"
+            size="lg"
+            roundedValue="md"
+          >
+            Salvar
+          </Button>
         </div>
-        <Button
-          onClick={handleSubmit}
-          className="text-opacity  w-[70px]   absolute right-0 self-end"
-          size="sm"
-          roundedValue="md"
-        >
-          Salvar
-        </Button>
-      </div>
-    </ModalWrapper>
+      </ModalWrapper>
+    </>
   );
 }
 
-export default ProfileUpdateModal;
+export default UserUpdateModal;
