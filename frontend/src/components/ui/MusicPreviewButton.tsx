@@ -1,59 +1,55 @@
-import React from "react";
+import { useAudioContext } from "../../contexts/AudioContext";
+import type { Music } from "../../hooks/useAudio";
 import Button from "./Button";
 import { MoreVertical, Pause, Play } from "lucide-react";
-import { useAudioContext } from "../../contexts/AudioContext";
-
-type Music = {
-  id: string;
-  name: string;
-  author: string;
-  url: string;
-  photo: string;
-  duration: string;
-  lyrics: string[];
-};
 
 type MusicPreviewButtonProps = {
-  song: Music;
+  selected: boolean;
+  data: Music;
 };
 
-function MusicPreviewButton({ song }: MusicPreviewButtonProps) {
-  const { currentMusic, isPlaying, setMusic } = useAudioContext();
-  const isThisSongPlaying = isPlaying && currentMusic?.id === song.id;
-
+function MusicPreviewButton({ selected, data }: MusicPreviewButtonProps) {
+  const { setSelectedSong, togglePlay, isPlaying } = useAudioContext();
   return (
     <div
+      onClick={(e) => {
+        setSelectedSong(data);
+        togglePlay(e, data);
+      }}
       className={`${
-        currentMusic?.id === song.id
-          ? "bg-neutral-900 hover:bg-neutral-800"
+        selected
+          ? "bg-neutral-900 hover:bg-neutral-800  outline-none ring-2 ring-neutral-600 duration-200 ease-in-out"
           : "bg-neutral-950 hover:bg-neutral-900"
       } border border-neutral-800 rounded-2xl h-17.5 flex items-center justify-between px-3`}
     >
       <div className="flex gap-3 items-center">
         <Button
           icon={
-            isThisSongPlaying ? (
+            selected && isPlaying ? (
               <Pause width="16" height="16" />
             ) : (
               <Play width="16" height="16" />
             )
           }
-          onClick={() => setMusic(song)}
+          onClick={(e) => {
+            setSelectedSong(data);
+            togglePlay(e, data);
+          }}
           size="sm"
           roundedValue="full"
         />
         <img
-          src={song.photo}
-          className="w-11 h-11 rounded-full bg-neutral-800 border border-neutral-800 shadow-2xl"
-          alt={`Cover for ${song.name}`}
+          src={data.cover}
+          className="w-11 h-11 rounded-full bg-neutral-800 border border-neutral-800 shadow-md"
+          alt={`Cover for ${data.name}`}
+          title={`Cover for ${data.name}`}
         />
         <div>
-          <p className="text-main text-lg">{song.name}</p>
-          <p className="text-opacity text-sm">{song.author}</p>
+          <p className="text-main text-lg">{data.name}</p>
+          <p className="text-opacity text-sm">{data.author}</p>
         </div>
       </div>
       <div className="flex gap-3 items-center">
-        <p className="text-opacity text-sm">{song.duration}</p>
         <MoreVertical className="text-opacity" />
       </div>
     </div>
