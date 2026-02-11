@@ -1,3 +1,4 @@
+import Button from "./ui/Button";
 import { ModalWrapper } from "./ui/ModalWrapper";
 
 type ChangeVisibilityModalProps = {
@@ -19,18 +20,22 @@ export function ChangeVisibilityModal({
       onClose={onCancel}
     >
       <div className="flex justify-end gap-2">
-        <button
+        <Button
+          size="sm"
+          variant="opacity"
+          roundedValue="sm"
           onClick={onCancel}
-          className="px-4 py-2 text-sm font-medium text-zinc-300 rounded-md hover:bg-zinc-700"
         >
           Cancelar
-        </button>
-        <button
+        </Button>
+        <Button
+          size="sm"
+          roundedValue="sm"
+          variant="confirm"
           onClick={onConfirm}
-          className="px-4 py-2 text-sm font-medium text-white rounded-md bg-blue-600 hover:bg-blue-700"
         >
           Confirmar
-        </button>
+        </Button>
       </div>
     </ModalWrapper>
   );
