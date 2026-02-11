@@ -8,30 +8,51 @@ import { uploadWithErrorHandler } from "../../../middleware/uploadWithErrorHandl
 import { optionalId, userUpdateBody } from "../schemas/schema";
 
 export function userRoutes(): Router {
-    const router = Router();
+  const router = Router();
 
-    const userController = new UserController();
+  const userController = new UserController();
 
+  router.get(
+    "/",
+    deserializeUser,
+    requireAuth,
+    validate({ query: optionalId }),
+    userController.getUser,
+  );
 
+  router.get(
+    "/me",
+    deserializeUser,
+    requireAuth,
+    (req: Request, res: Response) => {
+      res.json(req.user);
+    },
+  );
 
-    router.get("/:userId",deserializeUser,requireAuth, validate({ params: optionalId}),   userController.getUser);
+  router.delete(
+    "/:userId",
+    deserializeUser,
+    requireAuth,
+    validate({ params: optionalId }),
+    userController.delete,
+  );
 
-    router.get("/", deserializeUser, requireAuth,(req: Request, res: Response) =>  {
-        res.json(req.user);
-    });
+  router.put(
+    "/",
+    deserializeUser,
+    requireAuth,
+    validate({ params: optionalId, body: userUpdateBody }),
+    userController.update,
+  );
 
+  router.post(
+    "/profile-picture",
+    deserializeUser,
+    requireAuth,
+    uploadWithErrorHandler(upload.single("image")),
+    validate({ body: optionalId }),
+    userController.changeProfilePicture,
+  );
 
-    router.delete("/:userId",deserializeUser,requireAuth, validate({ params: optionalId}),   userController.delete);
-
-    router.put("/:userId",deserializeUser,requireAuth, validate({ params: optionalId, body: userUpdateBody}),   userController.update);
-
-    router.post("/profilePicture",
-        deserializeUser,
-        requireAuth,
-        uploadWithErrorHandler(upload.single("image")),
-        validate({ body: optionalId}),
-        userController.changeProfilePicture
-    );
-
-    return router;
+  return router;
 }

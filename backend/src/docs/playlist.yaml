@@ -10,7 +10,7 @@ paths:
       parameters:
         - in: path
           name: userId
-          required: true
+          required: false
           schema:
             type: string
             format: uuid
@@ -22,7 +22,6 @@ paths:
             type: integer
             format: int32
             minimum: 1
-            default: 1
           description: Page number for pagination.
         - in: query
           name: limit
@@ -31,7 +30,6 @@ paths:
             type: integer
             format: int32
             minimum: 1
-            default: 10
           description: Number of items per page for pagination. Max 20 for regular users, 100 for admins.
       responses:
         "200":
@@ -55,8 +53,8 @@ paths:
 
   /playlist/{playlistId}:
     get:
-      summary: Get musics by Playlist ID
-      description: Get all musics for a specific playlist by its ID.
+      summary: Get a playlist by ID
+      description: Retrieve a single playlist by its ID.
       tags:
         - Playlist
       security:
@@ -69,39 +67,19 @@ paths:
             type: string
             format: uuid
           description: The ID of the playlist.
-        - in: query
-          name: page
-          required: false
-          schema:
-            type: integer
-            format: int32
-            minimum: 1
-            default: 1
-          description: Page number for pagination.
-        - in: query
-          name: limit
-          required: false
-          schema:
-            type: integer
-            format: int32
-            minimum: 1
-            default: 10
-          description: Number of items per page for pagination. Max 20 for regular users, 100 for admins.
       responses:
         "200":
-          description: A paginated list of musics in the playlist.
+          description: A single playlist object.
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Music"
+                    $ref: "#/components/schemas/Playlist"
                   message:
                     type: string
-                    example: "Playlist musics fetched successfully"
+                    example: "Playlist fetched successfully"
         "401":
           description: Unauthorized.
         "404":
@@ -178,6 +156,69 @@ paths:
           description: Unauthorized.
         "404":
           description: Playlist not found.
+
+  /playlist/{playlistId}/musics:
+    get:
+      summary: Get musics by Playlist ID
+      description: Get all musics for a specific playlist by its ID, with pagination.
+      tags:
+        - Playlist
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: playlistId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the playlist.
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 1
+          description: Page number for pagination.
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 10
+          description: Number of items per page for pagination. Max 20 for regular users, 100 for admins.
+      responses:
+        "200":
+          description: A paginated list of musics in the playlist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Music"
+                      page:
+                        type: integer
+                        example: 1
+                      totalItems:
+                        type: integer
+                        example: 10
+                  message:
+                    type: string
+                    example: "Playlist musics fetched successfully"
+        "401":
+          description: Unauthorized.
+        "404":
+          description: Playlist or User not found.
 
   /playlist:
     post:

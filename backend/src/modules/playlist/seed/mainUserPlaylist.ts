@@ -18,44 +18,41 @@ async function mainUserPlaylist(playlistQuantity?: number) {
   for (let i = 0; i < playlistsToCreate; i++) {
     playlists.push({
       name: `${faker.music.genre()} Hits`,
-      image: faker.image.url({ width: 300, height: 300 })
+      image: faker.image.url({ width: 300, height: 300 }),
     });
   }
 
   for (const playlist of playlists) {
-
     try {
       const alreadyExists = await prisma.playlist.findFirst({
         where: {
           owner: { email: ownerEmail },
-          name: playlist.name
-        }
+          name: playlist.name,
+        },
       });
 
       if (!alreadyExists) {
-
         await prisma.playlist.create({
           data: {
             name: playlist.name,
             image: playlist.image,
             owner: {
-              connect: { email: ownerEmail }
-            }
-          }
+              connect: { email: ownerEmail },
+            },
+          },
         });
 
         createdPlaylists++;
         results.push({
           name: playlist.name,
           status: "CREATED",
-          owner: ownerEmail
+          owner: ownerEmail,
         });
-
       } else {
         results.push({
           name: playlist.name,
           status: "SKIPPED",
-          owner: ownerEmail
+          owner: ownerEmail,
         });
 
         console.log(" Already exists");
@@ -64,7 +61,7 @@ async function mainUserPlaylist(playlistQuantity?: number) {
       results.push({
         name: playlist.name,
         status: "ERROR",
-        owner: ownerEmail
+        owner: ownerEmail,
       });
 
       console.error("Error:", error);
