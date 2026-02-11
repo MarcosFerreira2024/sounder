@@ -4,7 +4,7 @@ type ButtonProps = {
   size: "xs" | "sm" | "md" | "lg";
   justify?: "center" | "start" | "end";
   icon?: string | React.ReactNode;
-  variant?: "default" | "rounded";
+  variant?: "default" | "opacity" | "active" | "destructive" | "confirm";
   iconPosition?: "left" | "right";
   roundedValue: "sm" | "md" | "full" | "xl";
   children?: React.ReactNode;
@@ -16,6 +16,7 @@ function Button({
   justify = "center",
   children,
   icon,
+  variant = "default",
   iconPosition = "left",
   roundedValue,
   tooltipText,
@@ -29,13 +30,13 @@ function Button({
     },
     sm: {
       height: "36px",
-      textSize: "12px",
+      textSize: "16px",
       padding: icon ? "0px" : "8px",
     },
 
     md: {
       height: "42px",
-      textSize: "16px",
+      textSize: "20px",
       padding: icon ? "0px" : "16px",
     },
     lg: {
@@ -60,19 +61,28 @@ function Button({
     }
   }
 
+  const variants = {
+    default: `bg-neutral-900 border disabled:opacity-50 
+       hover:bg-neutral-800 outline-none  border-neutral-800 text-main   `,
+    opacity: `bg-neutral-900 border border-neutral-800 text-opacity hover:bg-neutral-800 `,
+
+    active: `bg-neutral-50 border border-neutral-200 text-neutral-900 font-inter`,
+    destructive: `hover:bg-red-700 bg-red-900 border border-red-800 text-neutral-200 font-inter`,
+    confirm: `hover:bg-lime-800 bg-lime-700 border border-lime-800 text-neutral-200 font-inter`,
+  };
+
   return (
     <button
       style={{
         minHeight: sizes[size].height,
         minWidth: sizes[size].height,
-        fontSize: sizes[size].textSize,
+        fontSize: props.className?.includes("text") ? "" : sizes[size].textSize,
         borderRadius: rounded[roundedValue],
         justifyContent: justify,
         paddingInline: sizes[size].padding,
       }}
       {...props}
-      className={`${props.className} 
-      bg-neutral-900 border hover:bg-neutral-800 outline-none focus-visible:ring-2 focus-visible:ring-neutral-600 duration-200 ease-out border-neutral-800 text-main shadow-2xl flex items-center`}
+      className={`${props.className} ${variants[variant]} cursor-pointer shadow-md gap-2  outline-none focus-visible:ring-2 focus-visible:ring-neutral-600 duration-200 ease-out flex items-center`}
     >
       {icon && iconPosition === "left" && renderIcon(icon)}
       {children && children}
