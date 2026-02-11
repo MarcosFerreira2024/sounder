@@ -1,47 +1,46 @@
 import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 
-function Header() {
-  const navLinks = [
-    {
-      path: "/",
-      name: "home",
-    },
-  ];
+import SearchInput from "./SearchInput";
+import { authClient } from "../../libs/auth/auth";
 
-  const authLinks = [
-    {
-      path: "/login",
-      name: "Entrar",
-    },
-  ];
+function Header() {
+  const session = authClient.useSession();
 
   const navigate = useNavigate();
 
   return (
     <header
       className="items-center sticky top-0
- min-h-15 flex justify-between "
+        min-h-15 flex justify-between "
     >
       <img
         src="/logo.png"
         onClick={() => navigate("/")}
         className="w-fit h-fit"
       />
-
-      {authLinks.map((data) => (
-        <div key={data.name}>
+      <div className="flex gap-4 justify-end flex-1">
+        <SearchInput />
+        {session.data ? (
+          <img
+            onClick={() => navigate(`/profile/${session.data?.user.id}`)}
+            src={session.data.user.image ?? "/not-found.png"}
+            className="rounded-full border border-neutral-900 max-w-12 max-h-12"
+            alt={session.data.user.name}
+            title={session.data.user.name}
+          />
+        ) : (
           <Button
-            onClick={() => navigate(data.path)}
+            onClick={() => navigate("/login")}
             className="cursor-pointer"
             size="md"
             roundedValue="md"
-            title={data.name}
+            title="Entrar"
           >
-            {data.name}
+            Entrar
           </Button>
-        </div>
-      ))}
+        )}
+      </div>
     </header>
   );
 }
