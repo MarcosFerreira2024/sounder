@@ -1,8 +1,19 @@
+import { useNavigate, useParams } from "react-router-dom";
 import UserConnectionsList from "../components/UserConnectionsList";
-import { followingMock } from "../data/followingMock";
+import { useFollow } from "../hooks/useFollow";
 
 function Following() {
-  return <UserConnectionsList data={followingMock} />;
+  const { userId } = useParams();
+  const { following } = useFollow(userId);
+  const navigate = useNavigate();
+
+  const data =
+    following?.map((following) => ({
+      ...following,
+      onClick: () => navigate(`/profile/${following.id}`),
+    })) ?? null;
+
+  return <UserConnectionsList data={data} />;
 }
 
 export default Following;
