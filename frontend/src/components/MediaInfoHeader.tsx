@@ -1,7 +1,7 @@
 type MediaHeaderProps = {
   image: string;
   title: string;
-  subtitle: string;
+  subtitle: string | null | undefined;
   children?: React.ReactNode;
 };
 
@@ -12,11 +12,11 @@ export function MediaInfoHeader({
   children,
 }: MediaHeaderProps) {
   return (
-    <div className="py-2 flex justify-between h-full min-h-24.5 max-h-24.5 items-center px-4 bg-neutral-950 w-full rounded-2xl">
+    <div className="py-2 flex justify-between h-full min-h-24.5 max-h-24.5 items-center px-4 border border-neutral-800 bg-neutral-950 w-full rounded-2xl">
       <div className="flex items-start gap-2">
         <img
           src={image}
-          className="rounded-full border border-neutral-900 w-18 h-18"
+          className="rounded-full border object-cover  border-neutral-900 w-18 h-18"
           alt={title}
         />
 
