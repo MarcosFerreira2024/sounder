@@ -1,12 +1,9 @@
 import {  useState } from "react";
-import { ZodError } from "zod";
-import { loginSchema, registerSchema } from "../libs/schemas/authSchema";
 import { useNavigate } from "react-router-dom";
-import signup from "../actions/signup";
-import login from "../actions/login";
 import { useAppError } from "../contexts/ErrorContext";
+import { authClient } from "../libs/auth/auth";
 
-function useAuth(type: "login" | "signup") {
+function useAuth(type?: "login" | "signup" | "callback") {
   const { handleAppErrors } = useAppError();
 
   const [name, setName] = useState("");
@@ -15,6 +12,13 @@ function useAuth(type: "login" | "signup") {
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    navigate("/login");
+  };
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
@@ -24,8 +28,12 @@ function useAuth(type: "login" | "signup") {
           throw new Error("Todos os campos devem ser preenchidos");
         }
 
-        const data = loginSchema.parse({ email, password });
-        await login(data);
+        const data = await authClient.signIn.email({
+          email,
+          password,
+        });
+        if(data.error) throw new Error(data.error.message)
+
         navigate("/");
       }
 
@@ -34,18 +42,18 @@ function useAuth(type: "login" | "signup") {
           throw new Error("Todos os campos devem ser preenchidos");
         }
 
-        const data = registerSchema.parse({
-          name,
-          surname,
+        const data = await authClient.signUp.email({
+          name: name + " " + surname,
           email,
           password,
+
         });
 
-        await signup(data);
+        if(data.error) throw new Error(data.error.message)
+
         navigate("/login");
       }
 
-      throw new Error("A type must be selected on useAuth");
     } catch (err) {
 
       handleAppErrors(err)
@@ -59,6 +67,7 @@ function useAuth(type: "login" | "signup") {
     email,
     password,
 
+    handleSignOut,
     setName,
     setSurname,
     setEmail,
