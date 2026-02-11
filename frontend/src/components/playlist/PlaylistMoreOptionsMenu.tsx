@@ -9,19 +9,27 @@ type PlaylistMoreOptionsMenuProps = {
   setDeleteOpen: (isOpen: boolean) => void;
   setRenameOpen: (isOpen: boolean) => void;
   setVisibilityOpen: (isOpen: boolean) => void;
+  position: {
+    x: number;
+    y: number;
+  };
 };
 
 function PlaylistMoreOptionsMenu({
   isPublic,
   closeMenu,
   setDeleteOpen,
+  position,
   setRenameOpen,
   setVisibilityOpen,
 }: PlaylistMoreOptionsMenuProps) {
-  const handleAction = (action: () => void) => {
+  const handleAction = (e: React.MouseEvent, action: () => void) => {
+    e.stopPropagation();
     action();
     closeMenu();
   };
+
+  console.log(position);
 
   const options = [
     {
@@ -49,25 +57,32 @@ function PlaylistMoreOptionsMenu({
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{
+          opacity: 1,
+        }}
+        style={{
+          top: position.y + "%",
+          left: position.x + "%",
+        }}
         exit={{ opacity: 0 }}
-        className="absolute top-8 right-0 shadow-2xl  bg-neutral-900 border border-neutral-800  rounded-md  z-50 w-56"
+        className="fixed z-100  shadow-md  bg-neutral-900 border border-neutral-800 group  rounded-2xl   w-56"
       >
         <div className="flex flex-col">
           {options.map((item) => {
             return (
               <button
+                key={item.title}
                 title={item.title}
-                onClick={() => handleAction(item.action)}
-                className="not-last:border-b border-neutral-800 group  hover:bg-neutral-800 p-2"
+                onClick={(e) => handleAction(e, item.action)}
+                className="not-last:border-b first:rounded-t-2xl hover:opacity-80 last:rounded-b-2xl border-neutral-800  hover:bg-neutral-800 p-2"
               >
                 <span
                   key={item.title}
                   title={item.title}
-                  className="flex items-center gap-2 p-2 pointer-events-none   rounded-md text-sm "
+                  className="flex items-center gap-2 p-2   rounded-2xl text-sm "
                 >
                   {item.icon}
-                  <span className="group-hover:text-neutral-100 pointer-events-none text-neutral-400 font-inter text-sm">
+                  <span className=" text-neutral-400 font-inter text-sm">
                     {item.title}
                   </span>
                 </span>
