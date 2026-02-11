@@ -1,36 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from "react";
+import { usePlaylist } from "./usePlaylist";
+import { useUser } from "./useUser";
+import { useUserPlaylists } from "./useUserPlaylists";
+import { authClient } from "../libs/auth/auth";
 
 function useCategories() {
-  const categories = [
-    {
-      name: "teste1",
-      photo: "artist-mock-photo.jpeg",
-      to: "profile/214/playlist/124",
-    },
-    {
-      name: "teste2",
-      photo: "music-cover-mock.png",
-      to: "profile/214/playlist/124",
-    },
-    {
-      name: "teste3",
-      photo: "artist-mock-photo.jpeg",
-      to: "profile/214/playlist/124",
-    },
-    {
-      name: "teste3",
-      photo: "artist-mock-photo.jpeg",
-      to: "profile/214/playlist/124",
-    },
-    {
-      name: "teste3",
-      photo: "artist-mock-photo.jpeg",
-      to: "profile/214/playlist/124",
-    },
-  ];
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const userId = authClient.useSession().data?.user.id || "";
+  const { playlists: userPlaylists } = useUserPlaylists(userId);
 
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -74,15 +52,13 @@ function useCategories() {
     scrollRight,
     canScrollLeft,
     canScrollRight,
-    categories,
+    categories: userPlaylists,
     containerRef,
     containerSize,
     updateScrollButtons,
     itemSize,
-    gap
-
-
-  }
+    gap,
+  };
 }
 
-export default useCategories
+export default useCategories;
