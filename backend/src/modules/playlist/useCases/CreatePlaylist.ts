@@ -1,32 +1,58 @@
-import { User } from "better-auth/types";
-import { PlaylistVisibility } from "../../../generated/prisma/enums";
 import { IPlaylistRepository } from "../interfaces/IPlaylistRepository";
 import { Playlist } from "../../../generated/prisma/client";
 import { inject, injectable } from "tsyringe";
+import { IFileStorage } from "../../../shared/storage/IFileStorage";
+import { AppUser } from "../../../shared/types/user";
+import { isAdmin } from "../../../shared/rules/isAdmin";
+
+type CreatePlaylistDTO = {
+  user: AppUser;
+  image: {
+    buffer: Buffer;
+    originalName: string;
+    mimeType: string;
+  } | null;
+  name: string;
+  userId?: string;
+};
 
 @injectable()
 class CreatePlaylist {
-    constructor(@inject("PlaylistRepository") private playlistRepository: IPlaylistRepository) {}
+  constructor(
+    @inject("PlaylistRepository")
+    private playlistRepository: IPlaylistRepository,
+    @inject("FileStorage")
+    private fileStorage: IFileStorage,
+  ) {}
 
-    async execute(user:User, payload:Partial<{name:string, photo:PlaylistVisibility}>): Promise<Playlist> {
+  async execute(data: CreatePlaylistDTO): Promise<Playlist> {
+    const target =
+      isAdmin(data.user) && data.userId ? data.userId : data.user.id;
 
-        const playlist = await this.playlistRepository.getPlaylistByUserId(user.id);
+    const playlist = await this.playlistRepository.getPlaylistByUserId(target);
 
+    playlist.some((pl) => {
+      if (pl.name === data.name) {
+        throw new Error("Playlist with this name already exists");
+      }
+    });
 
+    let image = null;
 
-        playlist.some((pl) => {
-                if (pl.name === payload.name){
-                    throw new Error("Playlist with this name already exists");
-                }
-        })
-
-
-
-
-        return await this.playlistRepository.createPlaylist(user.id, payload);
-
-     
+    if (data.image) {
+      const { path } = await this.fileStorage.save({
+        buffer: data.image.buffer,
+        filename: data.image.originalName,
+        folder: `${target}/playlists`,
+      });
+      image = path;
     }
+
+    return await this.playlistRepository.createPlaylist(target, {
+      name: data.name,
+      image: image,
+    });
+  }
 }
 
-export { CreatePlaylist }
+export { CreatePlaylist };
