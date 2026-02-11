@@ -14,7 +14,7 @@ export function SidePanel({
 
   return (
     <section
-      style={{ maxHeight: "calc(100dvh - 84px - 100px)" }}
+      style={{ height: "calc(100dvh - 84px - 100px)" }}
       className="
         relative
         w-full

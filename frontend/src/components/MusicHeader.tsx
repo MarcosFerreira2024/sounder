@@ -1,16 +1,17 @@
 import { Heart } from "lucide-react";
 import Button from "./ui/Button";
-import { useAudioContext } from "../contexts/AudioContext";
 import { MediaInfoHeader } from "./MediaInfoHeader";
+import { useAudioContext } from "../contexts/AudioContext";
 
 export function MusicHeader() {
-  const { currentMusic } = useAudioContext();
-
-  const image = currentMusic?.photo ?? "/music-cover-mock.png";
-  const title = currentMusic?.name ?? "No music selected";
+  const { selectedSong } = useAudioContext();
 
   return (
-    <MediaInfoHeader subtitle={"teste"} image={image} title={title}>
+    <MediaInfoHeader
+      subtitle={selectedSong?.author ?? "Not Found"}
+      image={selectedSong?.cover ?? "/not-found.png"}
+      title={selectedSong?.name ?? "Not Found"}
+    >
       <Button title="Like" icon={<Heart />} roundedValue="full" size="md" />
     </MediaInfoHeader>
   );

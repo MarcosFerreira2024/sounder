@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
-function useAuthCarousel(isTyping:boolean) {
-
+function useAuthCarousel(isTyping: boolean) {
   const images = [
     { alt: "Tyler The Creator, Flower Boy", src: "auth/flower-boy.webp" },
     { alt: "SZA, SOS", src: "auth/sza-sos.webp" },
@@ -9,7 +8,7 @@ function useAuthCarousel(isTyping:boolean) {
   ];
   const minIndex = 0;
   const maxIndex = images.length - 1;
-  const interval = 3000; // 3s 
+  const interval = 3000; // 3s
 
   type scrollPreference = "paused" | "running";
 
@@ -17,7 +16,7 @@ function useAuthCarousel(isTyping:boolean) {
   const [autoScrollPreference, setAutoScrollPreference] =
     useState<scrollPreference>(() => {
       const savedPreference = localStorage.getItem(
-        "autoScrollPreference"
+        "autoScrollPreference",
       ) as scrollPreference;
       return savedPreference || "running";
     });
@@ -46,7 +45,6 @@ function useAuthCarousel(isTyping:boolean) {
     return () => clearInterval(timer);
   }, [isHovering]);
 
-
   return {
     images,
     isHovering,
@@ -58,9 +56,7 @@ function useAuthCarousel(isTyping:boolean) {
     maxIndex,
     autoScrollPreference,
     setCurrentIndex,
-
-
-  }
+  };
 }
 
-export default useAuthCarousel
+export default useAuthCarousel;

@@ -1,80 +1,75 @@
 import { MoreVertical } from "lucide-react";
 import { usePlaylistContext } from "../../contexts/PlaylistContext";
 import { MediaInfoHeader } from "../MediaInfoHeader";
-import useVisibility from "../../hooks/useVisibility";
-import { useState } from "react";
-import { DeletePlaylistModal } from "./DeletePlaylistModal";
-import { RenamePlaylistModal } from "./RenamePlaylistModal";
-import { ChangeVisibilityModal } from "../ChangeVisibilityModal";
 import PlaylistMoreOptionsMenu from "./PlaylistMoreOptionsMenu";
+import PlaylistHeaderSkeleton from "./PlaylistHeaderSkeleton";
+import { PlaylistOwnerModal } from "./PlaylistOwnerModal";
+import { usePlaylistActions } from "../../hooks/usePlaylistActions";
+import usePositionMenu from "../../hooks/usePositionMenu";
 
 export function PlayListHeader() {
-  const { playlistName, playlistPhoto, playListMusicsTotal } =
-    usePlaylistContext();
+  const { loading, playlist } = usePlaylistContext();
+  const { close, isVisible, position, toggle } = usePositionMenu();
 
-  const { isVisible, close, toggle } = useVisibility(false);
-  const [isPublic, setIsPublic] = useState(false);
+  const {
+    setDeleteOpen,
+    isDeleteOpen,
+    isRenameOpen,
+    setRenameOpen,
+    isVisibilityOpen,
+    setVisibilityOpen,
+  } = usePlaylistActions();
 
-  const [isDeleteOpen, setDeleteOpen] = useState(false);
-  const [isRenameOpen, setRenameOpen] = useState(false);
-  const [isVisibilityOpen, setVisibilityOpen] = useState(false);
+  if (loading || !playlist) {
+    return (
+      <>
+        <PlaylistHeaderSkeleton isLoading={loading} data={playlist} />
+      </>
+    );
+  }
 
   return (
     <>
       <MediaInfoHeader
-        image={playlistPhoto}
-        title={playlistName}
-        subtitle={`${playListMusicsTotal} músicas`}
+        key={playlist.id}
+        image={playlist.image}
+        title={playlist.name}
+        subtitle={
+          playlist.musics?.length
+            ? `${playlist.musics.length} músicas `
+            : `Sem músicas`
+        }
       >
         <div className="relative">
           <MoreVertical
-            onClick={toggle}
+            onClick={(e: React.MouseEvent) => toggle(e)}
             className="text-opacity cursor-pointer"
           />
           {isVisible && (
             <PlaylistMoreOptionsMenu
-              playlistName={playlistName}
-              isPublic={isPublic}
+              playlistName={playlist.name}
+              isPublic={playlist.visibility === "PUBLIC"}
               closeMenu={close}
               setDeleteOpen={setDeleteOpen}
               setRenameOpen={setRenameOpen}
+              position={position}
               setVisibilityOpen={setVisibilityOpen}
             />
           )}
         </div>
       </MediaInfoHeader>
 
-      {isDeleteOpen && (
-        <DeletePlaylistModal
-          onConfirm={() => {
-            console.log("Delete playlist");
-            setDeleteOpen(false);
-          }}
-          onCancel={() => setDeleteOpen(false)}
-        />
-      )}
-
-      {isRenameOpen && (
-        <RenamePlaylistModal
-          initialValue={playlistName}
-          onConfirm={(name) => {
-            console.log("Rename:", name);
-            setRenameOpen(false);
-          }}
-          onCancel={() => setRenameOpen(false)}
-        />
-      )}
-
-      {isVisibilityOpen && (
-        <ChangeVisibilityModal
-          isPublic={isPublic}
-          onConfirm={() => {
-            console.log("Visibility toggled");
-            setVisibilityOpen(false);
-          }}
-          onCancel={() => setVisibilityOpen(false)}
-        />
-      )}
+      <PlaylistOwnerModal
+        playlistId={playlist.id}
+        isDeleteOpen={isDeleteOpen}
+        setDeleteOpen={setDeleteOpen}
+        isRenameOpen={isRenameOpen}
+        setRenameOpen={setRenameOpen}
+        isVisibilityOpen={isVisibilityOpen}
+        setVisibilityOpen={setVisibilityOpen}
+        isPublic={playlist.visibility === "PUBLIC"}
+        name={playlist.name}
+      />
     </>
   );
 }

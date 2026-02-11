@@ -21,49 +21,53 @@ function CategoriesCarousel() {
 
   const { hideTooltip, showTooltip } = useTooltip();
 
-  return (
-    <div className="flex items-center gap-2">
-      <ChevronLeft
-        className={`${!canScrollLeft && "opacity-50"} text-neutral-400`}
-        onClick={() => scrollLeft()}
-      />
-
-      <div
-        ref={containerRef}
-        onScroll={updateScrollButtons}
-        style={{
-          gap,
-          maxWidth: containerSize,
-        }}
-        className="flex items-center overflow-x-auto scrollbar-hide"
-      >
-        {categories.map((item, index) => (
-          <button
-            onMouseLeave={hideTooltip}
-            onMouseMove={(e) => showTooltip(e, item.name)}
-            onClick={() => navigate(item.to)}
-            key={index}
-            className=" bg-neutral-700 rounded-lg "
-          >
-            <img
-              style={{
-                minWidth: itemSize,
-                minHeight: itemSize,
-                maxHeight: itemSize,
-                maxWidth: itemSize,
-              }}
-              src={item.photo}
-              className="   object-cover rounded-lg border border-neutral-900"
-            />
-          </button>
-        ))}
+  if (categories)
+    return (
+      <div className="flex items-center gap-2">
+        {categories.length > 4 && (
+          <ChevronLeft
+            className={`${!canScrollLeft && "opacity-50"} text-neutral-200`}
+            onClick={() => scrollLeft()}
+          />
+        )}
+        <div
+          ref={containerRef}
+          onScroll={updateScrollButtons}
+          style={{
+            gap,
+            maxWidth: containerSize,
+          }}
+          className="flex items-center overflow-x-auto scrollbar-hide"
+        >
+          {categories.map((item, index) => (
+            <button
+              onMouseLeave={hideTooltip}
+              onMouseMove={(e) => showTooltip(e, item.name)}
+              onClick={() => navigate(`/playlist/${item.id}`)}
+              key={index}
+              className=" bg-neutral-700 rounded-lg "
+            >
+              <img
+                style={{
+                  minWidth: itemSize,
+                  minHeight: itemSize,
+                  maxHeight: itemSize,
+                  maxWidth: itemSize,
+                }}
+                src={item.image}
+                className="   object-cover rounded-lg border border-neutral-900"
+              />
+            </button>
+          ))}
+        </div>
+        {categories.length > 4 && (
+          <ChevronRight
+            className={`${!canScrollRight && "opacity-50"} text-neutral-200`}
+            onClick={() => scrollRight()}
+          />
+        )}
       </div>
-      <ChevronRight
-        className={`${!canScrollRight && "opacity-50"} text-neutral-400`}
-        onClick={() => scrollRight()}
-      />
-    </div>
-  );
+    );
 }
 
 export default CategoriesCarousel;

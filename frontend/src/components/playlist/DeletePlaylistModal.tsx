@@ -1,3 +1,4 @@
+import Button from "../ui/Button";
 import { ModalWrapper } from "../ui/ModalWrapper";
 
 export function DeletePlaylistModal({
@@ -14,18 +15,22 @@ export function DeletePlaylistModal({
       onClose={onCancel}
     >
       <div className="flex justify-end gap-2 mt-6">
-        <button
+        <Button
+          size="sm"
+          variant="opacity"
+          roundedValue="sm"
           onClick={onCancel}
-          className="px-4 py-2 text-sm font-medium text-zinc-300 rounded-md hover:bg-zinc-700"
         >
           Cancelar
-        </button>
-        <button
+        </Button>
+        <Button
+          size="sm"
+          variant="destructive"
+          roundedValue="sm"
           onClick={onConfirm}
-          className="px-4 py-2 text-sm font-medium text-red-500 rounded-md bg-red-500/20 hover:bg-red-500/30"
         >
           Excluir
-        </button>
+        </Button>
       </div>
     </ModalWrapper>
   );

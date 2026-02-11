@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { ModalWrapper } from "../ui/ModalWrapper";
+import Button from "../ui/Button";
+import Input from "../ui/Input";
 
 type RenamePlaylistModalProps = {
-  initialValue: string;
   onConfirm: (name: string) => void;
   onCancel: () => void;
+  initialValue: string;
 };
 
 export function RenamePlaylistModal({
@@ -15,26 +17,32 @@ export function RenamePlaylistModal({
   const [name, setName] = useState(initialValue);
 
   return (
-    <ModalWrapper title="Renomear playlist" onClose={onCancel}>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 mb-6 text-white"
-      />
-      <div className="flex justify-end gap-2">
-        <button
-          onClick={onCancel}
-          className="px-4 py-2 text-sm font-medium text-zinc-300 rounded-md hover:bg-zinc-700"
-        >
-          Cancelar
-        </button>
-        <button
-          onClick={() => onConfirm(name)}
-          className="px-4 py-2 text-sm font-medium text-white rounded-md bg-blue-600 hover:bg-blue-700"
-        >
-          Salvar
-        </button>
+    <ModalWrapper title="Renomear playlist:" onClose={onCancel}>
+      <div className="flex flex-col gap-2">
+        <Input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Digite um novo nome para a playlist"
+        />
+        <div className="flex justify-end gap-2">
+          <Button
+            size="sm"
+            roundedValue="sm"
+            variant="opacity"
+            onClick={onCancel}
+          >
+            Cancelar
+          </Button>
+          <Button
+            size="sm"
+            roundedValue="sm"
+            variant="confirm"
+            onClick={() => onConfirm(name)}
+          >
+            Alterar Nome
+          </Button>
+        </div>
       </div>
     </ModalWrapper>
   );

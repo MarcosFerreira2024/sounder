@@ -43,7 +43,7 @@ function AuthCarousel({ isTyping }: { isTyping: boolean }) {
           draggable={false}
           key={images[currentIndex].alt}
           onClick={handleScrollPreference}
-          className=" h-full   border-neutral-800 rounded-2xl shadow-2xl border min-h-full absolute object-cover object-center"
+          className=" h-full   border-neutral-800 rounded-2xl shadow-md border min-h-full absolute object-cover object-center"
           src={images[currentIndex].src}
           alt={images[currentIndex].alt}
         />
@@ -85,7 +85,7 @@ function AuthCarousel({ isTyping }: { isTyping: boolean }) {
         )}
       </AnimatePresence>
 
-      <div className="flex gap-2 absolute bottom-2 z-20 shadow-2xl w-full justify-center">
+      <div className="flex gap-2 absolute bottom-2 z-20 shadow-md w-full justify-center">
         {Array.from({ length: 3 }).map((_, index) => (
           <div
             key={index}
