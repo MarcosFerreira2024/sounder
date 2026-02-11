@@ -1,50 +1,32 @@
-import { useGoogleLogin } from '@react-oauth/google';
-import  { useEffect } from 'react'
-import { getGoogleUserInfo } from '../actions/getGoogleUserInfo';
-import { useNavigate } from 'react-router-dom';
-import { GITHUB_CLIENT_ID } from '../main';
+import { authClient } from '../libs/auth/auth';
+import type { SocialProvider } from 'better-auth';
 
 function useLoginProviders() {
-  const navigate = useNavigate()
 
 
 
-   const loginWithGoogle = useGoogleLogin({
-    onSuccess: async  (response) => {
-      await getGoogleUserInfo(response.access_token)
 
-      navigate("/")
+    const signIn = async (provider: SocialProvider) => {
+      await authClient.signIn.social({
+        provider,
+        callbackURL: "http://localhost:5173/auth/callback",
+      })
+    }
 
-      
-    },
-    onError: () => {
-      console.log("login failed");
-    },
-  });
 
-  const loginWithGithub = () => window.location.assign("https://github.com/login/oauth/authorize?client_id="+GITHUB_CLIENT_ID)
-
-  useEffect(() => {
-    const query = window.location.search;
-    const url = new URLSearchParams(query);
-    const code = url.get("code");
-    if(!code) return
-
-    console.log(code);
-  });
 
     const data = [
         {
           icon:"ui/google-icon.svg",
           text:"Google",
           tooltip:"Logar com Google",
-          onClick: () => loginWithGoogle()
+          onClick: async () => await signIn("google")
         },
         {
           icon:"ui/github-icon.svg",
           text:"GitHub",
           tooltip:"Logar com GitHub",
-          onClick: ()=> loginWithGithub()
+          onClick: async () => await signIn("github")
         }
     ]
 
