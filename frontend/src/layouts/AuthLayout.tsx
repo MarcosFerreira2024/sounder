@@ -29,12 +29,11 @@ function AuthLayout({
         className="w-fit lg:hidden  absolute top-2 z-40 left-2 h-fit"
       />
       <div
-        className="bg-neutral-900 shadow-2xl  border
+        className="bg-neutral-900 shadow-md  border
        border-neutral-800 w-[1440px] h-[800px] 
        p-2 rounded-2xl "
       >
-        <div className="flex shadow-2xl  bg-neutral-950 border border-neutral-900 rounded-2xl h-full p-4 gap-6">
-          {/* lado esquerdo*/}
+        <div className="flex shadow-md  bg-neutral-950 border border-neutral-900 rounded-2xl h-full p-4 gap-6">
           <AuthCarousel isTyping={isTyping} />
 
           <div className="lg:w-2/3 w-full  flex flex-col gap-6">
