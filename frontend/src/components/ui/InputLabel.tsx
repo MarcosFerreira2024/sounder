@@ -1,9 +1,12 @@
 import React from "react";
+import Input from "./Input";
 type InputLabelProps = {
   name: string;
-  text: string;
-  type: "password" | "email" | "number" | "text";
+  text?: string;
+  type: "password" | "email" | "number" | "text" | "search";
   onChange: (value: string) => void;
+  handleKeyDown?: () => void;
+  showLabel?: boolean;
   value?: string;
   placeholder: string;
 };
@@ -12,22 +15,29 @@ function InputLabel({
   onChange,
   placeholder,
   text,
+  handleKeyDown,
   type,
+  showLabel = true,
   value,
 }: InputLabelProps) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    onChange(e.target.value);
+
   return (
-    <div className="flex flex-col gap-2 w-full">
-      <label htmlFor={name} className="text-main text-xl">
-        {text}:
-      </label>
-      <input
-        className="placeholder:text-opacity hover:bg-neutral-800 duration-200 ease-out text-main outline-none focus-visible:ring-2 focus-visible:ring-neutral-600 text-sm h-[12.5] bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl p-4"
+    <div className="flex flex-col  gap-1 w-full relative">
+      {showLabel && (
+        <label htmlFor={name} className="text-main text-xl">
+          {text}
+        </label>
+      )}
+      <Input
+        onKeyDownCapture={handleKeyDown}
         type={type}
-        id={name}
         name={name}
+        id={name}
         value={value}
         placeholder={placeholder}
-        onChange={(e) => onChange(e.currentTarget.value)}
+        onChange={handleChange}
       />
     </div>
   );
