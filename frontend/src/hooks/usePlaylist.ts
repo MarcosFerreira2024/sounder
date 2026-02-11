@@ -1,37 +1,49 @@
-import { jojiGlimpseOfUs } from "../data/musicMock";
+import { useEffect, useState } from "react";
+import getPlaylistById from "../actions/playlists/getById";
+import getMusicsByPlaylistId from "../actions/music/getMusicsByPlaylistId";
+import type { Music } from "./useAudio";
 
-export function usePlaylist() {
-  const playlistName = "Minha Playlist";
-  const playlistPhoto = "/playlist.jpg";
+export type Playlist = {
+  id: string;
+  name: string;
+  image: string;
+  visibility: "PUBLIC" | "PRIVATE";
+  musics?: Music[];
+  ownerId: string;
+  createdAt: string;
+};
 
-  const musics = [
-    jojiGlimpseOfUs,
-    {
-      id: "2",
-      name: "Song 2",
-      author: "Artist 2",
-      url: "/song2.mp3",
-      photo: "/music-cover-mock.png",
-      duration: "2:45",
-      lyrics: [],
-    },
-    {
-      id: "3",
-      name: "Song 3",
-      author: "Artist 3",
-      url: "/song3.mp3",
-      photo: "/music-cover-mock.png",
-      duration: "4:10",
-      lyrics: [],
-    },
-  ];
+export function usePlaylist(playlistId?: string) {
+  const [playlist, setPlaylist] = useState<Playlist | null>(null);
+  const [musics, setMusics] = useState<Music[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const playListMusicsTotal = musics.length;
+  useEffect(() => {
+    if (!playlistId) {
+      setPlaylist(null);
+      setMusics([]);
+      setLoading(false);
+      return;
+    }
 
-  return {
-    playlistName,
-    playlistPhoto,
-    playListMusicsTotal,
-    musics,
-  };
+    async function load() {
+      try {
+        const [playlist, musics] = await Promise.all([
+          getPlaylistById(playlistId),
+          getMusicsByPlaylistId(playlistId),
+        ]);
+
+        setPlaylist(playlist);
+        setMusics(musics);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    load();
+  }, [playlistId]);
+
+  return { playlist, musics, loading };
 }
