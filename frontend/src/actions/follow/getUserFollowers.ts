@@ -11,7 +11,11 @@ async function getUserFollowers(userId: string) {
 
   const json = await response.json();
 
-  return json.data;
+  if (!response.ok) {
+    throw new Error(json.message);
+  }
+
+  return json.data.items;
 }
 
 export default getUserFollowers;

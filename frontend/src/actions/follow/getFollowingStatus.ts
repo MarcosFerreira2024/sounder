@@ -11,6 +11,10 @@ async function getFollowingStatus(userId: string) {
 
   const json = await response.json();
 
+  if (!response.ok) {
+    throw new Error(json.message);
+  }
+
   return json.data;
 }
 
