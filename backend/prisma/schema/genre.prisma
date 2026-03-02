@@ -1,18 +1,16 @@
 model Genre {
-    id   String @id @default(uuid())
-    name String @unique
-
-    musics MusicGenre[]
+  id     String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name   String       @unique
+  musics MusicGenre[]
 }
 
 model MusicGenre {
-    musicId String
-    genreId String
+  musicId String @db.Uuid
+  genreId String @db.Uuid
+  genre   Genre  @relation(fields: [genreId], references: [id])
+  music   Music  @relation(fields: [musicId], references: [id])
 
-    music Music @relation(fields: [musicId], references: [id])
-    genre Genre @relation(fields: [genreId], references: [id])
-
-    @@unique([musicId, genreId])
-    @@index([musicId])
-    @@index([genreId])
+  @@unique([musicId, genreId])
+  @@index([musicId])
+  @@index([genreId])
 }

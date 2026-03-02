@@ -1,21 +1,20 @@
-import { prismaAdapter } from "better-auth/adapters/prisma";
 import { betterAuth } from "better-auth";
-import { prisma } from "../libs/prismaClient";
 import { openAPI } from "better-auth/plugins";
 import "dotenv/config";
+import { Pool } from "pg";
+import crypto from "node:crypto";
 
 export const auth = betterAuth({
   secret: process.env.AUTH_SECRET as string,
-  database: prismaAdapter(prisma, {
-    provider: "sqlite",
+  database: new Pool({
+    connectionString: process.env.DATABASE_URL,
   }),
 
   advanced: {
     database: {
-      generateId: "uuid",
+      generateId: () => crypto.randomUUID(),
     },
   },
-
   user: {
     additionalFields: {
       role: {

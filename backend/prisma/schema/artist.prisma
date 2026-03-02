@@ -1,15 +1,14 @@
 model Artist {
-    id     String              @id @default(uuid())
-    user   User                @relation(fields: [userId], references: [id])
-    userId String              @unique
-    status ArtistAccountStatus @default(PENDING)
-
-    music  Music[]
-    albums Album[]
+  id     String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId String              @unique @db.Uuid
+  status ArtistAccountStatus @default(PENDING)
+  albums Album[]
+  user   User                @relation(fields: [userId], references: [id])
+  music  Music[]
 }
 
 enum ArtistAccountStatus {
-    PENDING
-    REQUESTED
-    ACTIVE
+  PENDING
+  REQUESTED
+  ACTIVE
 }

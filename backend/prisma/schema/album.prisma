@@ -1,11 +1,10 @@
 model Album {
-    id        String   @id @default(uuid())
-    name      String
-    author    Artist   @relation(fields: [authorId], references: [id])
-    authorId  String
-    cover     String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    musics Music[]
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  authorId  String   @db.Uuid
+  cover     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    Artist   @relation(fields: [authorId], references: [id])
+  musics    Music[]
 }
