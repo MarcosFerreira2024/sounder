@@ -1,79 +1,116 @@
-import { injectable } from "tsyringe";
-import fs from "fs";
-import path from "path";
-import sharp from 'sharp';
-import { IImageProcessingService, BlurImagesPaths } from "./IImageProcessingService";
+import { injectable, inject } from "tsyringe";
+import sharp from "sharp";
+import {
+  IImageProcessingService,
+  BlurImagesPaths,
+} from "./IImageProcessingService";
+import { IFileStorage } from "../../modules/file/IFileStorage";
 
 @injectable()
 export class ImageProcessingService implements IImageProcessingService {
-
-  public albumHasBlurImages(
-    albumCoverPath: string,
-    albumFolder: string
-  ): BlurImagesPaths | null {
-    const coverFileName = path.basename(albumCoverPath);
-    const ext = path.extname(coverFileName);
-    const baseName = path.basename(coverFileName, ext);
-
-    const paths: BlurImagesPaths = {
-      blur100: path.join(albumFolder, `${baseName}-blur100${ext}`),
-      blur75: path.join(albumFolder, `${baseName}-blur75${ext}`),
-      blur50: path.join(albumFolder, `${baseName}-blur50${ext}`),
-      blur25: path.join(albumFolder, `${baseName}-blur25${ext}`),
-    };
-
-    const allExist = Object.values(paths).every(p => fs.existsSync(p));
-
-    return allExist ? paths : null;
-  }
-
-  public async generateBlurAndSaveImages(
-    originalPath: string
-  ): Promise<BlurImagesPaths> {
-    if (!fs.existsSync(originalPath)) {
-      throw new Error(`File does not exist: ${originalPath}`);
-    }
-
-    const dir = path.dirname(originalPath);
-    const ext = path.extname(originalPath);
-    const baseName = path.basename(originalPath, ext);
-
-    const paths: BlurImagesPaths = {
-      blur100: path.join(dir, `${baseName}-blur100${ext}`),
-      blur75: path.join(dir, `${baseName}-blur75${ext}`),
-      blur50: path.join(dir, `${baseName}-blur50${ext}`),
-      blur25: path.join(dir, `${baseName}-blur25${ext}`),
-    };
-
-    const blurLevels = {
-      blur100: 30,
-      blur75: 20,
-      blur50: 10,
-      blur25: 5,
-    };
-
-    const promises = [];
-    for (const key of Object.keys(paths) as (keyof BlurImagesPaths)[]) {
-      promises.push(sharp(originalPath)
-        .blur(blurLevels[key])
-        .toFile(paths[key]));
-    }
-    await Promise.all(promises);
-
-
-    return paths;
-  }
+  constructor(
+    @inject("FileStorage")
+    private fileStorage: IFileStorage,
+  ) {}
 
   public async ensureBlurImages(
-    albumCoverPath: string,
-    albumFolder: string
+    originalImageUrl: string,
+    artistId: string,
   ): Promise<BlurImagesPaths> {
-    const existing = this.albumHasBlurImages(albumCoverPath, albumFolder);
+    const { folder, filename, contentType } =
+      this.extractFileInfoFromUrl(originalImageUrl);
+    const baseName = filename.substring(0, filename.lastIndexOf("."));
+    const ext = filename.substring(filename.lastIndexOf("."));
 
-    if (existing) {
-      return existing;
+    const blurPaths: BlurImagesPaths = {
+      blur100: "",
+      blur75: "",
+      blur50: "",
+      blur25: "",
+    };
+
+    const supabaseBlurPaths: { [key: string]: string } = {
+      blur100: `${folder}/${baseName}-blur100${ext}`,
+      blur75: `${folder}/${baseName}-blur75${ext}`,
+      blur50: `${folder}/${baseName}-blur50${ext}`,
+      blur25: `${folder}/${baseName}-blur25${ext}`,
+    };
+
+    const baseUrl = originalImageUrl.substring(
+      0,
+      originalImageUrl.lastIndexOf("/"),
+    );
+    (Object.keys(blurPaths) as Array<keyof BlurImagesPaths>).forEach((key) => {
+      const blurLevel = key.replace("blur", "");
+      blurPaths[key] = `${baseUrl}/${baseName}-${blurLevel}${ext}`;
+    });
+
+    try {
+      const originalImageBuffer = await this.fileStorage.download(
+        `${artistId}/albums/${folder}/${filename}`,
+      );
+
+      const blurLevels = {
+        blur100: 100,
+        blur75: 75,
+        blur50: 50,
+        blur25: 25,
+      };
+
+      const promises = [];
+      for (const key of Object.keys(
+        blurLevels,
+      ) as (keyof typeof blurLevels)[]) {
+        promises.push(
+          sharp(originalImageBuffer)
+            .blur(blurLevels[key])
+            .toBuffer()
+            .then(async (blurredBuffer) => {
+              const blurredFileName = `${baseName}-${key}${ext}`;
+              const { path: publicUrl } = await this.fileStorage.save({
+                buffer: blurredBuffer,
+                filename: blurredFileName,
+                folder: folder,
+                contentType: contentType,
+              });
+              blurPaths[key] = publicUrl;
+            }),
+        );
+      }
+      await Promise.all(promises);
+    } catch (error) {
+      console.error("Error processing blur images from Supabase:", error);
+      throw error;
     }
 
-    return this.generateBlurAndSaveImages(albumCoverPath);
+    return blurPaths;
+  }
+
+  private extractFileInfoFromUrl(url: string): {
+    folder: string;
+    filename: string;
+    contentType: string;
+  } {
+    const parts = url.split("/");
+    const filenameWithExtension = parts[parts.length - 1];
+    const folder = parts[parts.length - 2];
+
+    let contentType = "application/octet-stream";
+    if (
+      filenameWithExtension.endsWith(".jpg") ||
+      filenameWithExtension.endsWith(".jpeg")
+    ) {
+      contentType = "image/jpeg";
+    } else if (filenameWithExtension.endsWith(".png")) {
+      contentType = "image/png";
+    } else if (filenameWithExtension.endsWith(".webp")) {
+      contentType = "image/webp";
+    }
+
+    return {
+      folder: folder,
+      filename: filenameWithExtension,
+      contentType: contentType,
+    };
   }
 }

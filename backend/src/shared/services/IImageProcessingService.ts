@@ -6,7 +6,8 @@ export type BlurImagesPaths = {
 };
 
 export interface IImageProcessingService {
-  albumHasBlurImages(albumCoverPath: string, albumFolder: string): BlurImagesPaths | null;
-  generateBlurAndSaveImages(originalPath: string): Promise<BlurImagesPaths>;
-  ensureBlurImages(albumCoverPath: string, albumFolder: string): Promise<BlurImagesPaths>;
+  ensureBlurImages(
+    originalImageUrl: string,
+    artistId: string,
+  ): Promise<BlurImagesPaths>;
 }
