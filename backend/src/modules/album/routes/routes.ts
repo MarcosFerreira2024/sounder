@@ -4,30 +4,52 @@ import { deserializeUser } from "../../../middleware/deserializeUser";
 import { requireAuth } from "../../../middleware/requireAuth";
 import { validate } from "../../../middleware/validateSchema";
 import { albumId, createAlbum } from "../schemas/schema";
-import { upload } from "../../../libs/multer";
 import { uploadWithErrorHandler } from "../../../middleware/uploadWithErrorHandler";
+import { uploadImage } from "../../../libs/multer";
 
 export function albumRoutes(): Router {
-    const router = Router();
+  const router = Router();
 
+  const albumController = new AlbumController();
 
-    const albumController = new AlbumController();
+  router.get("/", deserializeUser, requireAuth, albumController.get);
 
-    router.get("/", deserializeUser, requireAuth, albumController.get);
+  router.post(
+    "/",
+    deserializeUser,
+    requireAuth,
+    uploadWithErrorHandler(uploadImage.single("cover")),
+    validate({ body: createAlbum }),
+    albumController.create,
+  );
 
-    router.post("/",
-        deserializeUser,
-        requireAuth,
-        uploadWithErrorHandler(upload.single("cover")),
-        validate({body:createAlbum}),
-        albumController.create
-    );
+  router.get(
+    "/:albumId/musics",
+    validate({ params: albumId }),
+    albumController.getMusics,
+  );
 
-    router.get("/:id", validate({ params: albumId }), albumController.getById);
+  router.get(
+    "/:albumId",
+    validate({ params: albumId }),
+    albumController.getById,
+  );
 
-    router.delete("/:id",deserializeUser,requireAuth, validate({ params: albumId }), albumController.delete);
+  router.delete(
+    "/:albumId",
+    deserializeUser,
+    requireAuth,
+    validate({ params: albumId }),
+    albumController.delete,
+  );
 
-    router.patch("/:id",deserializeUser,requireAuth, validate({ params: albumId }), albumController.update);
+  router.patch(
+    "/:albumId",
+    deserializeUser,
+    requireAuth,
+    validate({ params: albumId }),
+    albumController.update,
+  );
 
-    return router;
+  return router;
 }
