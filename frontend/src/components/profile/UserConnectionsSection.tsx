@@ -17,6 +17,7 @@ export function UserConnectionsSection({
 
   return (
     <CarouselSection
+      loading={isLoading}
       to={`/profile/${userId}/${type}`}
       title={type === "following" ? "Seguindo" : "Seguidores"}
       items={data}

@@ -168,7 +168,9 @@ export const useAudio = () => {
     [selectedSong],
   );
 
-  const togglePlay = (e: React.MouseEvent, song?: Music) => {
+  const togglePlay = (e?: React.MouseEvent, song?: Music) => {
+    e?.stopPropagation();
+    e?.preventDefault();
     if (!song || (selectedSong && song.id === selectedSong.id)) {
       if (isPlaying) {
         pauseAudio();
@@ -409,6 +411,7 @@ export const useAudio = () => {
     isVolumeControlVisible,
     setIsVolumeControlVisible,
     audioRef,
+    isHovering,
     handleMouseEnterVolume,
     handleMouseLeaveVolume,
     nextSong,

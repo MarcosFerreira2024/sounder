@@ -1,4 +1,3 @@
-import addToPlaylist from "../actions/music/removeFromPlaylist";
 import type { QueryType } from "../hooks/useSearch";
 
 export const BACKEND_API_URL = "http://localhost:3000/api";

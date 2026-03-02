@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAppNotifications } from "../contexts/NotificationsContext";
-
 function useUpload(
   action: (file?: File) => Promise<void>,
-  onclose: () => void,
+  onclose?: () => void,
   isOptional?: boolean,
 ) {
   const [photo, setPhoto] = useState<File | null | undefined>(null);
@@ -46,6 +45,7 @@ function useUpload(
       handleAppNotificationsError(error);
     } finally {
       setUploading(false);
+      onclose?.();
     }
   };
 

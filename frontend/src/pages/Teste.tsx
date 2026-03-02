@@ -1,9 +1,5 @@
 import { useRef, useState } from "react";
 import Input from "../components/ui/Input";
-import { authClient } from "../libs/auth/auth";
-import { useUserPlaylists } from "../hooks/useUserPlaylists";
-import { AddTracksToPlaylistModal } from "../components/playlist/addTracksToPlaylistModal";
-import useVisibility from "../hooks/useVisibility";
 
 export default function Teste() {
   const audioRef = useRef<HTMLAudioElement | null>(null);

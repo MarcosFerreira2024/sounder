@@ -1,5 +1,5 @@
 import confetti from "@hiseb/confetti";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 
 function useConfetti() {
   const triggerConfetti = useCallback(() => {
@@ -13,10 +13,7 @@ function useConfetti() {
       { x: window.innerWidth * 0.3, y: window.innerHeight * 0.3 },
     ];
     for (let i = 0; i < positionList.length; i++) {
-      setTimeout(
-        () => confetti({ position: positionList[i], zIndex: 1000 }),
-        i * 350,
-      );
+      setTimeout(() => confetti({ position: positionList[i] }), i * 350);
     }
   }, []);
 

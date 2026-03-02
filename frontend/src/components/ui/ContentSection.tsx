@@ -11,7 +11,6 @@ function ContentSection({
   scrollState,
   scrollLeft,
   scrollRight,
-  loading,
   hasItems,
   to,
 }: {

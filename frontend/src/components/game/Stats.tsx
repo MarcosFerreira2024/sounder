@@ -1,5 +1,3 @@
-import React from "react";
-
 function Stats({ qtd, text }: { qtd: number; text: string }) {
   return (
     <div className="flex flex-col text-main w-full justify-center items-center">

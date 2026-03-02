@@ -1,4 +1,3 @@
-import React from "react";
 import { ModalWrapperSkeleton } from "../ui/ModalWrapperSkeleton";
 
 function AddTracksToPlaylistSkeleton() {

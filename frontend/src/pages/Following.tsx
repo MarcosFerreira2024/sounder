@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import UserConnectionsList from "../components/UserConnectionsList";
 import { useFollow } from "../hooks/useFollow";
 

@@ -43,7 +43,7 @@ function CustomTooltipWrapper() {
       }
     };
 
-    const handleMouseOut = (event: MouseEvent) => {
+    const handleMouseOut = () => {
       if (currentTarget.current) {
         currentTarget.current.removeEventListener("mousemove", handleMouseMove);
         currentTarget.current = null;

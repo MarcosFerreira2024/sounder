@@ -5,7 +5,6 @@ import MainLayout from "../../layouts/MainLayout";
 import CollectionMobile from "./CollectionMobile";
 import CollectionDesktop from "./CollectionDesktop";
 import NoRecommendations from "./NoRecommendations";
-import { GlobalLoader } from "../ui/GlobalLoader";
 
 export type CollectionContentProps = {
   toggleLyricsVisibilty: () => void;

@@ -20,7 +20,7 @@ function useMusicActions() {
   const id = authClient.useSession().data?.user.id || "";
   const { playlists, loading: loadingPlaylists } = useUserPlaylists(id);
   const [selected, setSelected] = useState<string[]>([]);
-  const { close, isVisible, open, toggle } = useVisibility(false);
+  const { close, isVisible, open } = useVisibility(false);
   const [canSelect, setCanSelect] = useState(true);
 
   const handleSelection = (id: string) => {
@@ -145,6 +145,7 @@ function useMusicActions() {
     handleAddMusicToPlaylist,
     playlists,
     handleCloseModal,
+    removeMusicFromPlaylistMutation,
     loadingPlaylists,
   };
 }

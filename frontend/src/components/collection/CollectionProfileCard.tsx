@@ -6,7 +6,6 @@ import { ChangeVisibilityModal } from "../ChangeVisibilityModal";
 import { DeleteModal } from "./DeleteModal";
 import { RenameModal } from "./RenameModal";
 import { useQueryClient } from "@tanstack/react-query";
-import { useCollectionActions } from "../../hooks/useCollectionAction";
 
 export type CollectionProfileCardProps = {
   id: string;

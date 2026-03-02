@@ -14,11 +14,10 @@ import { motion } from "framer-motion";
 import Image from "../ui/Image";
 import useMusicActions from "../../hooks/useMusicActions";
 import { MusicCoverSkeleton } from "./MusicCoverSkeleton";
-import { AddTracksToPlaylistModal } from "../playlist/addTracksToPlaylistModal";
+import { AddTracksToPlaylistModal } from "../playlist/AddTracksToPlaylistModal";
 
 export function MusicCover({
   toggleLyricsVisibilty,
-  isLyricsVisible,
   showExtraControls = true,
   image,
   loading,

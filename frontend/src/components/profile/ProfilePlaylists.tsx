@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import type { Playlist } from "../../hooks/usePlaylist";
-import CarouselSection from "../ui/CarouselSection";
 import CollectionProfileCard from "../collection/CollectionProfileCard";
+import CarouselSection from "../ui/CarouselSection";
 
 interface ProfilePlaylistsProps {
   playlists: Playlist[] | [];
@@ -13,6 +13,7 @@ export function ProfilePlaylists({ playlists }: ProfilePlaylistsProps) {
   return (
     <>
       <CarouselSection
+        loading={false}
         to={`/profile/${userId}/playlists`}
         title="Playlists"
         items={playlists}

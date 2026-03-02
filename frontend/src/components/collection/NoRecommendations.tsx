@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Button from "../ui/Button";
 import useConfetti from "../../hooks/useConfetti";
-import { number } from "zod";
 
 function NoRecommendations() {
   const { triggerConfetti } = useConfetti();
