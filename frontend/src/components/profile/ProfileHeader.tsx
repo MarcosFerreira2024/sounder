@@ -4,39 +4,58 @@ import Button from "../ui/Button";
 import { usePermissions } from "../../hooks/usePermissions";
 import { useParams } from "react-router-dom";
 import { useFollow } from "../../hooks/useFollow";
+import type useModalManager from "../../hooks/useModalManager";
+import { authClient } from "../../libs/auth/auth";
 
 interface ProfileHeaderProps {
   title: string;
   subtitle: string;
   image: string;
-  showModal: () => void;
+  loadingProfile?: boolean;
+  modals: ReturnType<typeof useModalManager<"profile" | "photo">>;
 }
 
 export function ProfileHeader({
   title,
   subtitle,
   image,
-  showModal,
+  modals,
+  loadingProfile,
 }: ProfileHeaderProps) {
   const { userId } = useParams();
-  const { isOwner, loading } = usePermissions();
+  const authenticatedUserId = authClient.useSession().data?.user.id;
 
-  const { isFollowingUser, toggleFollow, wait } = useFollow(userId);
+  const { isOwner, loading } = usePermissions(authenticatedUserId);
 
-  if (loading) return null;
+  const { isFollowingUser, toggleFollow, isLoading } = useFollow(userId);
 
   return (
-    <MediaInfoHeader subtitle={subtitle} title={title} image={image}>
+    <MediaInfoHeader
+      loading={loadingProfile || loading}
+      showChangePictureModal={() => modals.open("photo")}
+      subtitle={subtitle}
+      title={title}
+      image={image}
+    >
       {isOwner(userId) ? (
-        <MoreVertical onClick={showModal} className="text-opacity" />
+        <MoreVertical
+          onClick={() => modals.open("profile")}
+          className="text-opacity cursor-pointer"
+        />
       ) : (
         <Button
           onClick={toggleFollow}
-          disabled={wait}
-          icon={isFollowingUser ? <Heart fill="currentColor" /> : <Heart />}
+          disabled={isLoading}
+          icon={
+            isFollowingUser ? (
+              <Heart className="md:w-6 w-4" fill="currentColor" />
+            ) : (
+              <Heart className="md:w-6 w-4" />
+            )
+          }
           roundedValue="full"
           size="md"
-          className={wait ? "cursor-wait" : "cursor-pointer"}
+          className={isLoading ? "cursor-wait" : "cursor-pointer"}
         />
       )}
     </MediaInfoHeader>

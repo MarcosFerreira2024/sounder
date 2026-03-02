@@ -1,36 +1,39 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import type { Playlist } from "../../hooks/usePlaylist";
-import PlaylistProfileCard from "../playlist/PlaylistProfileCard";
+import CarouselSection from "../ui/CarouselSection";
+import CollectionProfileCard from "../collection/CollectionProfileCard";
 
 interface ProfilePlaylistsProps {
   playlists: Playlist[] | [];
 }
 
 export function ProfilePlaylists({ playlists }: ProfilePlaylistsProps) {
-  const navigate = useNavigate();
   const { userId } = useParams();
 
-  if (playlists.length > 0) {
-    return (
-      <div className="flex flex-col gap-2">
-        <h1
-          onClick={() => navigate(`/profile/${userId}/playlists`)}
-          className="text-main text-2xl"
-        >
-          Playlists:
-        </h1>
-        <div className="flex gap-4 w-full h-full overflow-hidden">
-          {playlists.map((playlist) => (
-            <PlaylistProfileCard
-              className="min-w-[328px] min-h-[216px] max-w-[328px] max-h-[216px]"
-              key={playlist.id}
-              {...playlist}
+  return (
+    <>
+      <CarouselSection
+        to={`/profile/${userId}/playlists`}
+        title="Playlists"
+        items={playlists}
+        mapItem={(playlist) => ({
+          id: playlist.id,
+          name: playlist.name,
+          image: playlist.image ?? null,
+          visibility: playlist.visibility,
+        })}
+        renderList={(mappedItems) =>
+          mappedItems.map((item) => (
+            <CollectionProfileCard
+              key={item.id}
+              {...item}
+              basePath="playlist"
+              canManage
+              imageClassName="min-w-[328px] min-h-[216px] max-w-[328px] max-h-[216px]"
             />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  return null;
+          ))
+        }
+      />
+    </>
+  );
 }
