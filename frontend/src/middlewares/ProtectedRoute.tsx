@@ -1,12 +1,15 @@
 import { Navigate } from "react-router-dom";
-import { authClient } from "../libs/auth/auth";
+import { useAuthProvider } from "../contexts/AuthContext";
+import { GlobalLoader } from "../components/ui/GlobalLoader";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { data, isPending, isRefetching } = authClient.useSession();
+  const session = useAuthProvider();
 
-  if (isPending || isRefetching) return <div>Loading...</div>;
+  if (!session || session.isPending) return <GlobalLoader />;
 
-  if (!data || !data.session) return <Navigate to="/login" replace />;
+  if (!session.data) {
+    return <Navigate to="/login" replace />;
+  }
 
-  return children;
+  return <>{children}</>;
 }

@@ -1,10 +1,15 @@
 import { Navigate } from "react-router-dom";
-import { authClient } from "../libs/auth/auth";
+import { useAuthProvider } from "../contexts/AuthContext";
+import { GlobalLoader } from "../components/ui/GlobalLoader";
 
 export function GuestRoute({ children }: { children: React.ReactNode }) {
-  const { data } = authClient.useSession();
+  const session = useAuthProvider();
 
-  if (data?.session) return <Navigate to="/" replace />;
+  if (!session || session.isPending) return <GlobalLoader />;
 
-  return children;
+  if (session.data) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
 }
