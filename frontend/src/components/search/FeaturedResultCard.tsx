@@ -3,27 +3,53 @@ import { Pause, Play } from "lucide-react";
 import type { SearchResult } from "../../hooks/useSearch";
 import useFeatured from "../../hooks/useFeatured";
 import { useAudio } from "../../hooks/useAudio";
+import Image from "../ui/Image";
 
 type FeaturedResultCardProps = {
   data: SearchResult | null;
+  loading: boolean;
 };
 
-function FeaturedResultCard({ data }: FeaturedResultCardProps) {
+function FeaturedResultCard({ data, loading }: FeaturedResultCardProps) {
   const { isPlaying, togglePlay } = useAudio();
   const hasFeatured = useFeatured(data);
+
+  if (loading || hasFeatured === undefined || !data) {
+    return (
+      <article className="flex flex-col gap-2 animate-pulse">
+        <div className="h-8 w-48 bg-neutral-800 rounded-md" />
+
+        <div className="flex flex-col lg:flex-row border lg:min-h-[190px] lg:max-h-[190px] rounded-2xl shadow-md overflow-hidden border-neutral-800">
+          <div className="flex flex-col gap-4 flex-1 lg:order-0 order-1 p-2 justify-between">
+            <div className="flex flex-col gap-2">
+              <div className="h-5 w-40 bg-neutral-800 rounded-md" />
+              <div className="h-4 w-28 bg-neutral-800 rounded-md" />
+            </div>
+
+            <div className="h-8 w-full bg-neutral-800 rounded-xl" />
+          </div>
+
+          <figure className="relative lg:order-1 order-0 flex-1">
+            <div className="w-full min-h-[300px] md:min-h-[190px]  md:max-h-[300px] bg-neutral-800" />
+          </figure>
+        </div>
+      </article>
+    );
+  }
+
   if (!hasFeatured) return null;
 
   const { featured, handleNavigate, hasMusics, labelMap, musicsFromArtist } =
     hasFeatured;
 
   return (
-    <article className="flex flex-col gap-2">
+    <article className="flex flex-col gap-2 ">
       <h1 className="text-main text-2xl">Melhor Resultado:</h1>
 
-      <div className="flex border min-h-[190px] max-h-[190px] rounded-2xl shadow-md overflow-hidden border-neutral-800">
-        <div className="flex flex-col flex-1 max-w-80 p-2 justify-between">
-          <div>
-            <h2 className="text-main text-xl">{featured.name}</h2>
+      <div className="flex flex-col lg:flex-row border  lg:min-h-[190px] lg:max-h-[190px]  rounded-2xl shadow-md overflow-hidden border-neutral-800">
+        <div className="flex flex-col gap-2 flex-1 lg:order-0 order-1  p-2 justify-between">
+          <div className="text-center md:text-left">
+            <h2 className="text-main text-base lg:text-xl">{featured.name}</h2>
             <p className="text-opacity">{labelMap[featured.type]}</p>
           </div>
 
@@ -37,11 +63,12 @@ function FeaturedResultCard({ data }: FeaturedResultCardProps) {
           </Button>
         </div>
 
-        <figure className="relative flex flex-1 justify-center items-center">
-          <img
-            src={featured.image ?? "/not-found.png"}
-            className="object-cover flex-1 min-w-full min-h-full"
+        <figure className="relative lg:order-1 order-0 flex-1 justify-center h-full items-center">
+          <Image
+            src={featured.image ?? "/not-found.svg"}
             alt={`Imagem de ${featured.name}`}
+            className="h-full w-full"
+            title={`Imagem de ${featured.name}`}
           />
 
           {featured.type === "artists" && hasMusics && (

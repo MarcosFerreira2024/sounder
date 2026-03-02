@@ -1,94 +1,123 @@
-import { useNavigate } from "react-router-dom";
-import SearchSection from "./SearchSection";
-import MediaCardList from "../ui/MediaCardList";
-import ImageDisplayCardList from "../ui/ImageDisplayCardList";
 import type { QueryType, SearchResult } from "../../hooks/useSearch";
 import { hasResults } from "../../helpers/hasResults";
+import CarouselSection from "../ui/CarouselSection";
+import DisplayCardList from "../ui/DisplayCardList";
 
-type SearchProps = {
+export type SearchProps = {
   data: SearchResult | null;
   type: QueryType;
+  loading: boolean;
 };
 
-export function SearchResults({ data, type }: SearchProps) {
-  const navigate = useNavigate();
+export function SearchResults({ data, type, loading }: SearchProps) {
+  const hasAnyResult = hasResults(type, loading, data);
 
-  if (!data) {
-    return null;
-  }
-
-  const hasAnyResult = hasResults(data, type);
-
-  if (!hasAnyResult) {
+  if (hasAnyResult === false) {
     return (
-      <div className="p-4 bg-neutral-950 rounded-2xl border border-neutral-800">
-        <p className="text-opacity text-xl">
-          Não há resultados para essa busca
-        </p>
+      <div className="flex flex-col gap-4 items-center p-4 bg-neutral-950 rounded-2xl border border-neutral-800">
+        <h1 className="text-xl  text-opacity">Nenhum resultado encontrado.</h1>
       </div>
     );
   }
-
+  if (loading)
+    return (
+      <div>
+        <h1 className="text-xl text-opacity">
+          Aguarde enquanto carregamos os dados
+        </h1>
+      </div>
+    );
   return (
-    <div className="flex flex-col gap-10 p-4  bg-neutral-950  overflow-y-scroll rounded-2xl border border-neutral-800">
-      <SearchSection title="Músicas" items={data?.musics}>
-        {(musics) => (
-          <MediaCardList
-            className="min-w-43.75 min-h-43.75 max-w-43.75 min-h-43.75"
-            data={musics.map((music) => ({
-              image: music.cover ?? null,
-              title: music.name,
-              onClick: () => navigate("/music/" + music.id),
-            }))}
-          />
+    <>
+      <CarouselSection
+        loading={loading}
+        title="Músicas"
+        items={data?.musics}
+        mapItem={(music) => ({
+          image: music.cover ?? null,
+          title: music.name,
+          to: "/music/" + music.id,
+          imageClassName:
+            "lg:min-w-43.75 lg:min-h-43.75 lg:max-w-43.75 lg:min-h-43.75 min-w-32 min-h-32 max-w-32 min-h-32",
+          className: "rounded-2xl h-fit",
+        })}
+        renderList={(mappedItems) => (
+          <DisplayCardList loading={loading} data={mappedItems} />
         )}
-      </SearchSection>
+      />
 
-      <SearchSection title="Artistas" items={data?.artists}>
-        {(artists) => (
-          <ImageDisplayCardList
-            className="min-w-43.75 min-h-43.75 max-w-43.75 min-h-43.75"
-            data={artists.map((artist) => ({
-              image: artist.image ?? null,
-              onClick: () => navigate("/profile/" + artist.id),
-            }))}
-          />
+      <CarouselSection
+        title="Artistas"
+        items={data?.artists}
+        loading={loading}
+        mapItem={(artist) => ({
+          image: artist.image ?? null,
+          to: "/profile/" + artist.userId,
+          title: artist.name,
+
+          imageClassName:
+            "lg:min-w-43.75 lg:min-h-43.75 lg:max-w-43.75 lg:min-h-43.75 min-w-32 min-h-32 max-w-32 min-h-32",
+          className: "rounded-2xl h-fit",
+        })}
+        renderList={(mappedItems) => (
+          <DisplayCardList loading={loading} data={mappedItems} />
         )}
-      </SearchSection>
-      <SearchSection title="Álbuns" items={data?.albums}>
-        {(albums) => (
-          <ImageDisplayCardList
-            className="min-w-43.75 min-h-43.75 max-w-43.75 min-h-43.75"
-            data={albums.map((album) => ({
-              image: album.cover ?? null,
-              onClick: () => navigate("/album/" + album.id),
-            }))}
-          />
+      />
+
+      <CarouselSection
+        loading={loading}
+        title="Álbuns"
+        items={data?.albums}
+        mapItem={(album) => ({
+          image: album.cover ?? null,
+          title: album.name,
+
+          to: "/album/" + album.id,
+          imageClassName:
+            "lg:min-w-43.75 lg:min-h-43.75 lg:max-w-43.75 lg:min-h-43.75 min-w-32 min-h-32 max-w-32 min-h-32",
+          className: "rounded-2xl h-fit",
+        })}
+        renderList={(mappedItems) => (
+          <DisplayCardList loading={loading} data={mappedItems} />
         )}
-      </SearchSection>
-      <SearchSection title="Playlists" items={data?.playlists}>
-        {(playlists) => (
-          <ImageDisplayCardList
-            className="min-w-43.75 min-h-43.75 max-w-43.75 min-h-43.75"
-            data={playlists.map((playlist) => ({
-              image: playlist.image ?? null,
-              onClick: () => navigate("/playlist/" + playlist.id),
-            }))}
-          />
+      />
+
+      <CarouselSection
+        loading={loading}
+        title="Playlists"
+        items={data?.playlists}
+        mapItem={(playlist) => ({
+          image: playlist.image ?? null,
+          title: playlist.name,
+
+          to: "/playlist/" + playlist.id,
+          imageClassName:
+            "lg:min-w-43.75 lg:min-h-43.75 lg:max-w-43.75 lg:min-h-43.75 min-w-32 min-h-32 max-w-32 min-h-32",
+          className: "rounded-2xl h-fit",
+        })}
+        renderList={(mappedItems) => {
+          return <DisplayCardList loading={loading} data={mappedItems} />;
+        }}
+      />
+
+      <CarouselSection
+        loading={loading}
+        title="Perfis"
+        items={data?.profiles}
+        mapItem={(profile) => ({
+          image: profile.image ?? null,
+          to: "/profile/" + profile.id,
+          title: profile.name,
+
+          imageClassName:
+            "lg:min-w-43.75 lg:min-h-43.75 lg:max-w-43.75 lg:min-h-43.75 min-w-32 min-h-32 max-w-32 min-h-32",
+          className: "rounded-2xl h-fit",
+        })}
+        renderList={(mappedItems) => (
+          <DisplayCardList loading={loading} data={mappedItems} />
         )}
-      </SearchSection>
-      <SearchSection title="Perfis" items={data?.profiles}>
-        {(profiles) => (
-          <ImageDisplayCardList
-            className="min-w-43.75 min-h-43.75 max-w-43.75 min-h-43.75"
-            data={profiles.map((profile) => ({
-              image: profile.image ?? null,
-              onClick: () => navigate("/profile/" + profile.id),
-            }))}
-          />
-        )}
-      </SearchSection>
-    </div>
+      />
+    </>
   );
 }
 
