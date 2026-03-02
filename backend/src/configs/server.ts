@@ -11,10 +11,10 @@ import { musicRoutes } from "../modules/music/routes/routes";
 import { albumRoutes } from "../modules/album/routes/routes";
 import { gameRoutes } from "../modules/game/routes/routes";
 import { artistRoutes } from "../modules/artist/routes/routes";
-import { cwd } from "node:process";
 
 import path from "path";
 import { searchRoutes } from "../modules/search/routes/routes";
+import { loadModel } from "../libs/nsfwJs";
 
 class Server {
   public app: Application;
@@ -59,8 +59,10 @@ class Server {
   }
 
   public run(): void {
-    this.app.listen(this.port, () => {
-      console.log(`Servidor rodando em http://localhost:${this.port}`);
+    loadModel().then(() => {
+      this.app.listen(this.port, () => {
+        console.log(`Servidor rodando em http://localhost:${this.port}`);
+      });
     });
   }
 }
