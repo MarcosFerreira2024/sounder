@@ -41,11 +41,10 @@ async function mockUsers(userQuantity?: number) {
     console.groupEnd();
   }
 
-  // Falhas
   if (failedUsers.length) {
     console.groupCollapsed(`Failed users (${failedUsers.length})`);
-    failedUsers.forEach(f =>
-      console.error(`Error creating ${f.email}`, f.error)
+    failedUsers.forEach((f) =>
+      console.error(`Error creating ${f.email}`, f.error),
     );
     console.groupEnd();
   }

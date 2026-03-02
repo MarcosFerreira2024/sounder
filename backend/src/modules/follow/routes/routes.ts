@@ -4,6 +4,7 @@ import { validate } from "../../../middleware/validateSchema";
 import { followSchema } from "../schemas/schema";
 import { deserializeUser } from "../../../middleware/deserializeUser";
 import { requireAuth } from "../../../middleware/requireAuth";
+import verifyRateLimit from "../../../middleware/verifyRateLimit";
 
 export function followRoutes(): Router {
   const router = Router();
@@ -14,6 +15,7 @@ export function followRoutes(): Router {
     validate({ params: followSchema }),
     deserializeUser,
     requireAuth,
+    verifyRateLimit(),
     followController.follow,
   );
   router.post(
