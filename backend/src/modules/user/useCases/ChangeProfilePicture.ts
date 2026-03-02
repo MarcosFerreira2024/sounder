@@ -1,19 +1,19 @@
-import { inject, injectable } from "tsyringe"
-import { IUserRepository } from "../interfaces/IUserRepository"
-import { isAdmin } from "../../../shared/rules/isAdmin"
-import { User } from "../../../generated/prisma/client"
-import { AppUser } from "../../../shared/types/user"
-import { IFileStorage } from "../../../shared/storage/IFileStorage"
+import { inject, injectable } from "tsyringe";
+import { IUserRepository } from "../interfaces/IUserRepository";
+import { isAdmin } from "../../../shared/rules/isAdmin";
+import { User } from "../../../generated/prisma/client";
+import { AppUser } from "../../../shared/types/user";
+import { IFileStorage } from "../../file/IFileStorage";
 
 type ChangeProfilePictureDTO = {
-  user: AppUser
+  user: AppUser;
   image: {
-    buffer: Buffer
-    originalName: string
-    mimeType: string
-  }
-  userId?: string
-}
+    buffer: Buffer;
+    originalName: string;
+    mimeType: string;
+  };
+  userId?: string;
+};
 
 @injectable()
 class ChangeProfilePicture {
@@ -21,43 +21,37 @@ class ChangeProfilePicture {
     @inject("UserRepository")
     private userRepository: IUserRepository,
     @inject("FileStorage")
-    private fileStorage: IFileStorage
+    private fileStorage: IFileStorage,
   ) {}
 
   async execute({
     user,
     image,
-    userId
+    userId,
   }: ChangeProfilePictureDTO): Promise<User> {
-
-    let targetUserId: string
-
-    
-
-
-
+    let targetUserId: string;
 
     if (userId) {
-      if (!isAdmin(user)) throw new Error("You don't have permission to change another user's profile picture")
-      const userExists = await this.userRepository.findById(userId)
-      if (!userExists) throw new Error("User not found")
+      if (!isAdmin(user))
+        throw new Error(
+          "You don't have permission to change another user's profile picture",
+        );
+      const userExists = await this.userRepository.findById(userId);
+      if (!userExists) throw new Error("User not found");
 
-      targetUserId = userId
+      targetUserId = userId;
     } else {
-      targetUserId = user.id
+      targetUserId = user.id;
     }
 
     const { path } = await this.fileStorage.save({
       buffer: image.buffer,
       filename: image.originalName,
-      folder: `${targetUserId}/profile-pictures`
-    })
+      folder: `${targetUserId}/profile-pictures`,
+    });
 
-    return await this.userRepository.changeProfilePicture(
-      targetUserId,
-      path
-    )
+    return await this.userRepository.changeProfilePicture(targetUserId, path);
   }
 }
 
-export { ChangeProfilePicture }
+export { ChangeProfilePicture };

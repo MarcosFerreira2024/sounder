@@ -34,9 +34,11 @@ class UserRepository implements IUserRepository {
         ...(query.name && {
           name: {
             contains: query.name,
+            mode: "insensitive",
           },
         }),
         ...(query.image && { image: query.image }),
+        artist: null,
       },
       skip: page && limit && (page - 1) * limit,
       take: limit,

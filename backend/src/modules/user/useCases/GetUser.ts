@@ -3,7 +3,6 @@ import { User } from "../../../generated/prisma/client";
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { isAdmin } from "../../../shared/rules/isAdmin";
 import { AppUser } from "../../../shared/types/user";
-import { normalizeImagePath } from "../../../shared/helpers/normalizeImagePath";
 
 @injectable()
 class GetUser {

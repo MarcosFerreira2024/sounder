@@ -43,9 +43,10 @@ class SearchService implements ISearchService {
             { name: query, authorName: query },
             1,
             10,
+            [],
+            "OR",
           ),
         };
-      // preciso por um or aqui nessa query
       case "playlists":
         return {
           playlists: await this.playlistRepo.getPlaylists(
@@ -65,7 +66,13 @@ class SearchService implements ISearchService {
           await Promise.all([
             this.artistRepo.getArtists({ name: query }, 1, 10),
             this.albumRepo.getAlbums({ name: query }, 1, 10),
-            this.musicRepo.getMusics({ name: query, authorName: query }, 1, 10),
+            this.musicRepo.getMusics(
+              { name: query, authorName: query },
+              1,
+              10,
+              [],
+              "OR",
+            ),
             this.playlistRepo.getPlaylists(
               { name: query, visibility: "PUBLIC" },
               1,

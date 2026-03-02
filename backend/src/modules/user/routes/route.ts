@@ -3,9 +3,11 @@ import { UserController } from "../controllers/UserController";
 import { deserializeUser } from "../../../middleware/deserializeUser";
 import { requireAuth } from "../../../middleware/requireAuth";
 import { validate } from "../../../middleware/validateSchema";
-import { upload } from "../../../libs/multer";
 import { uploadWithErrorHandler } from "../../../middleware/uploadWithErrorHandler";
 import { optionalId, userUpdateBody } from "../schemas/schema";
+import verifyRateLimit from "../../../middleware/verifyRateLimit";
+import { VerifyNSFWContent } from "../../../middleware/verifyNsfwImage";
+import { uploadImage } from "../../../libs/multer";
 
 export function userRoutes(): Router {
   const router = Router();
@@ -14,9 +16,11 @@ export function userRoutes(): Router {
 
   router.get(
     "/",
+
     deserializeUser,
     requireAuth,
     validate({ query: optionalId }),
+
     userController.getUser,
   );
 
@@ -49,7 +53,9 @@ export function userRoutes(): Router {
     "/profile-picture",
     deserializeUser,
     requireAuth,
-    uploadWithErrorHandler(upload.single("image")),
+    verifyRateLimit(1),
+    uploadWithErrorHandler(uploadImage.single("image")),
+    VerifyNSFWContent,
     validate({ body: optionalId }),
     userController.changeProfilePicture,
   );
