@@ -20,7 +20,6 @@ export default function AuthCallback() {
         }
 
         if (session) {
-          console.log("Session in AuthCallback:", session);
           window.location.href = "http://localhost:5173/";
         }
       } catch {

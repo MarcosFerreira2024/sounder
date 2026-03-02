@@ -1,96 +1,67 @@
 import MainLayout from "../layouts/MainLayout";
-import { ProfileHeader } from "../components/profile/ProfileHeader";
-import { ProfileAboutSection } from "../components/profile/ProfileAboutSection";
-import { UserConnectionsSection } from "../components/profile/UserConnectionsSection";
 import useModalManager from "../hooks/useModalManager";
-import { ProfilePlaylists } from "../components/profile/ProfilePlaylists";
 import { useUserPlaylists } from "../hooks/useUserPlaylists";
 import { useParams } from "react-router-dom";
 import { usePermissions } from "../hooks/usePermissions";
-import { useProfile } from "../hooks/useProfile";
-import UserUpdateModal from "../components/profile/ProfileUpdateModal";
-import UserProfilePictureModal from "../components/UserProfilePictureModal";
 import { useFollow } from "../hooks/useFollow";
+import { usePlaylistActions } from "../hooks/usePlaylistActions";
+import MobileProfilePage from "../components/profile/MobileProfilePage";
+import DesktopProfilePage from "../components/profile/DesktopProfilePage";
+import ProfileModals from "../components/profile/ProfileModals";
+import { useUser } from "../hooks/useUser";
+import { authClient } from "../libs/auth/auth";
 
 export function Profile() {
   const { userId } = useParams();
 
-  const { isOwner } = usePermissions();
+  const { user, loading: loadingProfile } = useUser(userId);
 
-  const { user } = useProfile(userId);
+  const authenticatedUserId = authClient.useSession().data?.user.id;
+  const { isOwner, loading: permissionsLoading } =
+    usePermissions(authenticatedUserId);
 
-  const { playlists } = useUserPlaylists(userId);
-  const { followers, following, isLoading, followCount } = useFollow(userId);
+  const { playlists, loading: playlistLoading } = useUserPlaylists(userId);
+  const {
+    followers,
+    following,
+    isLoading: followLoading,
+    followCount,
+  } = useFollow(userId);
+
+  const { changeVisibility, deletePlaylistById, rename } = usePlaylistActions();
 
   const modals = useModalManager<"profile" | "photo">();
 
   const emptyStateMessage = () => {
-    if (!playlists && !following && !followers)
-      return "Esse usuario ainda nao possui playlists, followers e following.";
+    if (!playlists.length && !following.length && !followers.length) {
+      return "Usuario ainda nao possui nenhum dado sem seu perfil";
+    }
+  };
+
+  const props = {
+    user,
+    changeVisibility,
+    deletePlaylistById,
+    rename,
+    modals,
+    playlists,
+    followCount,
+    followers,
+    following,
+    isLoading: playlistLoading || followLoading || permissionsLoading,
+    loadingProfile,
+    userId: userId!,
+    emptyStateMessage: emptyStateMessage(),
+    isOwner,
   };
 
   return (
     <MainLayout>
-      {modals.activeModal === "profile" && isOwner(userId) && (
-        <UserUpdateModal
-          onClose={modals.close}
-          photo={user?.image ?? "/not-found.png"}
-          open={modals.open}
-        />
-      )}
-
-      {modals.activeModal === "photo" && (
-        <UserProfilePictureModal onClose={modals.close} />
-      )}
-
-      <div className="flex  gap-4 ">
-        <aside className="p-2 w-1/3 bg-neutral-900 border   border-neutral-800 rounded-2xl shadow-md flex  flex-col gap-2 ">
-          <ProfileHeader
-            showModal={() => modals.open("profile")}
-            subtitle={`Profile`}
-            title={user?.name ?? "User"}
-            image={user?.image ?? "/not-found.png"}
-          />
-
-          <ProfileAboutSection
-            description={user?.about ?? ""}
-            followCount={followCount}
-          />
-        </aside>
-        <div
-          style={{
-            minHeight: "calc(100dvh - 84px - 100px)",
-            maxHeight: "calc(100dvh - 84px - 100px)",
-          }}
-          className="
-        w-2/3
-        min-h-150
-        bg-neutral-900
-        rounded-2xl
-        border border-neutral-800
-        grid gap-2
-        p-2
-        overflow-hidden
-      "
-        >
-          <div className="p-4 flex flex-col gap-y-10 bg-neutral-950 border border-neutral-800 shadow-md flex-1 rounded-2xl overflow-y-auto">
-            <ProfilePlaylists playlists={playlists} />
-            <UserConnectionsSection
-              isLoading={isLoading}
-              type="followers"
-              data={followers}
-            />
-            <UserConnectionsSection
-              isLoading={isLoading}
-              type="following"
-              data={following}
-            />
-            {emptyStateMessage() && (
-              <p className="text-neutral-400">{emptyStateMessage()}</p>
-            )}
-          </div>
-        </div>
-      </div>
+      <ProfileModals {...props} />
+      <MobileProfilePage {...props} />
+      <DesktopProfilePage {...props} />
     </MainLayout>
   );
 }
+
+export default Profile;

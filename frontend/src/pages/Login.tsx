@@ -15,7 +15,7 @@ function Login() {
       linkText={"Registre-se"}
       isTyping={false}
     >
-      <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
+      <form onSubmit={handleSubmit} className="w-full flex flex-col  gap-6">
         <InputLabel
           text="Email"
           name="email"
@@ -32,7 +32,12 @@ function Login() {
           type="password"
           value={password}
         />
-        <Button title="Entrar" size="lg" roundedValue="md">
+        <Button
+          className="h-[50px] w-full"
+          title="Entrar"
+          size="lg"
+          roundedValue="md"
+        >
           Entrar
         </Button>
         <AuthProviders />
