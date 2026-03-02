@@ -1,7 +1,12 @@
 import type { QueryType, SearchResult } from "../hooks/useSearch";
 
-function hasResults(data: SearchResult, type: QueryType) {
-  if (!data) return false;
+function hasResults(
+  type: QueryType,
+  isLoading: boolean,
+  data?: SearchResult | null,
+) {
+  if (!data) return;
+  if (isLoading) return;
 
   if (type === "all") {
     return Object.values(data).some(
