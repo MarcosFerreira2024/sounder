@@ -14,8 +14,6 @@ async function updateUserProfilePicture(image?: File | null) {
 
   const json = await response.json();
 
-  console.log(json);
-
   return json.data;
 }
 

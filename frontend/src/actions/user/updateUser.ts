@@ -1,7 +1,7 @@
 import { routes } from "../../consts/routes";
-import type { PublicUser } from "../../hooks/useProfile";
+import type { User } from "../../hooks/useUser";
 
-async function updateUserData(data: Partial<PublicUser>) {
+async function updateUserData(data: Partial<User>) {
   const response = await fetch(routes.user.updateUser(), {
     method: "PUT",
     headers: {
