@@ -7,7 +7,8 @@
     "seed": "tsx src/shared/seeds/seeds.ts",
     "game": "tsx src/modules/game/cronjobs/dailyGame.ts",
     "start": "node dist/src/index.js",
-    "build": "tsc"
+    "postinstall": "prisma generate",
+    "build": "prisma generate && tsc"
   },
   "dependencies": {
     "@libsql/client": "^0.17.0",

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { container } from "tsyringe";
 import { handleAppError } from "../../../shared/helpers/handleAppError";
 import { QueryType } from "../services/SearchService";
-import { SearchByQuery } from "../useCases/searchByQuery";
+import { SearchByQuery } from "../useCases/SearchByQuery";
 
 class SearchController {
   async search(req: Request, res: Response) {

@@ -4,6 +4,10 @@ import crypto from "crypto";
 import { IFileStorage } from "./IFileStorage";
 
 export class DiskFileStorage implements IFileStorage {
+  async download(filePath: string) {
+    return fs.readFile(filePath);
+  }
+
   async save({ buffer, filename, folder }: any) {
     const fileHash = crypto.randomBytes(16).toString("hex");
     const safeName = `${fileHash}-${filename}`;

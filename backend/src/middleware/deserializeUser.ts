@@ -1,26 +1,26 @@
-import { Request, Response, NextFunction } from 'express';
-import { fromNodeHeaders } from 'better-auth/node';
-import { auth } from '../configs/auth';
+import { Request, Response, NextFunction } from "express";
+import { fromNodeHeaders } from "better-auth/node";
+import { auth } from "../configs/auth";
+import { AppUser } from "../shared/types/user";
 
+export const deserializeUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const headers = fromNodeHeaders(req.headers);
+    const session = await auth.api.getSession({ headers });
 
-
-export const deserializeUser = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const headers = fromNodeHeaders(req.headers);
-        const session = await auth.api.getSession({ headers });
-
-        
-        if (session) {
-            req.user = session.user;
-            req.session = session.session;
-        } else {
-            req.user = undefined;
-            req.session = undefined;
-        }
-        next();
-    } catch (error) {
-        next(error);
+    if (session) {
+      req.user = session.user as AppUser;
+      req.session = session.session;
+    } else {
+      req.user = undefined;
+      req.session = undefined;
     }
+    next();
+  } catch (error) {
+    next(error);
+  }
 };
-
-

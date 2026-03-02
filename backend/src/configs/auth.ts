@@ -54,7 +54,7 @@ export const auth = betterAuth({
     redirectUrl: process.env.PASSWORD_RESET_REDIRECT_URL as string,
   },
 
-  trustedOrigins: ["http://localhost:5173"],
+  trustedOrigins: ["http://localhost:5173", "https://sounder-tawny.vercel.app"],
 });
 type Session = typeof auth.$Infer.Session;
 export type { Session };

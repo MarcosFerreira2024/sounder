@@ -1,11 +1,11 @@
 import "reflect-metadata";
-import "../../../shared/container"; // Import the container setup
+import "../../../shared/container";
 import cron from "node-cron";
 import { GameService } from "../services/GameService";
-import { container } from "tsyringe"; // Import container to resolve dependencies
-import dotenv from "dotenv"; // Import dotenv
+import { container } from "tsyringe";
+import dotenv from "dotenv";
 
-dotenv.config(); // Load environment variables
+dotenv.config();
 
 const gameService = container.resolve(GameService);
 await gameService.normalMode();
