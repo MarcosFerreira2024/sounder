@@ -5,33 +5,26 @@ import { AppUser } from "../../../shared/types/user";
 import { canChangeMusic } from "../rules/canChangeMusic";
 
 @injectable()
-class UpdateMusic{ 
+class UpdateMusic {
+  constructor(
+    @inject("MusicRepository") private musicRepository: IMusicRepository,
+  ) {}
 
-    constructor(@inject("MusicRepository") private musicRepository: IMusicRepository) {}
-
-    async execute(user:AppUser,musicId:string,data:{name?:string;audio?:string;lyrics?:string,albumId?:string}):Promise<Music | null>{
-
-        
-        const musicExists = await this.musicRepository.getMusicById(musicId);
-        if(!musicExists)throw new Error("Music not found");
-        if(!canChangeMusic(user,musicExists.authorId)){
-            throw new Error("You don't have permission to update this music");
-        }
-
-
-
-
-
-
-
-        
-        const updatedMusic = await this.musicRepository.updateMusic(musicId,data);
-
-        return updatedMusic;
-        
-
-
+  async execute(
+    user: AppUser,
+    musicId: string,
+    data: { name?: string; audio?: string; lyrics?: string; albumId?: string },
+  ): Promise<Music | null> {
+    const musicExists = await this.musicRepository.getMusicById(musicId);
+    if (!musicExists) throw new Error("Music not found");
+    if (!canChangeMusic(user, musicExists.artistId)) {
+      throw new Error("You don't have permission to update this music");
     }
+
+    const updatedMusic = await this.musicRepository.updateMusic(musicId, data);
+
+    return updatedMusic;
+  }
 }
 
 export { UpdateMusic };

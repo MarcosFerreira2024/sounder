@@ -10,170 +10,170 @@ import { handleAppError } from "../../../shared/helpers/handleAppError";
 import { LikeMusic } from "../useCases/LikeMusic";
 import { DeslikeMusic } from "../useCases/DeslikeMusic";
 import { AssignMusicToAlbum } from "../useCases/AssignMusicToAlbum";
+import { UserMusicRecommendations } from "../useCases/UserMusicRecommendations";
 
 class MusicController {
+  async getRecommended(req: Request, res: Response) {
+    try {
+      const recommended = await container
+        .resolve(UserMusicRecommendations)
+        .execute(req.user!);
 
-    async assignToAlbum (req:Request,res:Response){
-        try{
-            const assigned = await container.resolve(AssignMusicToAlbum).execute(req.body.musicId,req.body.albumId,req.user!,req.body.artistId)
-
-
-            res.status(200).json({data:assigned,message:"Music Assigned succesfully"})
-        }
-
-        catch (error) {
-            return handleAppError(res, error);
-        }
-
+      return res
+        .status(200)
+        .json({ data: recommended, message: "Musics fetched successfully" });
+    } catch (error) {
+      return handleAppError(res, error);
     }
+  }
 
+  async assignToAlbum(req: Request, res: Response) {
+    try {
+      const assigned = await container
+        .resolve(AssignMusicToAlbum)
+        .execute(
+          req.body.musicId,
+          req.body.albumId,
+          req.user!,
+          req.body.artistId,
+        );
 
-
-    async create(req: Request, res: Response) { 
-        try {
-            const { name, albumId, artistId } = req.body;
-            const lyricsFile = req.file; 
-
-
-
-            const created = await container
-                .resolve(CreateMusic)
-                .execute(
-                    req.user!,
-                    name,
-                    { buffer: lyricsFile!.buffer, originalName: lyricsFile!.originalname, mimeType: lyricsFile!.mimetype }, 
-                    req.body.genres as string[],
-                    albumId,
-                    artistId
-                );
-
-            return res.status(201).json({
-                data: created,
-                message: "Music created successfully"
-            });
-        } catch (error) {
-            return handleAppError(res, error);
-        }
+      return res
+        .status(200)
+        .json({ data: assigned, message: "Music Assigned succesfully" });
+    } catch (error) {
+      return handleAppError(res, error);
     }
+  }
 
-    async delete(req: Request, res: Response) {
-        try {
-            await container
-                .resolve(DeleteMusic)
-                .execute(
-                    req.user!,
-                    req.params.id as string
-                );
+  async create(req: Request, res: Response) {
+    try {
+      const { name, albumId, artistId } = req.body;
+      const lyricsFile = req.file;
 
-            return res.status(200).json({
-                message: "Music deleted successfully"
-            });
-        } catch (error) {
-            return handleAppError(res, error);
-        }
+
+
+      const created = await container.resolve(CreateMusic).execute(
+        req.user!,
+        name,
+        {
+          buffer: lyricsFile!.buffer,
+          originalName: lyricsFile!.originalname,
+          mimeType: lyricsFile!.mimetype,
+        },
+        req.body.genres as string[],
+        albumId,
+        artistId,
+      );
+
+      return res.status(201).json({
+        data: created,
+        message: "Music created successfully",
+      });
+    } catch (error) {
+      return handleAppError(res, error);
     }
+  }
 
-    async update(req: Request, res: Response) {
-        try {
-            const updated = await container
-                .resolve(UpdateMusic)
-                .execute(
-                    req.user!,
-                    req.params.id as string,
-                    { ...req.body }
-                );
+  async delete(req: Request, res: Response) {
+    try {
+      await container
+        .resolve(DeleteMusic)
+        .execute(req.user!, req.params.id as string);
 
-            return res.status(200).json({
-                data: updated,
-                message: "Music updated successfully"
-            });
-        } catch (error) {
-            return handleAppError(res, error);
-        }
+      return res.status(200).json({
+        message: "Music deleted successfully",
+      });
+    } catch (error) {
+      return handleAppError(res, error);
     }
+  }
 
-    async get(req: Request, res: Response) {
-        try {
-            const { limit, page } = normalizePagination(
-                req.query.page as unknown as number,
-                req.query.limit as unknown as number,
+  async update(req: Request, res: Response) {
+    try {
+      const updated = await container
+        .resolve(UpdateMusic)
+        .execute(req.user!, req.params.id as string, { ...req.body });
 
-
-
-                req.user!
-            );
-
-            const search = {
-                name: req.query.name as string | undefined,
-                authorName: req.query.authorName as string | undefined,
-                id: req.query.id as string | undefined,
-                authorId: req.query.authorId as string | undefined,
-                audio: req.query.audio as string | undefined,
-            }
-
-            const musics = await container
-                .resolve(GetMusics)
-                .execute(page, limit, search);
-
-            return res.json({
-                data: musics,
-                message: "Musics fetched successfully"
-            });
-        } catch (error) {
-            return handleAppError(res, error);
-        }
+      return res.status(200).json({
+        data: updated,
+        message: "Music updated successfully",
+      });
+    } catch (error) {
+      return handleAppError(res, error);
     }
+  }
 
-    async getById(req: Request, res: Response) {
-        try {
-            const music = await container
-                .resolve(GetMusicById)
-                .execute(req.params.id as string);
+  async get(req: Request, res: Response) {
+    try {
+      const { limit, page } = normalizePagination(
+        req.query.page as unknown as number,
+        req.query.limit as unknown as number,
 
-            return res.json({
-                data: music,
-                message: "Music fetched successfully"
-            });
-        } catch (error) {
-            return handleAppError(res, error);
-        }
+        req.user!,
+      );
+
+      const search = {
+        name: req.query.name as string | undefined,
+        authorName: req.query.authorName as string | undefined,
+        id: req.query.id as string | undefined,
+        authorId: req.query.authorId as string | undefined,
+        audio: req.query.audio as string | undefined,
+      };
+
+      const musics = await container
+        .resolve(GetMusics)
+        .execute(page, limit, search);
+
+      return res.json({
+        data: musics,
+        message: "Musics fetched successfully",
+      });
+    } catch (error) {
+      return handleAppError(res, error);
     }
+  }
 
+  async getById(req: Request, res: Response) {
+    try {
+      const music = await container
+        .resolve(GetMusicById)
+        .execute(req.params.id as string);
 
-    async like (req: Request, res: Response) {
-
-        try {
-            const musicId = req.params.id as string;
-            await container
-                .resolve(LikeMusic)
-                .execute(musicId, req.user!);
-
-            return res.status(200).json({
-                message: "Music liked successfully"
-            });
-        }catch (error) {
-            return handleAppError(res, error);
-        }
-
+      return res.json({
+        data: music,
+        message: "Music fetched successfully",
+      });
+    } catch (error) {
+      return handleAppError(res, error);
     }
+  }
 
+  async like(req: Request, res: Response) {
+    try {
+      const musicId = req.params.id as string;
+      await container.resolve(LikeMusic).execute(musicId, req.user!);
 
-    async deslike (req: Request, res: Response) {
-        try {
-            const musicId = req.params.id as string;
-            await container
-                .resolve(DeslikeMusic)
-                .execute(musicId, req.user!);
-
-            return res.status(200).json({
-                message: "Music desliked successfully"
-            });
-        }catch(error) {
-            return handleAppError(res, error);
-        }
+      return res.status(200).json({
+        message: "Music liked successfully",
+      });
+    } catch (error) {
+      return handleAppError(res, error);
     }
+  }
 
+  async deslike(req: Request, res: Response) {
+    try {
+      const musicId = req.params.id as string;
+      await container.resolve(DeslikeMusic).execute(musicId, req.user!);
 
+      return res.status(200).json({
+        message: "Music desliked successfully",
+      });
+    } catch (error) {
+      return handleAppError(res, error);
+    }
+  }
 }
 
 export { MusicController };

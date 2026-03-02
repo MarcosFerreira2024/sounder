@@ -1,4 +1,4 @@
-import { Music } from "../../../generated/prisma/client";
+import { Music, Prisma } from "../../../generated/prisma/client";
 import { prisma } from "../../../libs/prismaClient";
 import {
   IMusicRepository,
@@ -27,17 +27,38 @@ class MusicRepository implements IMusicRepository {
     return availableMusics[randomIndex];
   }
 
-  async getMusicById(musicId: string): Promise<Music | null> {
+  async getMusicById(musicId: string): Promise<MusicWithCover | null> {
     const music = await prisma.music.findUnique({
       where: {
         id: musicId,
       },
       include: {
-        genres: true,
+        genres: {
+          select: {
+            genre: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        album: {
+          select: {
+            cover: true,
+          },
+        },
       },
     });
 
-    return music;
+    if (!music) return null;
+
+    const withCover = {
+      ...music,
+      genres: music?.genres.map((genre) => genre.genre.name),
+      cover: music?.album?.cover,
+    };
+
+    return withCover;
   }
 
   async updateMany(
@@ -126,30 +147,79 @@ class MusicRepository implements IMusicRepository {
       prisma.music.delete({ where: { id: musicId } }),
     ]);
   }
+
   async getMusics(
     search?: musicQueryFilters,
     page?: number,
     limit?: number,
+    excludeMusics?: string[],
+    operator: "AND" | "OR" = "AND",
   ): Promise<MusicWithCover[]> {
-    return await prisma.music.findMany({
-      where: {
-        ...(search?.name && { name: { contains: search.name } }),
-        ...(search?.audio && { audio: { contains: search.audio } }),
-        ...(search?.id && { id: search.id }),
-        ...(search?.artistId && { artistId: search.artistId }),
+    const filters: Prisma.MusicWhereInput[] = [];
 
-        artist: {
-          user: {
-            name: {
-              contains: search?.authorName,
+    if (search?.name) {
+      filters.push({
+        name: { contains: search.name, mode: "insensitive" },
+      });
+    }
+
+    if (search?.genresName) {
+      filters.push({
+        genres: {
+          some: {
+            genre: {
+              name: { in: search.genresName },
             },
           },
         },
-      },
+      });
+    }
 
-      skip: page && limit && (page - 1) * limit,
-      take: limit && limit,
+    if (search?.audio) {
+      filters.push({
+        audio: { equals: search.audio },
+      });
+    }
 
+    if (search?.id) {
+      filters.push({
+        id: search.id,
+      });
+    }
+
+    if (search?.artistId) {
+      filters.push({
+        artistId: search.artistId,
+      });
+    }
+
+    if (search?.authorName) {
+      filters.push({
+        artist: {
+          user: {
+            name: {
+              contains: search.authorName,
+              mode: "insensitive",
+            },
+          },
+        },
+      });
+    }
+
+    const where: Prisma.MusicWhereInput = {};
+
+    if (excludeMusics?.length) {
+      where.id = { notIn: excludeMusics };
+    }
+
+    if (filters.length) {
+      where[operator] = filters;
+    }
+
+    const musics = await prisma.music.findMany({
+      where,
+      skip: page && limit ? (page - 1) * limit : undefined,
+      take: limit ?? undefined,
       include: {
         album: {
           select: {
@@ -158,6 +228,19 @@ class MusicRepository implements IMusicRepository {
         },
       },
     });
+
+    const withCover: MusicWithCover[] = musics.map((music) => ({
+      id: music.id,
+      name: music.name,
+      albumId: music.albumId,
+      artistId: music.artistId,
+      audio: music.audio,
+      likeCount: music.likeCount,
+      lyrics: music.lyrics,
+      cover: music.album?.cover,
+    }));
+
+    return withCover;
   }
 
   async removeLike(musicId: string): Promise<void> {

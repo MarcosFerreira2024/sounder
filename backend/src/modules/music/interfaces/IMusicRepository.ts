@@ -5,19 +5,34 @@ export type musicQueryFilters = {
   audio?: string;
   id?: string;
   artistId?: string;
+  genresName?: string[];
+
   authorName?: string;
 };
 
+export type PlaylistMusicItem = {
+  id: string;
+  name: string;
+  audio: string;
+  likeCount: number;
+  cover?: string | null;
+  lyrics: string;
+  author: string;
+  genres: string[];
+};
+
 export type MusicWithCover = Music & {
-  album: {
-    cover: string;
-  } | null;
+  cover?: string | null;
+};
+export type LikedMusicsWithCover = MusicWithCover & { liked: boolean | null };
+export type LikedPlaylistMusicItem = PlaylistMusicItem & {
+  liked: boolean | null;
 };
 
 interface IMusicRepository {
-  getMusicById(musicId: string): Promise<Music | null>;
+  getMusicById(musicId: string): Promise<MusicWithCover | null>;
 
-  getRandomMusic(exclude: string[]): Promise<MusicWithCover | null>;
+  getRandomMusic(exclude?: string[]): Promise<MusicWithCover | null>;
 
   deleteByAlbumId(albumId: string): Promise<void>;
 
@@ -35,6 +50,8 @@ interface IMusicRepository {
     search?: musicQueryFilters,
     page?: number,
     limit?: number,
+    excludeMusics?: string[],
+    operator?: "AND" | "OR",
   ): Promise<MusicWithCover[]>;
 
   createMusic(data: {
