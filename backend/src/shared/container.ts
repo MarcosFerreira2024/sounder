@@ -21,8 +21,8 @@ import { GameSessionRepository } from "../modules/game/repos/GameSessionReposito
 import { GameUserRepository } from "../modules/game/repos/GameUserRepository";
 import { ArtistRepository } from "../modules/artist/repositories/ArtistRepository";
 import { IArtistRepository } from "../modules/artist/interfaces/IArtistRepository";
-import { IFileStorage } from "./storage/IFileStorage";
-import { DiskFileStorage } from "./storage/DiskFileStorage";
+import { IFileStorage } from "../modules/file/IFileStorage";
+import { SupabaseFileStorage } from "../modules/file/SupabaseFileStorage";
 import { IGameRepository } from "../modules/game/interfaces/IGameRepository";
 import { GameRepository } from "../modules/game/repos/GameRepository";
 import { ImageProcessingService } from "./services/ImageProcessingService";
@@ -84,7 +84,7 @@ container.registerSingleton<IArtistRepository>(
   ArtistRepository,
 );
 
-container.registerSingleton<IFileStorage>("FileStorage", DiskFileStorage);
+container.registerSingleton<IFileStorage>("FileStorage", SupabaseFileStorage);
 
 container.registerSingleton<IGameRepository>("GameRepository", GameRepository);
 
