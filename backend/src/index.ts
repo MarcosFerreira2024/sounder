@@ -1,14 +1,9 @@
 import "reflect-metadata";
 import "./shared/container";
 import { Server } from "./configs/server";
-import dotenv from "dotenv";
 import "./modules/game/cronjobs/dailyGame";
+import dotenv from "dotenv";
 
 dotenv.config();
 
-
-
-new Server(Number(process.env.PORT)).run()
-
-
-
+new Server(Number(process.env.PORT)).run();
