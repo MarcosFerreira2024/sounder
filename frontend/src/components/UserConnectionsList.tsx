@@ -1,23 +1,31 @@
 import MainLayout from "../layouts/MainLayout";
-import ImageDisplayCardList from "./ui/ImageDisplayCardList";
+import DisplayCardList from "./ui/DisplayCardList";
 import UserConnectionsListSkeleton from "./UserConnectionsListSkeleton";
 
 export type UserConnectionsListProps = {
   data:
     | {
         id: string;
-        name: string;
+        title: string;
         image?: string;
-        onClick?: () => void;
+        to: string;
+        imageClassName: string;
       }[]
     | null;
 };
 function UserConnectionsList({ data }: UserConnectionsListProps) {
+  const mappedData = data?.map((item) => {
+    return {
+      ...item,
+      overlay: false,
+    };
+  });
+
   return (
     <MainLayout>
       <div
         style={{ maxHeight: "calc(100dvh - 84px - 100px)" }}
-        className="flex-1  overflow-y-auto py-4"
+        className="flex-1  lg:scrollbar-default scrollbar-hide overflow-y-auto py-4"
       >
         <div
           className="
@@ -28,10 +36,7 @@ function UserConnectionsList({ data }: UserConnectionsListProps) {
           "
         >
           {data ? (
-            <ImageDisplayCardList
-              className={"min-w-70  rounded-full min-h-70 max-w-70 max-h-70 "}
-              data={data}
-            />
+            <DisplayCardList data={mappedData ?? []} />
           ) : (
             <UserConnectionsListSkeleton />
           )}

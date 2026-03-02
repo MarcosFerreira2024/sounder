@@ -3,6 +3,7 @@ import Button from "../ui/Button";
 import { Pause, Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useAuthCarousel from "../../hooks/useAuthCarousel";
+import Image from "../ui/Image";
 
 function AuthCarousel({ isTyping }: { isTyping: boolean }) {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function AuthCarousel({ isTyping }: { isTyping: boolean }) {
     >
       <AnimatePresence key={currentIndex}>
         <motion.div
-          className="w-full h-full absolute pointer-events-none bg-black/80 top-0  z-20 left-0"
+          className="w-full h-full absolute pointer-events-none bg-black/80 rounded-2xl top-0  z-20 left-0"
           initial={{
             opacity: 1,
           }}
@@ -43,13 +44,13 @@ function AuthCarousel({ isTyping }: { isTyping: boolean }) {
           draggable={false}
           key={images[currentIndex].alt}
           onClick={handleScrollPreference}
-          className=" h-full   border-neutral-800 rounded-2xl shadow-md border min-h-full absolute object-cover object-center"
+          className=" h-full w-full   border-neutral-800 rounded-2xl shadow-md border min-h-full absolute object-cover object-center"
           src={images[currentIndex].src}
           alt={images[currentIndex].alt}
         />
       </AnimatePresence>
 
-      <img
+      <Image
         draggable={false}
         onClick={() => navigate("/")}
         src="/logo.png"

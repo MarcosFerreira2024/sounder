@@ -1,35 +1,38 @@
-import LyricsSection from "./LyricsSection";
-import PlaylistSection from "./playlist/PlaylistSection";
+import { CollectionHeader } from "./collection/CollectionHeader";
+import TrackList from "./music/TrackList";
+import { useCollectionContext } from "../contexts/CollectionContext";
+import { MusicHeader } from "./music/MusicHeader";
 
 type SidePanelProps = {
   lyricsVisible: boolean;
-  showPlaylistMusic: boolean;
+  showMusics: boolean;
+  loading?: boolean;
 };
 
 export function SidePanel({
   lyricsVisible,
-  showPlaylistMusic,
+  showMusics,
+  loading,
 }: SidePanelProps) {
-  if (!lyricsVisible && !showPlaylistMusic) return null;
+  const { collection, collectionType } = useCollectionContext();
+  if (!lyricsVisible && !showMusics) return null;
+
+  const isMusicOrRecommendation =
+    collectionType === "recommendation" ||
+    collection?.type === "recommendation" ||
+    collectionType === "music" ||
+    collection?.type === "music";
 
   return (
-    <section
-      style={{ height: "calc(100dvh - 84px - 100px)" }}
-      className="
-        relative
-        w-full
-        max-w-[40%]
-        min-h-150
-        bg-neutral-900
-        rounded-2xl
-        border border-neutral-800
-        grid gap-2
-        p-2
-        overflow-hidden
-      "
-    >
-      {lyricsVisible && <LyricsSection />}
-      {!lyricsVisible && showPlaylistMusic && <PlaylistSection />}
-    </section>
+    <>
+      {isMusicOrRecommendation ? (
+        <MusicHeader loading={loading} />
+      ) : (
+        <CollectionHeader />
+      )}
+      <div className="flex flex-1   flex-col gap-4 p-4 bg-neutral-950 overflow-y-auto  rounded-2xl border border-neutral-800">
+        <TrackList />
+      </div>
+    </>
   );
 }
