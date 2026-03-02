@@ -1,20 +1,26 @@
 import Button from "./Button";
 import { Gamepad2, Home, LogOut, Plus } from "lucide-react";
-import CategoriesCarousel from "../CategoriesCarousel";
+import CategoriesCarousel from "../playlist/PlaylistCarousel";
 import useVisibility from "../../hooks/useVisibility";
-import AddPlaylistModal from "../playlist/AddPlaylistModal";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import AddModal from "../collection/AddModal";
+import { SidebarSkeleton } from "./SidebarSkeleton";
+import usePlaylistsCarousel from "../../hooks/usePlaylistsCarousel";
 
-function Sidebar() {
+function Sidebar({ loading }: { loading?: boolean }) {
   const { close, isVisible, open } = useVisibility(false);
   const { handleSignOut } = useAuth();
   const navigate = useNavigate();
 
+  const data = usePlaylistsCarousel();
+
+  if (data.loading || loading) return <SidebarSkeleton />;
+
   return (
-    <div className="w-full h-full p-2 mt-2 min-h-[94px] flex bg-neutral-900 border border-neutral-800 rounded-2xl">
-      <nav className="flex flex-1   items-center px-4 py-2.5 rounded-2xl  justify-between bg-neutral-950 border-neutral-900">
-        <div className="flex items-center gap-4 ">
+    <div className="w-full h-full  p-1 lg:p-2 mt-2 min-h-[94px] flex relative   bg-neutral-900 border border-neutral-800 rounded-2xl">
+      <nav className="flex flex-1  justify-between  items-center lg:px-4 px-2  rounded-2xl   bg-neutral-950 border-neutral-900">
+        <div className="flex items-center  lg:gap-4 gap-3 ">
           <Button
             onClick={handleSignOut}
             roundedValue="full"
@@ -29,10 +35,10 @@ function Sidebar() {
             icon={<Home />}
             title="Home"
           />
-          <CategoriesCarousel />
+          <CategoriesCarousel loading={loading} data={data} />
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex lg:gap-4 gap-3">
           <Button
             onClick={() => navigate("/daily-game")}
             roundedValue="full"
@@ -42,7 +48,7 @@ function Sidebar() {
           />
 
           <Button
-            onClick={() => open()}
+            onClick={open}
             roundedValue="full"
             size="md"
             icon={<Plus />}
@@ -51,7 +57,7 @@ function Sidebar() {
         </div>
       </nav>
 
-      {isVisible && <AddPlaylistModal onClose={close} />}
+      {isVisible && <AddModal onClose={close} />}
     </div>
   );
 }

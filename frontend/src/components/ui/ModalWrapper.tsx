@@ -24,13 +24,13 @@ export function ModalWrapper({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/60 flex items-center justify-center z-100"
+        className="fixed inset-0 bg-black/60 flex items-center justify-center p-2 z-100"
         onClick={onClose}
       >
         <motion.div
           exit={{ scale: 0 }}
           transition={{ ease: "easeInOut", duration: 0.1 }}
-          className={`${className ?? "max-w-[460px] w-full"} bg-neutral-900 border-neutral-800 shadow-md border rounded-lg p-2   relative`}
+          className={`${className ?? "max-w-[460px] w-full"} bg-neutral-900 border-neutral-800 shadow-md border rounded-lg md:p-2 p-1   relative`}
           onClick={(e) => e.stopPropagation()}
         >
           <Button

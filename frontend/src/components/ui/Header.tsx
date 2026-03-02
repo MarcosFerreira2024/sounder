@@ -1,33 +1,42 @@
 import { useNavigate } from "react-router-dom";
 import Button from "./Button";
-
 import SearchInput from "./SearchInput";
-import { authClient } from "../../libs/auth/auth";
+import { useAuthProvider } from "../../contexts/AuthContext";
+import Image from "./Image";
+import HeaderSkeleton from "./HeaderSkeleton";
 
 function Header() {
-  const session = authClient.useSession();
-
+  const { data, isPending, isRefetching } = useAuthProvider();
   const navigate = useNavigate();
+
+  const isLoading = isPending || isRefetching;
+
+  if (isLoading) return <HeaderSkeleton />;
 
   return (
     <header
-      className="items-center sticky top-0
+      className="items-center sticky gap-4 top-0
         min-h-15 flex justify-between "
     >
-      <img
+      <Image
         src="/logo.png"
         onClick={() => navigate("/")}
-        className="w-fit h-fit"
+        className="w-27 object-cover lg:w-fit lg:h-fit"
       />
+
       <div className="flex gap-4 justify-end flex-1">
         <SearchInput />
-        {session.data ? (
-          <img
-            onClick={() => navigate(`/profile/${session.data?.user.id}`)}
-            src={session.data.user.image ?? "/not-found.png"}
-            className="rounded-full border border-neutral-900 max-w-12 max-h-12"
-            alt={session.data.user.name}
-            title={session.data.user.name}
+
+        {data?.session ? (
+          <Image
+            onClick={() => navigate(`/profile/${data?.user.id}`)}
+            src={data?.user.image ?? "/not-found.svg"}
+            className="rounded-full border border-neutral-900 min-w-12 min-h-12 max-w-12 max-h-12"
+            onError={(e) => {
+              e.currentTarget.src = "/not-found.svg";
+            }}
+            alt={data?.user.name}
+            title={data?.user.name}
           />
         ) : (
           <Button

@@ -12,7 +12,7 @@ function Tooltip() {
       initial={{ opacity: 0, scale: 0 }}
       animate={{ opacity: 1, scale: 1.1 }}
       exit={{ opacity: 0, scale: 0 }}
-      className="absolute z-999 pointer-events-none  wrap-break-word
+      className="absolute z-999 pointer-events-none wrap-break-word  
                  bg-neutral-900 text-neutral-100 font-inter border border-neutral-800
                  px-2 py-1 rounded text-xs text-center"
       style={{

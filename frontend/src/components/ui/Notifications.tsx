@@ -1,14 +1,14 @@
 import { X } from "lucide-react";
 import Button from "./Button";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
-type AppErrorProps = {
+type NotifcationsProps = {
   message: string;
   onClose?: () => void;
   setIsHovering: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function AppError({ message, onClose, setIsHovering }: AppErrorProps) {
+function Notifcations({ message, onClose, setIsHovering }: NotifcationsProps) {
   return (
     <motion.div
       key="error"
@@ -38,4 +38,4 @@ function AppError({ message, onClose, setIsHovering }: AppErrorProps) {
   );
 }
 
-export default AppError;
+export default Notifcations;

@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React from "react";
+import Image from "./Image";
 
 type ButtonProps = {
   size: "xs" | "sm" | "md" | "lg";
@@ -6,9 +7,8 @@ type ButtonProps = {
   icon?: string | React.ReactNode;
   variant?: "default" | "opacity" | "active" | "destructive" | "confirm";
   iconPosition?: "left" | "right";
-  roundedValue: "sm" | "md" | "full" | "xl";
+  roundedValue: "sm" | "md" | "xl" | "full";
   children?: React.ReactNode;
-  tooltipText?: string;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 function Button({
@@ -19,73 +19,84 @@ function Button({
   variant = "default",
   iconPosition = "left",
   roundedValue,
-  tooltipText,
+  className = "",
   ...props
 }: ButtonProps) {
   const sizes = {
     xs: {
-      height: "24px",
-      textSize: "12px",
-      padding: icon ? "0px" : "8px",
+      base: "min-h-5 text-sm md:h-6 ",
+      square: "min-w-5 md:w-6",
+      padding: "px-1 md:px-2",
     },
     sm: {
-      height: "36px",
-      textSize: "16px",
-      padding: icon ? "0px" : "8px",
+      base: "min-h-8  md:h-9 ",
+      square: "min-w-8 md:w-9",
+      padding: "px-2 md:px-2",
     },
-
     md: {
-      height: "42px",
-      textSize: "20px",
-      padding: icon ? "0px" : "16px",
+      base: "min-h-9 text-base md:h-10 md:text-lg",
+      square: "min-w-9 md:w-10",
+      padding: "px-3 md:px-4",
     },
     lg: {
-      height: "50px",
-      textSize: "20px",
-      padding: icon ? "0px" : "24px",
+      base: "min-h-10 text-base md:h-12 md:text-lg",
+      square: "min-w-10 md:w-12",
+      padding: "px-4 md:px-6",
     },
+  };
+
+  const variants = {
+    default:
+      "bg-neutral-900 border border-neutral-800 text-main not-disabled:hover:bg-neutral-800 disabled:opacity-50",
+    opacity:
+      "bg-neutral-900 border border-neutral-800 text-opacity not-disabled:hover:bg-neutral-800",
+    active:
+      "bg-neutral-50 border border-neutral-200 text-neutral-900 font-inter",
+    destructive:
+      "bg-red-900 border border-red-800 text-neutral-200 not-disabled:hover:bg-red-700 font-inter",
+    confirm:
+      "bg-lime-700 border border-lime-800 text-neutral-200 not-disabled:hover:bg-lime-800 font-inter",
   };
 
   const rounded = {
-    sm: "8px",
-    md: "16px",
-    xl: "24px",
-    full: "999px",
+    sm: "rounded-[8px]",
+    md: "rounded-[16px]",
+    xl: "rounded-[24px]",
+    full: "rounded-full",
   };
+
+  const currentSize = sizes[size];
+
+  const dimensionClass =
+    icon && !children
+      ? `${currentSize.base} ${currentSize.square}`
+      : `${currentSize.base} ${currentSize.padding}`;
 
   function renderIcon(icon: string | React.ReactNode) {
     if (typeof icon === "string") {
-      return <img className="pointer-events-none" src={icon} />;
-    } else {
-      return icon;
+      return <Image className="pointer-events-none" src={icon} />;
     }
+    return icon;
   }
-
-  const variants = {
-    default: `bg-neutral-900 border disabled:opacity-50 
-       hover:bg-neutral-800 outline-none  border-neutral-800 text-main   `,
-    opacity: `bg-neutral-900 border border-neutral-800 text-opacity hover:bg-neutral-800 `,
-
-    active: `bg-neutral-50 border border-neutral-200 text-neutral-900 font-inter`,
-    destructive: `hover:bg-red-700 bg-red-900 border border-red-800 text-neutral-200 font-inter`,
-    confirm: `hover:bg-lime-800 bg-lime-700 border border-lime-800 text-neutral-200 font-inter`,
-  };
 
   return (
     <button
-      style={{
-        minHeight: sizes[size].height,
-        minWidth: sizes[size].height,
-        fontSize: props.className?.includes("text") ? "" : sizes[size].textSize,
-        borderRadius: rounded[roundedValue],
-        justifyContent: justify,
-        paddingInline: sizes[size].padding,
-      }}
       {...props}
-      className={`${props.className} ${variants[variant]} cursor-pointer shadow-md gap-2  outline-none focus-visible:ring-2 focus-visible:ring-neutral-600 duration-200 ease-out flex items-center`}
+      className={`
+        ${dimensionClass}
+        ${variants[variant]}
+        ${rounded[roundedValue]}
+        flex items-center gap-2
+        justify-${justify}
+        shadow-md
+        transition-all duration-200 ease-out
+        focus-visible:ring-2 focus-visible:ring-neutral-600
+         text-nowrap
+        ${className}
+      `}
     >
       {icon && iconPosition === "left" && renderIcon(icon)}
-      {children && children}
+      {children}
       {icon && iconPosition === "right" && renderIcon(icon)}
     </button>
   );

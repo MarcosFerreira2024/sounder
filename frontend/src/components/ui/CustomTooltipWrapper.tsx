@@ -31,7 +31,7 @@ function CustomTooltipWrapper() {
         }
       }
     },
-    [showTooltip]
+    [showTooltip],
   );
 
   useEffect(() => {

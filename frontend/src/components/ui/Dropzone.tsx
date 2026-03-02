@@ -1,5 +1,6 @@
 import { Upload } from "lucide-react";
 import React from "react";
+import Image from "./Image";
 
 function Dropzone({
   photo,
@@ -9,10 +10,10 @@ function Dropzone({
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
-    <div className=" w-[300px] h-[300px] shadow-md overflow-hidden flex items-center justify-center border relative border-neutral-800 rounded-2xl border-dashed">
+    <div className=" md:w-[300px] md:h-[300px] w-[150px] h-[150px] shadow-md overflow-hidden flex items-center justify-center border relative border-neutral-800 rounded-2xl border-dashed">
       <label htmlFor="fileInput" className=" absolute w-full h-full">
         {photo && (
-          <img
+          <Image
             src={URL.createObjectURL(photo)}
             alt="photo"
             className="w-full h-full z-20 object-center absolute object-cover rounded-2xl"
