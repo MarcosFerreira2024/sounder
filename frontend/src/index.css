@@ -1,24 +1,27 @@
 @import "tailwindcss";
 @import 'tailwind-scrollbar-hide/v4';
 
+/* Scrollbar geral (fundo da barra) */
 ::-webkit-scrollbar {
-  width: 8px;            
-  height: 8px;             
-  background: transparent;   
+  width: 5px;       /* maior largura */
+  height: 5px;      /* maior altura */
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;   
-}
-
+/* Thumb (parte que você arrasta) */
 ::-webkit-scrollbar-thumb {
-  background-color: #171717; 
-  border: 2px solid #262626; 
-  border-radius: 9999px;     
+  background-color: #262626 /* neutral-800 */;
+  border-radius: 12px;
 }
 
+/* Track (área por onde a thumb passa) */
+::-webkit-scrollbar-track {
+  background: #09090b; /* neutral-950 */
+}
+
+/* Botões do scrollbar (setas) */
 ::-webkit-scrollbar-button {
-  display: none !important;            
+  display: hidden;
+
 }
 
 
