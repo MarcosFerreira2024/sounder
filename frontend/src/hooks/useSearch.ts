@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import type { Music } from "./useAudio";
-import type { PublicUser } from "./useProfile";
 import type { Playlist } from "./usePlaylist";
 import { searchByQuery } from "../actions/search/searchByQuery";
+import { useAppNotifications } from "../contexts/NotificationsContext";
+import type { User } from "./useUser";
 
 export type QueryType =
   | "all"
@@ -31,11 +32,11 @@ export type Album = {
 };
 
 export type SearchResult = {
-  artists?: PublicUser[];
+  artists?: Artist[];
   albums?: Album[];
   musics?: Music[];
   playlists?: Playlist[];
-  profiles?: PublicUser[];
+  profiles?: User[];
 };
 
 function useSearch() {
@@ -47,6 +48,7 @@ function useSearch() {
 
   const [search, setSearch] = useState(q);
   const [data, setData] = useState<SearchResult | null>(null);
+  const { setNotification } = useAppNotifications();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -64,13 +66,17 @@ function useSearch() {
     setLoading(true);
 
     const load = async () => {
-      const data = await searchByQuery(q, type);
+      try {
+        const data = await searchByQuery(q, type);
 
-      console.log(data);
-
-      if (!cancelled) setData(data);
-
-      setLoading(false);
+        if (!cancelled) setData(data);
+      } catch (error: any) {
+        setNotification(error.message);
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
     };
 
     load();
@@ -98,7 +104,6 @@ function useSearch() {
 
   const cancel = () => {
     setSearch("");
-    navigate("/search");
   };
 
   return {

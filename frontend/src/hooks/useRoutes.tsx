@@ -1,3 +1,4 @@
+import React from "react";
 import Home from "../pages/Home";
 import Signup from "../pages/Signup";
 import Playlist from "../pages/Playlist";
@@ -7,107 +8,111 @@ import Followers from "../pages/Followers";
 import Login from "../pages/Login";
 import Following from "../pages/Following";
 import AuthCallback from "../pages/AuthCallback";
-import type { JSX } from "react";
-import { AudioProvider } from "../contexts/AudioContext";
-import { PlaylistProvider } from "../contexts/PlaylistContext";
-import { useParams } from "react-router-dom";
 import Search from "../pages/Search";
 import NotFound from "../pages/NotFound";
 import UserPlaylists from "../pages/UserPlaylists";
+import Album from "../pages/Album";
+import DailyGame from "../pages/DailyGame";
+import Music from "../pages/Music";
 
 type AppRoute = {
   path: string;
-  element: JSX.Element;
+  Component: React.ComponentType;
   guard?: "auth" | "guest" | "public";
 };
 
+const routes: AppRoute[] = [
+  {
+    path: "/",
+    Component: Home,
+    guard: "auth",
+  },
+  {
+    path: "/search",
+    Component: Search,
+  },
+  {
+    path: "/music/:musicId",
+    Component: Music,
+  },
+  {
+    path: "/playlist/:playlistId",
+    Component: Playlist,
+    guard: "auth",
+  },
+  {
+    path: "/daily-game",
+    Component: DailyGame,
+    guard: "auth",
+  },
+  {
+    path: "/profile",
+    Component: Profile,
+    guard: "auth",
+  },
+
+  {
+    path: "/profile/:userId",
+    Component: Profile,
+    guard: "auth",
+  },
+  {
+    path: "/album/:albumId",
+    Component: Album,
+    guard: "auth",
+  },
+  {
+    path: "/profile/:userId/playlists",
+    Component: UserPlaylists,
+    guard: "auth",
+  },
+
+  {
+    path: "/profile/:userId/followers",
+    Component: Followers,
+    guard: "auth",
+  },
+
+  {
+    path: "/profile/:userId/following",
+    Component: Following,
+    guard: "auth",
+  },
+  {
+    path: "/profile/:userId/playlist/:playlistId",
+    Component: Playlist,
+    guard: "auth",
+  },
+
+  {
+    path: "/teste",
+    Component: Teste,
+    guard: "public",
+  },
+  {
+    path: "/login",
+    Component: Login,
+    guard: "guest",
+  },
+  {
+    path: "/signup",
+    Component: Signup,
+    guard: "guest",
+  },
+  {
+    path: "/auth/callback",
+    Component: AuthCallback,
+    guard: "guest",
+  },
+  {
+    path: "*",
+    Component: NotFound,
+    guard: "public",
+  },
+];
+
 function useRoutes() {
-  const routes: AppRoute[] = [
-    {
-      path: "/",
-      element: (
-        <AudioProvider>
-          <Home />
-        </AudioProvider>
-      ),
-      guard: "auth",
-    },
-    {
-      path: "/search",
-      element: <Search />,
-    },
-    {
-      path: "/playlist/:playlistId",
-      element: <PlaylistRoute />,
-      guard: "auth",
-    },
-    {
-      path: "/profile/:userId",
-      element: <Profile />,
-      guard: "auth",
-    },
-    {
-      path: "/profile/:userId/playlists",
-      element: <UserPlaylists />,
-      guard: "auth",
-    },
-    {
-      path: "/profile/:userId/followers",
-      element: <Followers />,
-      guard: "auth",
-    },
-
-    {
-      path: "/profile/:userId/following",
-      element: <Following />,
-      guard: "auth",
-    },
-    {
-      path: "/profile/:userId/playlist/:playlistId",
-      element: <PlaylistRoute />,
-      guard: "auth",
-    },
-
-    {
-      path: "/teste",
-      element: <Teste />,
-      guard: "guest",
-    },
-    {
-      path: "/login",
-      element: <Login />,
-      guard: "guest",
-    },
-    {
-      path: "/signup",
-      element: <Signup />,
-      guard: "guest",
-    },
-    {
-      path: "/auth/callback",
-      element: <AuthCallback />,
-      guard: "guest",
-    },
-    {
-      path: "*",
-      element: <NotFound />,
-      guard: "public",
-    },
-  ];
-
   return { routes };
 }
 
 export default useRoutes;
-
-export function PlaylistRoute() {
-  const { playlistId } = useParams<{ playlistId: string }>();
-
-  return (
-    <PlaylistProvider playlistId={playlistId}>
-      <AudioProvider>
-        <Playlist />
-      </AudioProvider>
-    </PlaylistProvider>
-  );
-}

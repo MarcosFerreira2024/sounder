@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAppError } from "../contexts/ErrorContext";
+import { useAppNotifications } from "../contexts/NotificationsContext";
 
 function useUpload(
   action: (file?: File) => Promise<void>,
@@ -8,15 +8,16 @@ function useUpload(
 ) {
   const [photo, setPhoto] = useState<File | null | undefined>(null);
   const [isUploading, setUploading] = useState(false);
-  const { setError } = useAppError();
+  const { setNotification, handleAppNotificationsError } =
+    useAppNotifications();
 
   const isValidImage = (file?: File | null): boolean => {
     if (!file) {
-      setError("Selecione uma imagem");
+      setNotification("Selecione uma imagem");
       return false;
     }
     if (!file.type.includes("image")) {
-      setError("Selecione uma imagem válida");
+      setNotification("Selecione uma imagem válida");
       return false;
     }
     return true;
@@ -41,9 +42,8 @@ function useUpload(
     setUploading(true);
     try {
       await action(photo ?? undefined);
-      onclose();
-    } catch {
-      setError("Erro ao enviar a imagem");
+    } catch (error: any) {
+      handleAppNotificationsError(error);
     } finally {
       setUploading(false);
     }

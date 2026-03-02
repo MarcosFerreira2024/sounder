@@ -1,48 +1,57 @@
-import { useEffect, useState } from "react";
-import { useAppError } from "../contexts/ErrorContext";
+import { useState, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAppNotifications } from "../contexts/NotificationsContext";
 import { useUser } from "./useUser";
 import { updateUserData } from "../actions/user/updateUser";
 import { userUpdateSchema } from "../libs/schemas/userUpdateSchema";
+import { useMutation } from "@tanstack/react-query";
+import { authClient } from "../libs/auth/auth";
 
 function useUserUpdateModal(onSubmitCloseFunction: () => void) {
-  const { user, loading } = useUser();
+  const authUser = authClient.useSession().data?.user;
+  const { user, loading } = useUser(authUser?.id);
+  const queryClient = useQueryClient();
+  const { handleAppNotificationsError } = useAppNotifications();
 
-  useEffect(() => {
-    if (user) {
-      setFullName(user.name || "");
-      setAbout(user.about || "");
-    }
-  }, [user, loading]);
+  const [fullName, setFullName] = useState<string>("");
+  const [about, setAbout] = useState<string>("");
 
   const aboutPlaceholder = "Escreva uma breve descrição sobre você.";
 
-  const [fullName, setFullName] = useState(user?.name || "");
-  const [about, setAbout] = useState(user?.about || "");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  useEffect(() => {
+    if (!user) return;
 
-  const { handleAppErrors } = useAppError();
+    setFullName(user.name ?? "");
+    setAbout(user.about ?? "");
+  }, [user]);
 
-  async function handleSubmit() {
-    try {
-      setIsSubmitting(true);
-      userUpdateSchema.parse({ fullName, about });
-      await updateUserData({ name: fullName, about });
+  const mutation = useMutation({
+    mutationFn: async (data: { fullName: string; about: string }) => {
+      userUpdateSchema.parse(data);
+      return updateUserData({ name: data.fullName, about: data.about });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       onSubmitCloseFunction();
-    } catch (err: any) {
-      handleAppErrors(err);
-    } finally {
-      setIsSubmitting(false);
-    }
+    },
+    onError: (err: any) => {
+      handleAppNotificationsError(err);
+    },
+  });
+
+  function handleSubmit() {
+    mutation.mutate({ fullName, about });
   }
 
   return {
     fullName,
     setFullName,
-    handleSubmit,
-    isSubmitting,
     about,
     setAbout,
     aboutPlaceholder,
+    handleSubmit,
+    isSubmitting: mutation.isPending,
+    loading,
   };
 }
 

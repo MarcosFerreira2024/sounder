@@ -1,25 +1,63 @@
 import { useState } from "react";
 import { createPlaylist } from "../actions/playlists/createPlaylist";
-import { useAppError } from "../contexts/ErrorContext";
+import { useAppNotifications } from "../contexts/NotificationsContext";
 import useUpload from "./useUpload";
+import { updatePlaylist } from "../actions/playlists/updatePlaylist";
+import { deletePlaylist } from "../actions/playlists/deletePlaylist";
 
 function usePlaylistActions(onClose?: () => void) {
-  const { setError } = useAppError();
+  const { setNotification, handleAppNotificationsError } =
+    useAppNotifications();
   const [name, setName] = useState("");
-
-  const [isDeleteOpen, setDeleteOpen] = useState(false);
-  const [isRenameOpen, setRenameOpen] = useState(false);
-  const [isVisibilityOpen, setVisibilityOpen] = useState(false);
 
   const { handleInputChange, handleUpload, isUploading, photo } = useUpload(
     async (file?: File) => {
-      if (!name) return setError("Preencha o nome da playlist");
-      await createPlaylist(name, file);
-      onClose!();
+      if (!name) return setNotification("Preencha o nome da playlist");
+      try {
+        await createPlaylist(name, file);
+        onClose!();
+      } catch (error: any) {
+        console.log(error);
+        handleAppNotificationsError(error);
+      }
     },
     onClose!,
     true,
   );
+
+  async function deletePlaylistById(id: string) {
+    setNotification("Excluindo playlist...");
+    try {
+      await deletePlaylist(id);
+      setNotification("Playlist excluída com sucesso");
+    } catch (error: any) {
+      handleAppNotificationsError(error);
+    }
+  }
+
+  async function rename(id: string, name: string, originalName?: string) {
+    if (originalName && name === originalName) return;
+    setNotification("Renomeando playlist...");
+    try {
+      await updatePlaylist({ name }, id);
+      setNotification("Playlist renomeada com sucesso");
+    } catch (error: any) {
+      handleAppNotificationsError(error);
+    }
+  }
+
+  async function changeVisibility(
+    id: string,
+    visibility: "PUBLIC" | "PRIVATE",
+  ) {
+    setNotification("Alterando visibilidade...");
+    try {
+      await updatePlaylist({ visibility }, id);
+      setNotification("Visibilidade alterada com sucesso");
+    } catch (error: any) {
+      handleAppNotificationsError(error);
+    }
+  }
 
   return {
     name,
@@ -28,12 +66,9 @@ function usePlaylistActions(onClose?: () => void) {
     isUploading,
     handleInputChange,
     handleUpload,
-    isDeleteOpen,
-    setDeleteOpen,
-    isRenameOpen,
-    setRenameOpen,
-    isVisibilityOpen,
-    setVisibilityOpen,
+    deletePlaylistById,
+    rename,
+    changeVisibility,
   };
 }
 

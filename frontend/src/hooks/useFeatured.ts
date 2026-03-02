@@ -16,13 +16,31 @@ function useFeatured(data: SearchResult | null) {
   if (!data) return null;
 
   const target = (): TargetResult | null => {
+    if (data.musics?.[0]) {
+      const music = data.musics[0];
+      return {
+        type: "musics",
+        id: music.id!,
+        name: music.name,
+        image: music.cover ?? "/not-found.svg",
+      };
+    }
+    if (data.playlists?.[0]) {
+      const playlist = data.playlists[0];
+      return {
+        type: "playlists",
+        id: playlist.id,
+        name: playlist.name,
+        image: playlist.image ?? "/not-found.svg",
+      };
+    }
     if (data.artists?.[0]) {
       const artist = data.artists[0];
       return {
         type: "artists",
-        id: artist.id,
+        id: artist.userId,
         name: artist.name,
-        image: artist.image ?? "/not-found.png",
+        image: artist.image ?? "/not-found.svg",
       };
     }
 
@@ -32,27 +50,7 @@ function useFeatured(data: SearchResult | null) {
         type: "albums",
         id: album.id,
         name: album.name,
-        image: album.cover ?? "/not-found.png",
-      };
-    }
-
-    if (data.musics?.[0]) {
-      const music = data.musics[0];
-      return {
-        type: "musics",
-        id: music.id,
-        name: music.name,
-        image: music.cover ?? "/not-found.png",
-      };
-    }
-
-    if (data.playlists?.[0]) {
-      const playlist = data.playlists[0];
-      return {
-        type: "playlists",
-        id: playlist.id,
-        name: playlist.name,
-        image: playlist.image ?? "/not-found.png",
+        image: album.cover ?? "/not-found.svg",
       };
     }
 
@@ -60,9 +58,9 @@ function useFeatured(data: SearchResult | null) {
       const profile = data.profiles[0];
       return {
         type: "profiles",
-        id: profile.id,
-        name: profile.name,
-        image: profile.image ?? "/not-found.png",
+        id: profile.id!,
+        name: profile.name!,
+        image: profile.image ?? "/not-found.svg",
       };
     }
 
@@ -88,7 +86,25 @@ function useFeatured(data: SearchResult | null) {
   } as const;
 
   const handleNavigate = () => {
-    navigate(`/${featured.type}/${featured.id}`);
+    switch (featured.type) {
+      case "artists":
+        return navigate(`/profile/${featured.id}`);
+
+      case "playlists":
+        return navigate(`/playlist/${featured.id}`);
+
+      case "profiles":
+        return navigate(`/profile/${featured.id}`);
+
+      case "albums":
+        return navigate(`/album/${featured.id}`);
+
+      case "musics":
+        return navigate(`/music/${featured.id}`);
+
+      default:
+        return;
+    }
   };
 
   return {

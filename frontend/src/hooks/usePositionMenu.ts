@@ -7,6 +7,7 @@ function usePositionMenu() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const toggle = (e: React.MouseEvent) => {
+    e.preventDefault();
     if (isVisible) return close();
     else return openMenu(e);
   };

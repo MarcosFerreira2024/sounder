@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useAppNotifications } from "../contexts/NotificationsContext";
 import getUserInfo from "../actions/user/getUserInfo";
 
-type User = {
+export type User = {
   id?: string;
   name?: string;
   email?: string;
@@ -12,27 +13,25 @@ type User = {
   role?: "ADMIN" | "USER";
 };
 
-export function useUser() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+function useUser(userId?: string | null) {
+  const { setNotification } = useAppNotifications();
 
-  const syncUserInfo = async () => {
-    const user = await getUserInfo();
-    setUser(user);
-    return;
+  const { data, error, isLoading } = useQuery<User, Error>({
+    queryKey: ["user", userId],
+    queryFn: () => {
+      return getUserInfo(userId);
+    },
+    enabled: !!userId,
+
+    staleTime: 1000 * 60,
+  });
+
+  if (error) setNotification(error.message);
+
+  return {
+    user: data,
+    loading: isLoading,
   };
-
-  useEffect(() => {
-    const load = async () => {
-      await syncUserInfo();
-    };
-    try {
-      load();
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  return { user, loading };
 }
+
+export { useUser };

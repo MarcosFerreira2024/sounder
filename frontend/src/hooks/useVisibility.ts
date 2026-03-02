@@ -20,12 +20,9 @@ function useVisibility(initialState: boolean) {
   };
 
   useEffect(() => {
-    window.addEventListener("click", close);
-
     window.addEventListener("keydown", handleKeyboardClose);
 
     return () => {
-      window.removeEventListener("click", close);
       window.removeEventListener("keydown", handleKeyboardClose);
     };
   }, []);

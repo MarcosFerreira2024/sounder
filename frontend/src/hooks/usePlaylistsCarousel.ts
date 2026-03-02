@@ -1,22 +1,22 @@
 import { useEffect, useRef, useState } from "react";
-import { usePlaylist } from "./usePlaylist";
-import { useUser } from "./useUser";
 import { useUserPlaylists } from "./useUserPlaylists";
 import { authClient } from "../libs/auth/auth";
+import useBreakpoint from "./useBreakpoint";
 
-function useCategories() {
+function usePlaylistsCarousel() {
   const userId = authClient.useSession().data?.user.id || "";
-  const { playlists: userPlaylists } = useUserPlaylists(userId);
+  const { playlists: userPlaylists, loading } = useUserPlaylists(userId);
+
+  const isMobile = useBreakpoint();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  const visibleItems = 4;
+  const visibleItems = isMobile ? 1 : 3;
   const itemSize = 56;
   const gap = 40;
-
   const scrollAmount = itemSize + gap;
   const containerSize = itemSize * visibleItems + gap * (visibleItems - 1);
 
@@ -44,7 +44,21 @@ function useCategories() {
 
   useEffect(() => {
     updateScrollButtons();
-  }, []);
+  }, [userPlaylists]);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const activeItem =
+      containerRef.current.querySelector<HTMLButtonElement>(
+        "[data-active=true]",
+      );
+    if (activeItem) {
+      activeItem.scrollIntoView({
+        inline: "start",
+      });
+    }
+  }, [userPlaylists]);
 
   return {
     scrollAmount,
@@ -52,13 +66,15 @@ function useCategories() {
     scrollRight,
     canScrollLeft,
     canScrollRight,
-    categories: userPlaylists,
+    playlists: userPlaylists,
     containerRef,
     containerSize,
     updateScrollButtons,
     itemSize,
+    loading,
+    visibleItems,
     gap,
   };
 }
 
-export default useCategories;
+export default usePlaylistsCarousel;

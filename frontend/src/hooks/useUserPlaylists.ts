@@ -1,29 +1,26 @@
-import { useEffect, useState } from "react";
-import type { Playlist } from "./usePlaylist";
+import { useAppNotifications } from "../contexts/NotificationsContext";
+import { useQuery } from "@tanstack/react-query";
 import getUserPlaylists from "../actions/playlists/getUserPlaylists";
+import type { Playlist } from "./usePlaylist";
 
-export function useUserPlaylists(userId?: string) {
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
-  const [loading, setLoading] = useState(true);
+export function useUserPlaylists(userId?: string | null) {
+  const { setNotification } = useAppNotifications();
 
-  useEffect(() => {
-    if (!userId) {
-      setPlaylists([]);
-      setLoading(false);
-      return;
-    }
+  const query = useQuery<{ items: Playlist[] }, Error>({
+    queryKey: ["playlists", userId],
+    queryFn: async () => {
+      if (!userId) return { items: [] };
+      return getUserPlaylists(userId);
+    },
+    enabled: !!userId,
+  });
 
-    async function load() {
-      try {
-        const res = await getUserPlaylists(userId);
-        setPlaylists(res.items);
-      } finally {
-        setLoading(false);
-      }
-    }
+  if (query.error) {
+    setNotification((query.error as Error).message);
+  }
 
-    load();
-  }, [userId]);
-
-  return { playlists, loading };
+  return {
+    playlists: query.data?.items ?? [],
+    loading: query.isLoading,
+  };
 }

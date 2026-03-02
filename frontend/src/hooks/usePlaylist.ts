@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import getPlaylistById from "../actions/playlists/getById";
 import getMusicsByPlaylistId from "../actions/music/getMusicsByPlaylistId";
 import type { Music } from "./useAudio";
+import { useAppNotifications } from "../contexts/NotificationsContext";
 
 export type Playlist = {
   id: string;
@@ -17,6 +18,7 @@ export function usePlaylist(playlistId?: string) {
   const [playlist, setPlaylist] = useState<Playlist | null>(null);
   const [musics, setMusics] = useState<Music[]>([]);
   const [loading, setLoading] = useState(true);
+  const { setNotification } = useAppNotifications();
 
   useEffect(() => {
     if (!playlistId) {
@@ -35,8 +37,8 @@ export function usePlaylist(playlistId?: string) {
 
         setPlaylist(playlist);
         setMusics(musics);
-      } catch (e) {
-        console.error(e);
+      } catch (error: any) {
+        setNotification(error.message);
       } finally {
         setLoading(false);
       }

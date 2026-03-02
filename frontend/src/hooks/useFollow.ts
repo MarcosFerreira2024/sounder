@@ -1,102 +1,104 @@
-import { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { authClient } from "../libs/auth/auth";
 import getUserFollowers from "../actions/follow/getUserFollowers";
 import getUserFollowing from "../actions/follow/getUserFollowing";
-import { authClient } from "../libs/auth/auth";
+import { getFollowCount } from "../actions/follow/getFollowCount";
 import { getFollowingStatus } from "../actions/follow/getFollowingStatus";
 import { unfollow } from "../actions/follow/unfollow";
 import { follow } from "../actions/follow/follow";
-import { getFollowCount } from "../actions/follow/getFollowCount";
+import { useAppNotifications } from "../contexts/NotificationsContext";
 
-function useFollow(userId?: string) {
-  const [following, setFollowing] = useState<Follow[] | null>(null);
-  const [followers, setFollowers] = useState<Follow[] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [followCount, setFollowCount] = useState({
-    followers: 0,
-    following: 0,
+type Follow = {
+  id: string;
+  name: string;
+  image: string;
+};
+
+type FollowCount = {
+  followers: number;
+  following: number;
+};
+
+export function useFollow(userId?: string | null) {
+  const queryClient = useQueryClient();
+  const { data: session } = authClient.useSession();
+  const { handleAppNotificationsError, setNotification } =
+    useAppNotifications();
+
+  const followersQuery = useQuery<Follow[], Error>({
+    queryKey: ["followers", userId],
+    queryFn: () => getUserFollowers(userId!),
+    enabled: !!userId,
   });
 
-  const [isFollowingUser, setIsFollowingUser] = useState(false);
+  const followingQuery = useQuery<Follow[], Error>({
+    queryKey: ["following", userId],
+    queryFn: () => getUserFollowing(userId!),
+    enabled: !!userId,
+  });
 
-  const [wait, setWait] = useState(false);
+  const followCountQuery = useQuery<FollowCount, Error>({
+    queryKey: ["followCount", userId],
+    queryFn: () => getFollowCount(userId!),
+    enabled: !!userId,
+  });
 
-  const { data } = authClient.useSession();
+  const isFollowingQuery = useQuery<boolean, Error>({
+    queryKey: ["isFollowingUser", userId],
+    queryFn: async () => {
+      if (!userId || userId === session?.user.id) return false;
+      return getFollowingStatus(userId);
+    },
+    enabled: !!userId && userId !== session?.user.id,
+  });
 
-  type Follow = {
-    id: string;
-    name: string;
-    image: string;
-  };
-
-  const isFollowing = async () => {
-    if (userId !== data?.user.id) {
+  const toggleFollowMutation = useMutation({
+    mutationFn: async () => {
+      try {
+        if (!userId) return;
+        setNotification("Processando sua solicitação...");
+        if (isFollowingQuery.data) {
+          await unfollow(userId);
+          setNotification("Você deixou de seguir este usuário.");
+        } else {
+          await follow(userId);
+          setNotification("Usuário seguido com sucesso.");
+        }
+      } catch (error: any) {
+        setNotification(error.message);
+      }
+    },
+    onSuccess: async () => {
       if (!userId) return;
-      return await getFollowingStatus(userId);
-    }
-  };
 
-  useEffect(() => {
-    if (!wait) return;
-
-    const timer = setTimeout(() => setWait(false), 500);
-    return () => clearTimeout(timer);
-  }, [wait]);
-
-  const toggleFollow = async () => {
-    if (!userId) return;
-    if (wait) return;
-
-    if (isFollowingUser) {
-      await unfollow(userId);
-    } else {
-      await follow(userId);
-    }
-
-    setWait(true);
-    await getFollowingStatus(userId).then(setIsFollowingUser);
-  };
-
-  useEffect(() => {
-    isFollowing().then(setIsFollowingUser);
-  }, [following, userId]);
-
-  useEffect(() => {
-    if (!userId) {
-      setFollowing(null);
-      setFollowers(null);
-      setIsLoading(false);
-      setFollowCount({ followers: 0, following: 0 });
-      return;
-    }
-
-    const load = async () => {
-      const [followers, following, followCount] = await Promise.all([
-        getUserFollowers(userId),
-        getUserFollowing(userId),
-        getFollowCount(userId),
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["followers", userId] }),
+        queryClient.invalidateQueries({ queryKey: ["following", userId] }),
+        queryClient.invalidateQueries({ queryKey: ["followCount", userId] }),
+        queryClient.invalidateQueries({
+          queryKey: ["isFollowingUser", userId],
+        }),
       ]);
+    },
+    onError: (err: any) => {
+      handleAppNotificationsError(err);
+    },
+  });
 
-      setFollowCount(followCount);
-      setFollowers(followers.items);
-      setFollowing(following.items);
-    };
+  const toggleFollow = () => toggleFollowMutation.mutate();
 
-    try {
-      load();
-    } finally {
-      setIsLoading(false);
-    }
-  }, [userId]);
+  const isLoading =
+    followersQuery.isLoading ||
+    followingQuery.isLoading ||
+    followCountQuery.isLoading ||
+    isFollowingQuery.isLoading;
 
   return {
-    following,
-    followers,
+    following: followingQuery.data ?? [],
+    followers: followersQuery.data ?? [],
     isLoading,
-    isFollowingUser,
+    isFollowingUser: isFollowingQuery.data ?? false,
     toggleFollow,
-    wait,
-    followCount,
+    followCount: followCountQuery.data ?? { followers: 0, following: 0 },
   };
 }
-
-export { useFollow };
