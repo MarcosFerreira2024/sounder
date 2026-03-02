@@ -14,6 +14,7 @@ interface IArtistRepository {
     search?: artistsQueryFilters,
     page?: number,
     limit?: number,
+    matchType?: "startsWith" | "contains",
   ): Promise<
     {
       userId: string;

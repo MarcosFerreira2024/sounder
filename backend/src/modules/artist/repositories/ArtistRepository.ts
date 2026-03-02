@@ -55,6 +55,7 @@ class ArtistRepository implements IArtistRepository {
     search?: artistsQueryFilters,
     page?: number,
     limit?: number,
+    matchType?: "startsWith" | "contains",
   ): Promise<
     {
       artistId: string;
@@ -64,31 +65,53 @@ class ArtistRepository implements IArtistRepository {
       about: string | null;
     }[]
   > {
+    if (!matchType) matchType = "contains";
+
     const artist = await prisma.artist.findMany({
       where: {
-        ...(search?.name && { user: { name: { contains: search.name } } }),
+        ...(search?.name && {
+          user: {
+            name:
+              matchType === "contains"
+                ? { contains: search.name, mode: "insensitive" }
+                : { startsWith: search.name, mode: "insensitive" },
+          },
+        }),
         ...(search?.id && { user: { id: search.id } }),
         ...(search?.musicName && {
-          music: { some: { name: { contains: search.musicName } } },
+          music: {
+            some: {
+              name:
+                matchType === "contains"
+                  ? { contains: search.musicName, mode: "insensitive" }
+                  : { startsWith: search.musicName, mode: "insensitive" },
+            },
+          },
         }),
         ...(search?.albumName && {
-          albums: { some: { name: { contains: search.albumName } } },
+          albums: {
+            some: {
+              name:
+                matchType === "contains"
+                  ? { contains: search.albumName, mode: "insensitive" }
+                  : { startsWith: search.albumName, mode: "insensitive" },
+            },
+          },
         }),
-        ...(search?.id && { user: { id: search.id } }),
       },
       select: {
         id: true,
         user: {
           select: {
-            name: true,
             id: true,
+            name: true,
             about: true,
             image: true,
           },
         },
       },
-      skip: page && limit && (page - 1) * limit,
-      take: limit && limit,
+      skip: page && limit ? (page - 1) * limit : undefined,
+      take: limit,
     });
 
     return artist.map((artist) => ({
