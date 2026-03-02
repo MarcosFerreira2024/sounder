@@ -3,26 +3,20 @@ import { CreateDailyGame } from "../useCases/CreateDailyGame";
 import { CreateGamemode } from "../useCases/CreateGamemode";
 import { CreateGame } from "../useCases/CreateGame";
 
-
-
 @injectable()
-class GameService{
+class GameService {
+  async normalMode() {
+    const dailyGame = await container.resolve(CreateDailyGame).execute();
+    const mode = await container
+      .resolve(CreateGamemode)
+      .execute(
+        "Normal",
+        "Good luck, you have 5 tries to guess the correct author of the song",
+      );
+    await container.resolve(CreateGame).execute(dailyGame.id, mode.id);
 
-
-
-
-
-    async normalMode () {
-        const dailyGame = await container.resolve(CreateDailyGame).execute()
-        const mode = await container.resolve(CreateGamemode).execute("Normal","Good luck, you have 5 tries to guess the correct author of the song")
-        await container.resolve(CreateGame).execute(dailyGame.id, mode.id)
-
-        console.log("Normal mode created successfully")
-    }
-
-
-
-
+    console.log("Daily Normal mode game created successfully");
+  }
 }
 
-export {GameService}
+export { GameService };

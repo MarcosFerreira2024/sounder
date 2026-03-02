@@ -1,9 +1,10 @@
-import { inject, injectable } from "tsyringe"
-import { IDailyGameRepository } from "../interfaces/IDailyGameRepository"
-import { IGameRepository } from "../interfaces/IGameRepository"
-import { IGameSessionRepository } from "../interfaces/IGameSessionRepository"
-import { GameSession } from "../../../generated/prisma/client"
-import { AppUser } from "../../../shared/types/user"
+import { inject, injectable } from "tsyringe";
+import { IDailyGameRepository } from "../interfaces/IDailyGameRepository";
+import { IGameRepository } from "../interfaces/IGameRepository";
+import { IGameSessionRepository } from "../interfaces/IGameSessionRepository";
+import { GameSession } from "../../../generated/prisma/client";
+import { AppUser } from "../../../shared/types/user";
+import { IGameModesRepository } from "../interfaces/IGameModesRepository";
 
 @injectable()
 class StartSession {
@@ -15,40 +16,54 @@ class StartSession {
     private gameRepository: IGameRepository,
 
     @inject("GameSessionRepository")
-    private gameSessionRepository: IGameSessionRepository
+    private gameSessionRepository: IGameSessionRepository,
+
+    @inject("GameModesRepository")
+    private gameModesRepository: IGameModesRepository,
   ) {}
 
-  async execute(user: AppUser): Promise<GameSession> {
-    const todayDailyGame = await this.dailyGameRepository.getToday()
+  async execute(user: AppUser, mode: string): Promise<GameSession> {
+    const gameModes = await this.gameModesRepository.getGameModes({
+      name: mode,
+    });
+    const gameMode = gameModes[0];
 
-    if (!todayDailyGame) {
-      throw new Error("DailyGame not created yet")
+    if (!gameMode) {
+      throw new Error(`Game mode "${mode}" not found.`);
     }
 
-    const game = await this.gameRepository.findByDailyId(
-      todayDailyGame.id
-    )
+    let gameId: string;
+    if (gameMode.name === "Normal") {
+      const todayDailyGame = await this.dailyGameRepository.getToday();
 
-    if (!game) {
-      throw new Error("Daily Game exists but Game was not created")
+      if (!todayDailyGame) {
+        throw new Error("DailyGame not created yet");
+      }
+
+      const game = await this.gameRepository.findByDailyId(todayDailyGame.id);
+
+      if (!game) {
+        throw new Error("Daily Game exists but Game was not created");
+      }
+      gameId = game.id;
+    } else {
+      throw new Error(`Logic not implemented for game mode "${mode}".`);
     }
 
-    const existingSession =
-      await this.gameSessionRepository.findSession(
-        game.id,
-        user.id
-      )
+    const existingSession = await this.gameSessionRepository.findSession(
+      gameId,
+      user.id,
+    );
 
     if (existingSession) {
-      throw new Error("Session already started")
+      return existingSession;
     }
 
     return this.gameSessionRepository.createSession({
-      gameId: game.id,
-      userId: user.id
-    })
+      gameId: gameId,
+      userId: user.id,
+    });
   }
 }
 
-
-export { StartSession }
+export { StartSession };
