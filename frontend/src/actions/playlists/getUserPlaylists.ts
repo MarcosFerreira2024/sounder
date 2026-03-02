@@ -13,6 +13,10 @@ async function getUserPlaylists(id?: string | undefined | null) {
 
   const playlists = await response.json();
 
+  if (!response.ok) {
+    throw new Error(playlists.message);
+  }
+
   return playlists.data;
 }
 

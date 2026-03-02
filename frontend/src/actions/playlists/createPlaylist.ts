@@ -13,7 +13,9 @@ async function createPlaylist(name: string, file?: File | null) {
 
   const json = await response.json();
 
-  console.log(json);
+  if (!response.ok) {
+    throw new Error(json.message);
+  }
 
   return json.data;
 }

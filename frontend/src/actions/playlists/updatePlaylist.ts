@@ -13,7 +13,9 @@ async function updatePlaylist(data: Partial<Playlist>, playlistId: string) {
 
   const json = await response.json();
 
-  console.log(json);
+  if (!response.ok) {
+    throw new Error(json.message);
+  }
 
   return json.data;
 }
