@@ -4,7 +4,7 @@
 
 Uma plataforma web de **descoberta musical com pegada social e gamificada**, construída com **Node.js + TypeScript no backend (inicialmente feito em Bun + Elysia)**  e **React + TypeScript no frontend**.
 
-A ideia central é simples: o usuário descobre músicas interagindo com elas (like / dislike), cria playlists, segue pessoas e artistas — e ao mesmo tempo participa de **modos de jogo já implementados**, que transformam a descoberta musical em algo mais envolvente e menos passivo.
+A ideia central é simples: o usuário descobre músicas interagindo com elas (like / dislike), cria playlists, segue pessoas e artistas e ao mesmo tempo participa de **modos de jogo já implementados**, que transformam a descoberta musical em algo mais envolvente e menos passivo.
 
 Apesar do foco inicial ser simplicidade, o projeto já nasce com uma **arquitetura bem organizada**, pensada para crescer sem virar um código difícil de manter. Tudo aqui foi feito para evoluir, não para ser descartado depois.
 
@@ -152,6 +152,4 @@ Atualmente o projeto esta em desenvolvimento.
 
 
 
-Last edited at: 03:36 03/02/2026
-> sim eu nao durmo
 
