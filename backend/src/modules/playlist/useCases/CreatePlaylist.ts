@@ -1,7 +1,7 @@
 import { IPlaylistRepository } from "../interfaces/IPlaylistRepository";
 import { Playlist } from "../../../generated/prisma/client";
 import { inject, injectable } from "tsyringe";
-import { IFileStorage } from "../../../shared/storage/IFileStorage";
+import { IFileStorage } from "../../file/IFileStorage";
 import { AppUser } from "../../../shared/types/user";
 import { isAdmin } from "../../../shared/rules/isAdmin";
 

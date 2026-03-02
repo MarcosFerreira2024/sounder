@@ -1,5 +1,6 @@
 import { Playlist } from "../../../generated/prisma/client";
 import { PlaylistVisibility } from "../../../generated/prisma/enums";
+import { MusicWithCover, PlaylistMusicItem } from "../../music/interfaces/IMusicRepository";
 
 export type updatePayload = Partial<{
   image: string;
@@ -32,16 +33,7 @@ interface IPlaylistRepository {
     playlistId: string,
     page?: number,
     limit?: number,
-  ): Promise<
-    {
-      id: string;
-      lyrics?: string;
-      name: string;
-      audio: string;
-      cover?: string;
-      author: string;
-    }[]
-  >;
+  ): Promise<PlaylistMusicItem[]>;
 
   createPlaylist(
     userId: string,

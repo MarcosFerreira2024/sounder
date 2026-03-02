@@ -1,6 +1,10 @@
 import { Playlist, PlaylistVisibility } from "../../../generated/prisma/client";
 import { prisma } from "../../../libs/prismaClient";
 import {
+  MusicWithCover,
+  PlaylistMusicItem,
+} from "../../music/interfaces/IMusicRepository";
+import {
   IPlaylistRepository,
   updatePayload,
 } from "../interfaces/IPlaylistRepository";
@@ -83,16 +87,7 @@ class PlaylistRepository implements IPlaylistRepository {
     playlistId: string,
     page?: number,
     limit?: number,
-  ): Promise<
-    {
-      id: string;
-      name: string;
-      lyrics?: string;
-      audio: string;
-      cover?: string;
-      author: string;
-    }[]
-  > {
+  ): Promise<PlaylistMusicItem[]> {
     const musics = await prisma.playlistMusic.findMany({
       where: {
         playlistId,
@@ -102,8 +97,18 @@ class PlaylistRepository implements IPlaylistRepository {
           select: {
             id: true,
             name: true,
+            genres: {
+              select: {
+                genre: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
             audio: true,
             lyrics: true,
+            likeCount: true,
             album: {
               select: {
                 cover: true,
@@ -135,9 +140,11 @@ class PlaylistRepository implements IPlaylistRepository {
         id: item.music.id,
         name: item.music.name,
         audio: item.music.audio,
+        likeCount: item.music.likeCount,
         cover: item.music.album?.cover,
         lyrics: item.music.lyrics,
         author: item.music.artist.user.name,
+        genres: item.music.genres.map((genre) => genre.genre.name),
       };
     });
   }

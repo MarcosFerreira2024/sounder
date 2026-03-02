@@ -8,10 +8,11 @@ import {
   playlistSchema,
   playlistIdOnlyParamsSchema,
   playlistAndMusicParamsSchema,
-  uploadImageSchema, // Added this import
+  uploadImageSchema,
 } from "../schema/schema";
 import { optionalId } from "../../user/schemas/schema";
-import { upload } from "../../../libs/multer";
+import { uploadImage } from "../../../libs/multer";
+import { VerifyNSFWContent } from "../../../middleware/verifyNsfwImage";
 
 export function playlistRoutes(): Router {
   const router = Router();
@@ -60,21 +61,22 @@ export function playlistRoutes(): Router {
   router.post(
     "/playlist",
     requireAuth,
-    upload.single("image"),
+    uploadImage.single("image"),
+    VerifyNSFWContent,
     validate({ body: playlistSchema, file: uploadImageSchema }),
 
     playlistController.create,
   );
 
   router.post(
-    "/playlist/:playlistId/:musicId",
+    "/playlist/:playlistId/music/:musicId",
     requireAuth,
     validate({ params: playlistAndMusicParamsSchema }),
     playlistController.addMusicToPlaylist,
   );
 
   router.delete(
-    "/playlist/:playlistId/:musicId",
+    "/playlist/:playlistId/music/:musicId",
     requireAuth,
     validate({ params: playlistAndMusicParamsSchema }),
     playlistController.removeMusicFromPlaylist,
