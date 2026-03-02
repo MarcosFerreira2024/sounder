@@ -3,7 +3,6 @@ import { mainUserPlaylist } from "../../modules/playlist/seed/mainUserPlaylist";
 import { mainUser } from "../../modules/user/seed/mainUser";
 import { mockUsers } from "../../modules/user/seed/mockUsers";
 import { seedArtists } from "../../modules/artist/seeds/seedArtists";
-import { seedMusicForAdminPlaylists } from "./seedMusicForAdminPlaylists";
 import dotenv from "dotenv";
 (async () => {
   console.log("Seeding data...");
@@ -14,13 +13,11 @@ import dotenv from "dotenv";
 
   (await mainUser(),
     await Promise.all([
-      seedGenres(),
-      mainUserPlaylist(5),
-      mockUsers(20),
       seedArtists(),
+      seedGenres(),
+      // mainUserPlaylist(5),
+      // mockUsers(20),
     ]));
-
-  await seedMusicForAdminPlaylists();
 
   const endedAt = new Date();
   const timeTaken = (endedAt.getTime() - startedAt.getTime()) / 1000;
