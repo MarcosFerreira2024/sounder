@@ -2,7 +2,6 @@ import { createRequire } from "node:module";
 import * as tf from "@tensorflow/tfjs";
 import sharp from "sharp";
 
-import { NextFunction, Request, Response } from "express";
 import { NSFWJS } from "nsfwjs";
 
 const require = createRequire(import.meta.url);

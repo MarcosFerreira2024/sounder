@@ -19,19 +19,21 @@ import { loadModel } from "../libs/nsfwJs";
 class Server {
   public app: Application;
 
-  constructor(public port: number) {
+  constructor(public port?: number) {
     this.app = express();
     this.config();
-
     this.routes();
     setupScalar(this.app);
-    loadModel();
+    if (!process.env.VERCEL) {
+      this.run();
+      // loadModel(); // precisei remover o loadmodel da vercel, ficou muito lerdo
+    }
   }
 
   private config(): void {
     this.app.use(
       cors({
-        origin: ["http://localhost:5173"],
+        origin: ["https://sounder-tawny.vercel.app"],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,
         methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
@@ -59,12 +61,11 @@ class Server {
     this.app.use("/api/search", searchRoutes());
   }
 
-  public run(): Application {
-    this.app.listen(this.port, () => {
-      console.log(`Servidor rodando em http://localhost:${this.port}`);
+  private run(): void {
+    const port = this.port || 3000;
+    this.app.listen(port, () => {
+      console.log(`Servidor rodando em http://localhost:${port}`);
     });
-
-    return this.app;
   }
 }
 

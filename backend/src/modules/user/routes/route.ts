@@ -6,7 +6,6 @@ import { validate } from "../../../middleware/validateSchema";
 import { uploadWithErrorHandler } from "../../../middleware/uploadWithErrorHandler";
 import { optionalId, userUpdateBody } from "../schemas/schema";
 import verifyRateLimit from "../../../middleware/verifyRateLimit";
-import { VerifyNSFWContent } from "../../../middleware/verifyNsfwImage";
 import { uploadImage } from "../../../libs/multer";
 
 export function userRoutes(): Router {
@@ -55,7 +54,6 @@ export function userRoutes(): Router {
     requireAuth,
     verifyRateLimit(1),
     uploadWithErrorHandler(uploadImage.single("image")),
-    VerifyNSFWContent,
     validate({ body: optionalId }),
     userController.changeProfilePicture,
   );

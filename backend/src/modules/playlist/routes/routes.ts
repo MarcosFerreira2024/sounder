@@ -12,7 +12,6 @@ import {
 } from "../schema/schema";
 import { optionalId } from "../../user/schemas/schema";
 import { uploadImage } from "../../../libs/multer";
-import { VerifyNSFWContent } from "../../../middleware/verifyNsfwImage";
 
 export function playlistRoutes(): Router {
   const router = Router();
@@ -62,7 +61,6 @@ export function playlistRoutes(): Router {
     "/playlist",
     requireAuth,
     uploadImage.single("image"),
-    VerifyNSFWContent,
     validate({ body: playlistSchema, file: uploadImageSchema }),
 
     playlistController.create,
