@@ -22,7 +22,6 @@ export const auth = betterAuth({
       secure: true,
       httpOnly: true,
       path: "/",
-      domain: "sounder-sigma.vercel.app",
     },
   },
 
