@@ -17,6 +17,15 @@ export const auth = betterAuth({
     },
     useSecureCookies: true,
   },
+
+  cookie: {
+    namePrefix: "sounder",
+    attributes: {
+      sameSite: "none",
+      secure: true,
+    },
+  },
+
   user: {
     additionalFields: {
       role: {
@@ -25,7 +34,6 @@ export const auth = betterAuth({
         input: false,
         required: false,
       },
-
       artist: {
         type: "json",
         input: false,
@@ -58,5 +66,6 @@ export const auth = betterAuth({
 
   trustedOrigins: process.env.TRUSTED_ORIGINS?.split(",") || [],
 });
+
 type Session = typeof auth.$Infer.Session;
 export type { Session };

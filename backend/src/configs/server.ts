@@ -21,6 +21,7 @@ class Server {
 
   constructor(public port?: number) {
     this.app = express();
+    this.app.set("trust proxy", true);
     this.config();
     this.routes();
     setupScalar(this.app);
