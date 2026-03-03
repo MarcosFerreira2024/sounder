@@ -1,4 +1,4 @@
-import { User } from "../../../generated/prisma/client";
+import { User } from "../../../generated/prisma/client.js";
 
 type userQuery = {
   id?: string;

@@ -1,6 +1,6 @@
-import { MusicReaction } from "../../../generated/prisma/enums";
-import { prisma } from "../../../libs/prismaClient";
-import { IMusicActionRepository } from "../interfaces/IMusicActionRepository";
+import { MusicReaction } from "../../../generated/prisma/enums.js";
+import { prisma } from "../../../libs/prismaClient.js";
+import { IMusicActionRepository } from "../interfaces/IMusicActionRepository.js";
 
 class MusicActionRepository implements IMusicActionRepository {
   async upsert(musicAction: {

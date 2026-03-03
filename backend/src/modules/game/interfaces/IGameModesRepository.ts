@@ -1,4 +1,4 @@
-import { GameMode } from "../../../generated/prisma/client";
+import { GameMode } from "../../../generated/prisma/client.js";
 
 type gameModesQueryFilters = {
     name?: string;

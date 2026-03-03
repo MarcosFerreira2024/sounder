@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
-import { IMusicRepository } from "../interfaces/IMusicRepository";
-import { AppUser } from "../../../shared/types/user";
-import { canCreateMusic } from "../rules/canCreateMusic";
-import { Music } from "../../../generated/prisma/client";
-import { isAdmin } from "../../../shared/rules/isAdmin";
-import { IArtistRepository } from "../../artist/interfaces/IArtistRepository";
-import { IFileStorage } from "../../file/IFileStorage";
-import { normalizeString } from "../../../shared/helpers/normalizeString";
-import { IAlbumRepository } from "../../album/interfaces/IAlbumRepository";
+import { IMusicRepository } from "../interfaces/IMusicRepository.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { canCreateMusic } from "../rules/canCreateMusic.js";
+import { Music } from "../../../generated/prisma/client.js";
+import { isAdmin } from "../../../shared/rules/isAdmin.js";
+import { IArtistRepository } from "../../artist/interfaces/IArtistRepository.js";
+import { IFileStorage } from "../../file/IFileStorage.js";
+import { normalizeString } from "../../../shared/helpers/normalizeString.js";
+import { IAlbumRepository } from "../../album/interfaces/IAlbumRepository.js";
 
 @injectable()
 class CreateMusic {

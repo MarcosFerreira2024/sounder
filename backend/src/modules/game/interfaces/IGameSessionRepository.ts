@@ -1,4 +1,4 @@
-import { GameStatus, GameSession } from "../../../generated/prisma/client"
+import { GameStatus, GameSession } from "../../../generated/prisma/client.js"
 
 
 type GameSessionUpdate ={

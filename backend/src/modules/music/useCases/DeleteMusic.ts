@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
-import { IMusicRepository } from "../interfaces/IMusicRepository";
-import { canChangeMusic } from "../rules/canChangeMusic";
-import { AppUser } from "../../../shared/types/user";
+import { IMusicRepository } from "../interfaces/IMusicRepository.js";
+import { canChangeMusic } from "../rules/canChangeMusic.js";
+import { AppUser } from "../../../shared/types/user.js";
 
 @injectable()
 class DeleteMusic {

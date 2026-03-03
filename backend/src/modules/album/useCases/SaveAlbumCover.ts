@@ -3,9 +3,9 @@ import { Request } from "express";
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
-import { prisma } from "../../../libs/prismaClient";
-import { AppUser } from "../../../shared/types/user";
-import { isAdmin } from "../../../shared/rules/isAdmin";
+import { prisma } from "../../../libs/prismaClient.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { isAdmin } from "../../../shared/rules/isAdmin.js";
 
 @injectable()
 class SaveAlbumCover {

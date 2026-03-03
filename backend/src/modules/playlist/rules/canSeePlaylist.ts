@@ -1,5 +1,5 @@
 import { User } from "better-auth/types";
-import { PlaylistVisibility } from "../../../generated/prisma/enums";
+import { PlaylistVisibility } from "../../../generated/prisma/enums.js";
 
 export function canSeePlaylist(ownerId: string, visibility: PlaylistVisibility[] | PlaylistVisibility, user?: User) {
 

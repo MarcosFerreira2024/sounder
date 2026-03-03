@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import multer from "multer";
-import * as errorConstants from "../shared/constants/errors";
-import { handleAppError } from "../shared/helpers/handleAppError";
+import * as errorConstants from "../shared/constants/errors.js";
+import { handleAppError } from "../shared/helpers/handleAppError.js";
 
 export function uploadWithErrorHandler(uploadHandler: (req: Request, res: Response, next: NextFunction) => void) {
     return (req: Request, res: Response, next: NextFunction) => {

@@ -1,5 +1,5 @@
 import { User } from "better-auth/types";
-import { IMusicActionRepository } from "../interfaces/IMusicActionRepository";
+import { IMusicActionRepository } from "../interfaces/IMusicActionRepository.js";
 
 class getInteractedMusicsByUser {
     constructor(private musicActionRepository: IMusicActionRepository) {}

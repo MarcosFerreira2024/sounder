@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { IArtistRepository } from "../interfaces/IArtistRepository";
-import { IUserRepository } from "../../user/interfaces/IUserRepository";
-import { AppUser } from "../../../shared/types/user";
-import { isAdmin } from "../../../shared/rules/isAdmin";
+import { IArtistRepository } from "../interfaces/IArtistRepository.js";
+import { IUserRepository } from "../../user/interfaces/IUserRepository.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { isAdmin } from "../../../shared/rules/isAdmin.js";
 
 
 @injectable()

@@ -1,9 +1,9 @@
 import { User } from "better-auth/types";
-import { PlaylistVisibility } from "../../../generated/prisma/enums";
+import { PlaylistVisibility } from "../../../generated/prisma/enums.js";
 import {
   IPlaylistRepository,
   updatePayload,
-} from "../interfaces/IPlaylistRepository";
+} from "../interfaces/IPlaylistRepository.js";
 import { inject, injectable } from "tsyringe";
 
 @injectable()

@@ -1,5 +1,5 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { IFileStorage } from "./IFileStorage";
+import { IFileStorage } from "./IFileStorage.js";
 import "dotenv/config";
 import crypto from "crypto";
 

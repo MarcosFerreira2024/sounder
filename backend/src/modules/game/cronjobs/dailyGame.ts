@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import "../../../shared/container";
 import cron from "node-cron";
-import { GameService } from "../services/GameService";
+import { GameService } from "../services/GameService.js";
 import { container } from "tsyringe";
 import dotenv from "dotenv";
 

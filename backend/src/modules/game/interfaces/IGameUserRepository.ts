@@ -1,4 +1,4 @@
-import { UserGameStatus } from "../../../generated/prisma/client"
+import { UserGameStatus } from "../../../generated/prisma/client.js"
 
 
 type GameUserUpdateStats = {

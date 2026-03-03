@@ -1,9 +1,9 @@
-import { GameMode } from "../../../generated/prisma/client";
-import { prisma } from "../../../libs/prismaClient";
+import { GameMode } from "../../../generated/prisma/client.js";
+import { prisma } from "../../../libs/prismaClient.js";
 import {
   gameModesQueryFilters,
   IGameModesRepository,
-} from "../interfaces/IGameModesRepository";
+} from "../interfaces/IGameModesRepository.js";
 
 class GameModesRepository implements IGameModesRepository {
   async create(name: string, description: string): Promise<GameMode> {

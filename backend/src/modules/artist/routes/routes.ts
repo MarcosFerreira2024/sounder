@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { deserializeUser } from "../../../middleware/deserializeUser";
-import { ArtistController } from "../controllers/ArtistController";
-import { requireAuth } from "../../../middleware/requireAuth";
+import { deserializeUser } from "../../../middleware/deserializeUser.js";
+import { ArtistController } from "../controllers/ArtistController.js";
+import { requireAuth } from "../../../middleware/requireAuth.js";
 
 
 function artistRoutes():Router {

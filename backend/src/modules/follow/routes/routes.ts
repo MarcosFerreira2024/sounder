@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { FollowController } from "../controllers/FollowController";
-import { validate } from "../../../middleware/validateSchema";
-import { followSchema } from "../schemas/schema";
-import { deserializeUser } from "../../../middleware/deserializeUser";
-import { requireAuth } from "../../../middleware/requireAuth";
-import verifyRateLimit from "../../../middleware/verifyRateLimit";
+import { FollowController } from "../controllers/FollowController.js";
+import { validate } from "../../../middleware/validateSchema.js";
+import { followSchema } from "../schemas/schema.js";
+import { deserializeUser } from "../../../middleware/deserializeUser.js";
+import { requireAuth } from "../../../middleware/requireAuth.js";
+import verifyRateLimit from "../../../middleware/verifyRateLimit.js";
 
 export function followRoutes(): Router {
   const router = Router();

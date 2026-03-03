@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { ISearchService } from "../interfaces/ISearchService";
-import { QueryType } from "../services/SearchService";
+import { ISearchService } from "../interfaces/ISearchService.js";
+import { QueryType } from "../services/SearchService.js";
 
 @injectable()
 class SearchByQuery {

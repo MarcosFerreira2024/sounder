@@ -1,6 +1,6 @@
-import { DailyGameHistory } from "../../../generated/prisma/client";
-import { prisma } from "../../../libs/prismaClient";
-import { GameHistorySearch, GameHistoryUpdate, IGameHistoryRepository, ResultItem } from "../interfaces/IGameHistoryRepository";
+import { DailyGameHistory } from "../../../generated/prisma/client.js";
+import { prisma } from "../../../libs/prismaClient.js";
+import { GameHistorySearch, GameHistoryUpdate, IGameHistoryRepository, ResultItem } from "../interfaces/IGameHistoryRepository.js";
 
 class GameHistoryRepository implements IGameHistoryRepository {
 

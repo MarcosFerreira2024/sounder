@@ -1,6 +1,6 @@
-import { auth } from "../../../configs/auth";
+import { auth } from "../../../configs/auth.js";
 import { faker } from '@faker-js/faker';
-import { prisma } from "../../../libs/prismaClient";
+import { prisma } from "../../../libs/prismaClient.js";
 
 async function mainUser () {
 

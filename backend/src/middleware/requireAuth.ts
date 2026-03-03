@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AppUser } from "../shared/types/user";
+import { AppUser } from "../shared/types/user.js";
 import { Session } from "better-auth/types";
 
 declare global {

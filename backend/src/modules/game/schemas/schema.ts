@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { zodErrorMessages } from "../../../shared/constants/errors";
+import { zodErrorMessages } from "../../../shared/constants/errors.js";
 
 export const gameId = z.uuid({ error: zodErrorMessages.invalid("game ID") });
 

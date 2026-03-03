@@ -1,13 +1,13 @@
 import { container } from "tsyringe";
-import { Follow } from "../useCases/Follow";
+import { Follow } from "../useCases/Follow.js";
 import { Request, Response } from "express";
-import { handleAppError } from "../../../shared/helpers/handleAppError";
-import { Unfollow } from "../useCases/Unfollow";
-import { GetFollowingById } from "../useCases/GetFollowingById";
-import { GetFollowersById } from "../useCases/GetFollowersById";
-import { normalizePagination } from "../../../shared/helpers/normalizePagination";
-import { GetFollowingStatus } from "../useCases/GetFollowingStatus";
-import { GetFollowCount } from "../useCases/GetFollowCount";
+import { handleAppError } from "../../../shared/helpers/handleAppError.js";
+import { Unfollow } from "../useCases/Unfollow.js";
+import { GetFollowingById } from "../useCases/GetFollowingById.js";
+import { GetFollowersById } from "../useCases/GetFollowersById.js";
+import { normalizePagination } from "../../../shared/helpers/normalizePagination.js";
+import { GetFollowingStatus } from "../useCases/GetFollowingStatus.js";
+import { GetFollowCount } from "../useCases/GetFollowCount.js";
 
 class FollowController {
   async getFollowCount(req: Request, res: Response) {

@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { Playlist } from "../../../generated/prisma/client";
-import { AppUser } from "../../../shared/types/user";
-import { IPlaylistRepository } from "../interfaces/IPlaylistRepository";
-import { canSeePlaylist } from "../rules/canSeePlaylist";
+import { Playlist } from "../../../generated/prisma/client.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { IPlaylistRepository } from "../interfaces/IPlaylistRepository.js";
+import { canSeePlaylist } from "../rules/canSeePlaylist.js";
 
 
 @injectable()

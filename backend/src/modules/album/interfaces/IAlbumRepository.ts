@@ -1,4 +1,4 @@
-import { Album, Music } from "../../../generated/prisma/client";
+import { Album, Music } from "../../../generated/prisma/client.js";
 
 export type albumQueryFilters = {
   authorId?: string;

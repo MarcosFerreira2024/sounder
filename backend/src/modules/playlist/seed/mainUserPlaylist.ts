@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { prisma } from "../../../libs/prismaClient";
+import { prisma } from "../../../libs/prismaClient.js";
 
 async function mainUserPlaylist(playlistQuantity?: number) {
   console.group("Seeding playlists");

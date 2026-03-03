@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import rateLimit from "express-rate-limit";
-import { AppUser } from "../shared/types/user";
+import { rateLimit } from "express-rate-limit";
+import { AppUser } from "../shared/types/user.js";
 import { ipKeyGenerator } from "express-rate-limit";
 import crypto from "crypto";
 

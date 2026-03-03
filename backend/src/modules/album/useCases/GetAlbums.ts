@@ -2,9 +2,9 @@ import { inject, injectable } from "tsyringe";
 import {
   albumQueryFilters,
   IAlbumRepository,
-} from "../interfaces/IAlbumRepository";
-import { Album } from "../../../generated/prisma/client";
-import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse";
+} from "../interfaces/IAlbumRepository.js";
+import { Album } from "../../../generated/prisma/client.js";
+import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse.js";
 
 @injectable()
 class GetAlbums {

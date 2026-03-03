@@ -1,4 +1,4 @@
-import { Music } from "../../../generated/prisma/client";
+import { Music } from "../../../generated/prisma/client.js";
 
 export type musicQueryFilters = {
   name?: string;

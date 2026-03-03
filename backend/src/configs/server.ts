@@ -2,19 +2,19 @@ import express, { Application } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { toNodeHandler } from "better-auth/node";
-import { auth } from "../configs/auth";
-import { setupScalar } from "../libs/scalarSetup";
-import { userRoutes } from "../modules/user/routes/route";
-import { playlistRoutes } from "../modules/playlist/routes/routes";
-import { followRoutes } from "../modules/follow/routes/routes";
-import { musicRoutes } from "../modules/music/routes/routes";
-import { albumRoutes } from "../modules/album/routes/routes";
-import { gameRoutes } from "../modules/game/routes/routes";
-import { artistRoutes } from "../modules/artist/routes/routes";
+import { auth } from "../configs/auth.js";
+import { setupScalar } from "../libs/scalarSetup.js";
+import { userRoutes } from "../modules/user/routes/route.js";
+import { playlistRoutes } from "../modules/playlist/routes/routes.js";
+import { followRoutes } from "../modules/follow/routes/routes.js";
+import { musicRoutes } from "../modules/music/routes/routes.js";
+import { albumRoutes } from "../modules/album/routes/routes.js";
+import { gameRoutes } from "../modules/game/routes/routes.js";
+import { artistRoutes } from "../modules/artist/routes/routes.js";
 
 import path from "path";
-import { searchRoutes } from "../modules/search/routes/routes";
-import { loadModel } from "../libs/nsfwJs";
+import { searchRoutes } from "../modules/search/routes/routes.js";
+import { loadModel } from "../libs/nsfwJs.js";
 
 class Server {
   public app: Application;

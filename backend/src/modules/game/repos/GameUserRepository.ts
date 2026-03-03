@@ -1,6 +1,6 @@
-import { UserGameStatus } from "../../../generated/prisma/client";
-import { prisma } from "../../../libs/prismaClient";
-import { GameUserUpdateStats, IGameUserRepository } from "../interfaces/IGameUserRepository";
+import { UserGameStatus } from "../../../generated/prisma/client.js";
+import { prisma } from "../../../libs/prismaClient.js";
+import { GameUserUpdateStats, IGameUserRepository } from "../interfaces/IGameUserRepository.js";
 
 class GameUserRepository implements IGameUserRepository {
 

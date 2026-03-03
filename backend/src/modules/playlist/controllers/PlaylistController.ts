@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
-import { normalizePagination } from "../../../shared/helpers/normalizePagination";
+import { normalizePagination } from "../../../shared/helpers/normalizePagination.js";
 import { container } from "tsyringe";
-import { CreatePlaylist } from "../useCases/CreatePlaylist";
-import { handleAppError } from "../../../shared/helpers/handleAppError";
-import { DeletePlaylist } from "../useCases/DeletePlaylist";
-import { GetMusicsByPlaylistId } from "../useCases/GetMusicsByPlaylistId";
-import { UpdatePlaylist } from "../useCases/UpdatePlaylist";
-import { RemoveFromPlaylist } from "../useCases/RemoveFromPlaylist";
-import { AddMusicToPlaylist } from "../useCases/AddToPlaylist";
-import { GetUserPlaylists } from "../useCases/GetUserPlaylists";
-import { GetPlaylistById } from "../useCases/GetPlaylistById";
+import { CreatePlaylist } from "../useCases/CreatePlaylist.js";
+import { handleAppError } from "../../../shared/helpers/handleAppError.js";
+import { DeletePlaylist } from "../useCases/DeletePlaylist.js";
+import { GetMusicsByPlaylistId } from "../useCases/GetMusicsByPlaylistId.js";
+import { UpdatePlaylist } from "../useCases/UpdatePlaylist.js";
+import { RemoveFromPlaylist } from "../useCases/RemoveFromPlaylist.js";
+import { AddMusicToPlaylist } from "../useCases/AddToPlaylist.js";
+import { GetUserPlaylists } from "../useCases/GetUserPlaylists.js";
+import { GetPlaylistById } from "../useCases/GetPlaylistById.js";
 
 class PlaylistController {
   async create(req: Request, res: Response): Promise<Response> {

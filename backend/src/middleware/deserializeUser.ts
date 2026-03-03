@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { fromNodeHeaders } from "better-auth/node";
-import { auth } from "../configs/auth";
-import { AppUser } from "../shared/types/user";
+import { auth } from "../configs/auth.js";
+import { AppUser } from "../shared/types/user.js";
 
 export const deserializeUser = async (
   req: Request,

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { zodErrorMessages } from "../../../shared/constants/errors";
+import { zodErrorMessages } from "../../../shared/constants/errors.js";
 
 export const musicId = z.object({
     id: z.uuid(zodErrorMessages.invalid("music ID")),

@@ -1,17 +1,17 @@
 import { Router } from "express";
-import { PlaylistController } from "../controllers/PlaylistController";
-import { requireAuth } from "../../../middleware/requireAuth";
-import { deserializeUser } from "../../../middleware/deserializeUser";
-import { validate } from "../../../middleware/validateSchema";
+import { PlaylistController } from "../controllers/PlaylistController.js";
+import { requireAuth } from "../../../middleware/requireAuth.js";
+import { deserializeUser } from "../../../middleware/deserializeUser.js";
+import { validate } from "../../../middleware/validateSchema.js";
 import {
   playlistBodyUpdateSchema,
   playlistSchema,
   playlistIdOnlyParamsSchema,
   playlistAndMusicParamsSchema,
   uploadImageSchema,
-} from "../schema/schema";
-import { optionalId } from "../../user/schemas/schema";
-import { uploadImage } from "../../../libs/multer";
+} from "../schema/schema.js";
+import { optionalId } from "../../user/schemas/schema.js";
+import { uploadImage } from "../../../libs/multer.js";
 
 export function playlistRoutes(): Router {
   const router = Router();

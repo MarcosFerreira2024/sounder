@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { ZodError } from "zod";
-import { appError } from "./appError";
+import { appError } from "./appError.js";
 
 export function handleAppError(res: Response, error: any) {
   if (error instanceof ZodError) {

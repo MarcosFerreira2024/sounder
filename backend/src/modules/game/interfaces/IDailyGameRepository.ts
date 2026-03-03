@@ -1,4 +1,4 @@
-import { DailyGame } from "../../../generated/prisma/client"
+import { DailyGame } from "../../../generated/prisma/client.js"
 
 type GameCreationArgs = {
     originalImage: string;

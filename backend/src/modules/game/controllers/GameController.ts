@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import { container } from "tsyringe";
-import { GetGameState } from "../useCases/GetGameState";
-import { handleAppError } from "../../../shared/helpers/handleAppError";
-import { GetUserGameStats } from "../useCases/GetUserGameStats";
-import { Answer } from "../useCases/Answer";
-import { DeleteDailyGame } from "../useCases/DeleteDailyGame";
-import { GetTodayGames } from "../useCases/GetTodayGames";
-import { StartSession } from "../useCases/StartGame";
+import { GetGameState } from "../useCases/GetGameState.js";
+import { handleAppError } from "../../../shared/helpers/handleAppError.js";
+import { GetUserGameStats } from "../useCases/GetUserGameStats.js";
+import { Answer } from "../useCases/Answer.js";
+import { DeleteDailyGame } from "../useCases/DeleteDailyGame.js";
+import { GetTodayGames } from "../useCases/GetTodayGames.js";
+import { StartSession } from "../useCases/StartGame.js";
 
 export class GameController {
   async startSession(req: Request, res: Response): Promise<Response> {

@@ -1,5 +1,5 @@
-import { prisma } from "../../../libs/prismaClient";
-import { FollowDTO, IFollowRepository } from "../interfaces/IFollowRepository";
+import { prisma } from "../../../libs/prismaClient.js";
+import { FollowDTO, IFollowRepository } from "../interfaces/IFollowRepository.js";
 
 class FollowRepository implements IFollowRepository {
   async getFollowCount(

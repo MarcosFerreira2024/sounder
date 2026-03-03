@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { IDailyGameRepository } from "../interfaces/IDailyGameRepository";
-import { IGameRepository } from "../interfaces/IGameRepository";
-import { IGameSessionRepository } from "../interfaces/IGameSessionRepository";
-import { GameSession } from "../../../generated/prisma/client";
-import { AppUser } from "../../../shared/types/user";
-import { IGameModesRepository } from "../interfaces/IGameModesRepository";
+import { IDailyGameRepository } from "../interfaces/IDailyGameRepository.js";
+import { IGameRepository } from "../interfaces/IGameRepository.js";
+import { IGameSessionRepository } from "../interfaces/IGameSessionRepository.js";
+import { GameSession } from "../../../generated/prisma/client.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { IGameModesRepository } from "../interfaces/IGameModesRepository.js";
 
 @injectable()
 class StartSession {

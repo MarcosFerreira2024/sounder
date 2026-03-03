@@ -1,4 +1,4 @@
-import { auth } from "../../../configs/auth";
+import { auth } from "../../../configs/auth.js";
 import { faker } from "@faker-js/faker";
 
 async function mockUsers(userQuantity?: number) {

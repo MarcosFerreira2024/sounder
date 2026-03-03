@@ -1,4 +1,4 @@
-import { DailyGameHistory } from "../../../generated/prisma/client"
+import { DailyGameHistory } from "../../../generated/prisma/client.js"
 
 type GameHistorySearch = {
     date?: Date,

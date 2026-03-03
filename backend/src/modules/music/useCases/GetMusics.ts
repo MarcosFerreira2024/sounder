@@ -2,9 +2,9 @@ import { inject, injectable } from "tsyringe";
 import {
   IMusicRepository,
   musicQueryFilters,
-} from "../interfaces/IMusicRepository";
-import { Music } from "../../../generated/prisma/client";
-import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse";
+} from "../interfaces/IMusicRepository.js";
+import { Music } from "../../../generated/prisma/client.js";
+import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse.js";
 
 @injectable()
 class GetMusics {

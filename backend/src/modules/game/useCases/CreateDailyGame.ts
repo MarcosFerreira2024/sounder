@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { IDailyGameRepository } from "../interfaces/IDailyGameRepository";
-import { IGameHistoryRepository } from "../interfaces/IGameHistoryRepository";
-import { IMusicRepository } from "../../music/interfaces/IMusicRepository";
-import { IAlbumRepository } from "../../album/interfaces/IAlbumRepository";
-import { IImageProcessingService } from "../../../shared/services/IImageProcessingService";
+import { IDailyGameRepository } from "../interfaces/IDailyGameRepository.js";
+import { IGameHistoryRepository } from "../interfaces/IGameHistoryRepository.js";
+import { IMusicRepository } from "../../music/interfaces/IMusicRepository.js";
+import { IAlbumRepository } from "../../album/interfaces/IAlbumRepository.js";
+import { IImageProcessingService } from "../../../shared/services/IImageProcessingService.js";
 
 @injectable()
 class CreateDailyGame {

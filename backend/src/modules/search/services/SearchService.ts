@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
 
-import { ISearchService, SearchResult } from "../interfaces/ISearchService";
-import { IArtistRepository } from "../../artist/interfaces/IArtistRepository";
-import { IAlbumRepository } from "../../album/interfaces/IAlbumRepository";
-import { IMusicRepository } from "../../music/interfaces/IMusicRepository";
-import { IPlaylistRepository } from "../../playlist/interfaces/IPlaylistRepository";
-import { IUserRepository } from "../../user/interfaces/IUserRepository";
+import { ISearchService, SearchResult } from "../interfaces/ISearchService.js";
+import { IArtistRepository } from "../../artist/interfaces/IArtistRepository.js";
+import { IAlbumRepository } from "../../album/interfaces/IAlbumRepository.js";
+import { IMusicRepository } from "../../music/interfaces/IMusicRepository.js";
+import { IPlaylistRepository } from "../../playlist/interfaces/IPlaylistRepository.js";
+import { IUserRepository } from "../../user/interfaces/IUserRepository.js";
 
 export type QueryType =
   | "all"

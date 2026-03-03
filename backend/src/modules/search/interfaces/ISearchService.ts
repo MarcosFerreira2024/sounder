@@ -1,7 +1,7 @@
-import { Artist } from "../../../generated/prisma/browser";
-import { Album, Playlist, User } from "../../../generated/prisma/client";
-import { MusicWithCover } from "../../music/interfaces/IMusicRepository";
-import { QueryType } from "../services/SearchService";
+import { Artist } from "../../../generated/prisma/browser.js";
+import { Album, Playlist, User } from "../../../generated/prisma/client.js";
+import { MusicWithCover } from "../../music/interfaces/IMusicRepository.js";
+import { QueryType } from "../services/SearchService.js";
 
 export type SearchResult = {
   artists: {

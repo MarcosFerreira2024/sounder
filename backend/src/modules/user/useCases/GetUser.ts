@@ -1,8 +1,8 @@
 import { injectable, inject } from "tsyringe";
-import { User } from "../../../generated/prisma/client";
-import { IUserRepository } from "../interfaces/IUserRepository";
-import { isAdmin } from "../../../shared/rules/isAdmin";
-import { AppUser } from "../../../shared/types/user";
+import { User } from "../../../generated/prisma/client.js";
+import { IUserRepository } from "../interfaces/IUserRepository.js";
+import { isAdmin } from "../../../shared/rules/isAdmin.js";
+import { AppUser } from "../../../shared/types/user.js";
 
 @injectable()
 class GetUser {

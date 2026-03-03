@@ -1,6 +1,6 @@
-import { isOwner } from "../../../shared/rules/isOwner";
-import { isAdmin } from "../../../shared/rules/isAdmin";
-import { AppUser } from "../../../shared/types/user";
+import { isOwner } from "../../../shared/rules/isOwner.js";
+import { isAdmin } from "../../../shared/rules/isAdmin.js";
+import { AppUser } from "../../../shared/types/user.js";
 
 function canChangeMusic(user: AppUser, ownerId: string): boolean {
   return isAdmin(user) || isOwner(user, ownerId);

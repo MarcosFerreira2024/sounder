@@ -1,10 +1,10 @@
 import { container } from "tsyringe";
-import { UpdateUser } from "../useCases/UpdateUser";
-import { GetUser } from "../useCases/GetUser";
-import { DeleteUser } from "../useCases/DeleteUser";
+import { UpdateUser } from "../useCases/UpdateUser.js";
+import { GetUser } from "../useCases/GetUser.js";
+import { DeleteUser } from "../useCases/DeleteUser.js";
 import { Request, Response } from "express";
-import { handleAppError } from "../../../shared/helpers/handleAppError";
-import { ChangeProfilePicture } from "../useCases/ChangeProfilePicture";
+import { handleAppError } from "../../../shared/helpers/handleAppError.js";
+import { ChangeProfilePicture } from "../useCases/ChangeProfilePicture.js";
 
 class UserController {
   async update(req: Request, res: Response): Promise<Response> {

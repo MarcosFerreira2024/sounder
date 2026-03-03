@@ -1,12 +1,12 @@
 import { container, inject, injectable } from "tsyringe";
-import { IGameSessionRepository } from "../interfaces/IGameSessionRepository";
-import { AppUser } from "../../../shared/types/user";
-import { GameState, GetGameState } from "./GetGameState";
-import { normalizeString } from "../../../shared/helpers/normalizeString";
-import { IGameUserRepository } from "../interfaces/IGameUserRepository";
-import { IDailyGameRepository } from "../interfaces/IDailyGameRepository";
-import { IGameModesRepository } from "../interfaces/IGameModesRepository";
-import { IGameRepository } from "../interfaces/IGameRepository";
+import { IGameSessionRepository } from "../interfaces/IGameSessionRepository.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { GameState, GetGameState } from "./GetGameState.js";
+import { normalizeString } from "../../../shared/helpers/normalizeString.js";
+import { IGameUserRepository } from "../interfaces/IGameUserRepository.js";
+import { IDailyGameRepository } from "../interfaces/IDailyGameRepository.js";
+import { IGameModesRepository } from "../interfaces/IGameModesRepository.js";
+import { IGameRepository } from "../interfaces/IGameRepository.js";
 
 @injectable()
 class Answer {

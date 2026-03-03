@@ -1,10 +1,10 @@
-import { DailyGame } from "../../../generated/prisma/client";
-import { prisma } from "../../../libs/prismaClient";
-import { getTodayRange } from "../../../shared/helpers/getTodayRange";
+import { DailyGame } from "../../../generated/prisma/client.js";
+import { prisma } from "../../../libs/prismaClient.js";
+import { getTodayRange } from "../../../shared/helpers/getTodayRange.js";
 import {
   GameCreationArgs,
   IDailyGameRepository,
-} from "../interfaces/IDailyGameRepository";
+} from "../interfaces/IDailyGameRepository.js";
 
 class DailyGameRepository implements IDailyGameRepository {
   async createDailyGame(data: GameCreationArgs): Promise<DailyGame> {

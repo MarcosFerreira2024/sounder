@@ -1,10 +1,10 @@
-import { Music, Prisma } from "../../../generated/prisma/client";
-import { prisma } from "../../../libs/prismaClient";
+import { Music, Prisma } from "../../../generated/prisma/client.js";
+import { prisma } from "../../../libs/prismaClient.js";
 import {
   IMusicRepository,
   musicQueryFilters,
   MusicWithCover,
-} from "../interfaces/IMusicRepository";
+} from "../interfaces/IMusicRepository.js";
 
 class MusicRepository implements IMusicRepository {
   async getRandomMusic(exclude: string[]): Promise<MusicWithCover | null> {

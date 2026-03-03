@@ -2,7 +2,7 @@ import { injectable, inject } from "tsyringe";
 import {
   AlbumWithAuthor,
   IAlbumRepository,
-} from "../interfaces/IAlbumRepository";
+} from "../interfaces/IAlbumRepository.js";
 
 @injectable()
 class GetAlbumById {

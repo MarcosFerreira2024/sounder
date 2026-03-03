@@ -1,5 +1,5 @@
 import { User } from "better-auth/types";
-import { IPlaylistRepository } from "../interfaces/IPlaylistRepository";
+import { IPlaylistRepository } from "../interfaces/IPlaylistRepository.js";
 import { inject, injectable } from "tsyringe";
 
 @injectable()

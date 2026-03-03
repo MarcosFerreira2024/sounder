@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { apiReference } from "@scalar/express-api-reference";
-import swaggerSpec from "./openapiSpec";
+import swaggerSpec from "./openapiSpec.js";
 
 function setupScalar(app: Application) {
   app.get("/openapi.json", (req, res) => {
@@ -11,9 +11,7 @@ function setupScalar(app: Application) {
   app.use(
     "/api/reference",
     apiReference({
-      spec: {
-        url: "/openapi.json",
-      },
+      url: "/openapi.json",
     }),
   );
 }

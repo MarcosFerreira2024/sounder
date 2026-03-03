@@ -1,7 +1,7 @@
 import { injectable, inject } from "tsyringe";
-import { IUserRepository } from "../interfaces/IUserRepository";
-import { isAdmin } from "../../../shared/rules/isAdmin";
-import { AppUser } from "../../../shared/types/user";
+import { IUserRepository } from "../interfaces/IUserRepository.js";
+import { isAdmin } from "../../../shared/rules/isAdmin.js";
+import { AppUser } from "../../../shared/types/user.js";
 
 @injectable()
 class DeleteUser{

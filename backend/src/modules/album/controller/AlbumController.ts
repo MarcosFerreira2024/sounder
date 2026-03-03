@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import { container } from "tsyringe";
-import { GetAlbums } from "../useCases/GetAlbums";
-import { normalizePagination } from "../../../shared/helpers/normalizePagination";
-import { GetAlbumById } from "../useCases/GetAlbumById";
-import { DeleteAlbum } from "../useCases/DeleteAlbum";
-import { CreateAlbum } from "../useCases/CreateAlbum";
-import { UpdateAlbum } from "../useCases/UpdateAlbum";
-import { handleAppError } from "../../../shared/helpers/handleAppError";
-import { AppUser } from "../../../shared/types/user";
-import { GetAlbumMusics } from "../useCases/GetAlbumMusics";
+import { GetAlbums } from "../useCases/GetAlbums.js";
+import { normalizePagination } from "../../../shared/helpers/normalizePagination.js";
+import { GetAlbumById } from "../useCases/GetAlbumById.js";
+import { DeleteAlbum } from "../useCases/DeleteAlbum.js";
+import { CreateAlbum } from "../useCases/CreateAlbum.js";
+import { UpdateAlbum } from "../useCases/UpdateAlbum.js";
+import { handleAppError } from "../../../shared/helpers/handleAppError.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { GetAlbumMusics } from "../useCases/GetAlbumMusics.js";
 
 class AlbumController {
   async getMusics(req: Request, res: Response) {

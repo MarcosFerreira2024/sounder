@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
-import { IGameUserRepository } from "../interfaces/IGameUserRepository";
-import { AppUser } from "../../../shared/types/user";
-import { IGameModesRepository } from "../interfaces/IGameModesRepository";
+import { IGameUserRepository } from "../interfaces/IGameUserRepository.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { IGameModesRepository } from "../interfaces/IGameModesRepository.js";
 
 @injectable()
 class GetUserGameStats {

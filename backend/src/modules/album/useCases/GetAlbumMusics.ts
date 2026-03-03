@@ -2,7 +2,7 @@ import { inject, injectable } from "tsyringe";
 import {
   AlbumWithMusics,
   IAlbumRepository,
-} from "../interfaces/IAlbumRepository";
+} from "../interfaces/IAlbumRepository.js";
 
 @injectable()
 class GetAlbumMusics {

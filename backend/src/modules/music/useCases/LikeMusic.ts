@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
-import { IMusicRepository } from "../interfaces/IMusicRepository";
+import { IMusicRepository } from "../interfaces/IMusicRepository.js";
 import { User } from "better-auth/types";
-import { IMusicActionRepository } from "../interfaces/IMusicActionRepository";
+import { IMusicActionRepository } from "../interfaces/IMusicActionRepository.js";
 
 @injectable()
 class LikeMusic {

@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { IUserRepository } from "../../user/interfaces/IUserRepository";
-import { IPlaylistRepository } from "../interfaces/IPlaylistRepository";
-import { AppUser } from "../../../shared/types/user";
-import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse";
-import { Playlist } from "../../../generated/prisma/client";
+import { IUserRepository } from "../../user/interfaces/IUserRepository.js";
+import { IPlaylistRepository } from "../interfaces/IPlaylistRepository.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse.js";
+import { Playlist } from "../../../generated/prisma/client.js";
 
 @injectable()
 class GetUserPlaylists {

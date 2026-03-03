@@ -2,11 +2,11 @@ import { inject, injectable } from "tsyringe";
 import {
   IMusicRepository,
   MusicWithCover,
-} from "../interfaces/IMusicRepository";
-import { Music } from "../../../generated/prisma/client";
-import { AppUser } from "../../../shared/types/user";
-import { IMusicActionRepository } from "../interfaces/IMusicActionRepository";
-import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse";
+} from "../interfaces/IMusicRepository.js";
+import { Music } from "../../../generated/prisma/client.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { IMusicActionRepository } from "../interfaces/IMusicActionRepository.js";
+import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse.js";
 
 @injectable()
 class UserMusicRecommendations {

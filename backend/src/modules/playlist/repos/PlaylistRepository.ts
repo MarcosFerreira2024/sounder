@@ -1,13 +1,13 @@
-import { Playlist, PlaylistVisibility } from "../../../generated/prisma/client";
-import { prisma } from "../../../libs/prismaClient";
+import { Playlist, PlaylistVisibility } from "../../../generated/prisma/client.js";
+import { prisma } from "../../../libs/prismaClient.js";
 import {
   MusicWithCover,
   PlaylistMusicItem,
-} from "../../music/interfaces/IMusicRepository";
+} from "../../music/interfaces/IMusicRepository.js";
 import {
   IPlaylistRepository,
   updatePayload,
-} from "../interfaces/IPlaylistRepository";
+} from "../interfaces/IPlaylistRepository.js";
 
 class PlaylistRepository implements IPlaylistRepository {
   async createPlaylist(

@@ -1,6 +1,6 @@
-import { User } from "../../../generated/prisma/client";
-import { prisma } from "../../../libs/prismaClient";
-import { IUserRepository } from "../interfaces/IUserRepository";
+import { User } from "../../../generated/prisma/client.js";
+import { prisma } from "../../../libs/prismaClient.js";
+import { IUserRepository } from "../interfaces/IUserRepository.js";
 
 class UserRepository implements IUserRepository {
   async delete(id: string): Promise<void> {

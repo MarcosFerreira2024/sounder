@@ -1,4 +1,4 @@
-import { prisma } from "../../../libs/prismaClient";
+import { prisma } from "../../../libs/prismaClient.js";
 
 async function seedGenres() {
   console.group("Seeding genres");

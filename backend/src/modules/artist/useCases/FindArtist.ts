@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { Music } from "../../../generated/prisma/client";
+import { Music } from "../../../generated/prisma/client.js";
 import {
   artistsQueryFilters,
   IArtistRepository,
-} from "../interfaces/IArtistRepository";
+} from "../interfaces/IArtistRepository.js";
 
 @injectable()
 class FindArtists {

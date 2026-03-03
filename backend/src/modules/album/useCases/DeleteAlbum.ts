@@ -1,8 +1,8 @@
 import { injectable, inject } from "tsyringe";
-import { IAlbumRepository } from "../interfaces/IAlbumRepository";
-import { canChangeAlbum } from "../rules/canChangeAlbum";
-import { AppUser } from "../../../shared/types/user";
-import { IMusicRepository } from "../../music/interfaces/IMusicRepository";
+import { IAlbumRepository } from "../interfaces/IAlbumRepository.js";
+import { canChangeAlbum } from "../rules/canChangeAlbum.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { IMusicRepository } from "../../music/interfaces/IMusicRepository.js";
 
 @injectable()
 class DeleteAlbum {

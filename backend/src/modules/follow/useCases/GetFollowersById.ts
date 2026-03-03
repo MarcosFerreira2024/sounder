@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { FollowDTO, IFollowRepository } from "../interfaces/IFollowRepository";
-import { IUserRepository } from "../../user/interfaces/IUserRepository";
-import { AppUser } from "../../../shared/types/user";
-import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse";
+import { FollowDTO, IFollowRepository } from "../interfaces/IFollowRepository.js";
+import { IUserRepository } from "../../user/interfaces/IUserRepository.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse.js";
 
 @injectable()
 class GetFollowersById {

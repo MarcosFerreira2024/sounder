@@ -1,4 +1,4 @@
-import { AppUser } from "../types/user";
+import { AppUser } from "../types/user.js";
 
 function isOwner (user?:AppUser, ownerId?:string): boolean {
 

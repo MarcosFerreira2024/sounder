@@ -1,8 +1,8 @@
 import { injectable, inject } from "tsyringe";
-import { IUserRepository } from "../interfaces/IUserRepository";
+import { IUserRepository } from "../interfaces/IUserRepository.js";
 import { User } from "better-auth/types";
-import { isAdmin } from "../../../shared/rules/isAdmin";
-import { AppUser } from "../../../shared/types/user";
+import { isAdmin } from "../../../shared/rules/isAdmin.js";
+import { AppUser } from "../../../shared/types/user.js";
 
 @injectable()
 class UpdateUser {

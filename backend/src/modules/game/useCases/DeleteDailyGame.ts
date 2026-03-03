@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { IDailyGameRepository } from "../interfaces/IDailyGameRepository";
+import { IDailyGameRepository } from "../interfaces/IDailyGameRepository.js";
 
 
 @injectable()

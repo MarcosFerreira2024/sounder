@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { GameController } from "../controllers/GameController";
-import { requireAuth } from "../../../middleware/requireAuth";
-import { deserializeUser } from "../../../middleware/deserializeUser";
-import { validate } from "../../../middleware/validateSchema";
-import { answer, gameId, gamemodeId, mode } from "../schemas/schema";
+import { GameController } from "../controllers/GameController.js";
+import { requireAuth } from "../../../middleware/requireAuth.js";
+import { deserializeUser } from "../../../middleware/deserializeUser.js";
+import { validate } from "../../../middleware/validateSchema.js";
+import { answer, gameId, gamemodeId, mode } from "../schemas/schema.js";
 import z from "zod";
 
 function gameRoutes(): Router {

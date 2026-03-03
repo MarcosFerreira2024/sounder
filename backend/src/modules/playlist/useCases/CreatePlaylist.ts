@@ -1,9 +1,9 @@
-import { IPlaylistRepository } from "../interfaces/IPlaylistRepository";
-import { Playlist } from "../../../generated/prisma/client";
+import { IPlaylistRepository } from "../interfaces/IPlaylistRepository.js";
+import { Playlist } from "../../../generated/prisma/client.js";
 import { inject, injectable } from "tsyringe";
-import { IFileStorage } from "../../file/IFileStorage";
-import { AppUser } from "../../../shared/types/user";
-import { isAdmin } from "../../../shared/rules/isAdmin";
+import { IFileStorage } from "../../file/IFileStorage.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { isAdmin } from "../../../shared/rules/isAdmin.js";
 
 type CreatePlaylistDTO = {
   user: AppUser;

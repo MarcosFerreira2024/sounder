@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { AlbumController } from "../controller/AlbumController";
-import { deserializeUser } from "../../../middleware/deserializeUser";
-import { requireAuth } from "../../../middleware/requireAuth";
-import { validate } from "../../../middleware/validateSchema";
-import { albumId, createAlbum } from "../schemas/schema";
-import { uploadWithErrorHandler } from "../../../middleware/uploadWithErrorHandler";
-import { uploadImage } from "../../../libs/multer";
+import { AlbumController } from "../controller/AlbumController.js";
+import { deserializeUser } from "../../../middleware/deserializeUser.js";
+import { requireAuth } from "../../../middleware/requireAuth.js";
+import { validate } from "../../../middleware/validateSchema.js";
+import { albumId, createAlbum } from "../schemas/schema.js";
+import { uploadWithErrorHandler } from "../../../middleware/uploadWithErrorHandler.js";
+import { uploadImage } from "../../../libs/multer.js";
 
 export function albumRoutes(): Router {
   const router = Router();

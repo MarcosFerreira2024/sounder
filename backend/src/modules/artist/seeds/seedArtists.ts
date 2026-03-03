@@ -1,4 +1,4 @@
-import { prisma } from "../../../libs/prismaClient";
+import { prisma } from "../../../libs/prismaClient.js";
 import crypto from "crypto";
 
 class ArtistFactory {

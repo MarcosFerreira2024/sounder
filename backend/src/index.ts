@@ -1,7 +1,7 @@
 import express from "express";
 import "reflect-metadata";
-import "./shared/container";
-import { Server } from "./configs/server";
+import "./shared/container.js";
+import { Server } from "./configs/server.js";
 import dotenv from "dotenv";
 
 dotenv.config();

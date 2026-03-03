@@ -1,7 +1,7 @@
 import { connect } from "http2";
-import { prisma } from "../../../libs/prismaClient";
-import { GameSessionCreationArgs, GameSessionUpdate, IGameSessionRepository } from "../interfaces/IGameSessionRepository";
-import { GameSession } from "../../../generated/prisma/client";
+import { prisma } from "../../../libs/prismaClient.js";
+import { GameSessionCreationArgs, GameSessionUpdate, IGameSessionRepository } from "../interfaces/IGameSessionRepository.js";
+import { GameSession } from "../../../generated/prisma/client.js";
 
 class GameSessionRepository implements IGameSessionRepository {
     async createSession(data: GameSessionCreationArgs): Promise<GameSession> {

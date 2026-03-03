@@ -1,4 +1,4 @@
-import { DailyGame } from "../../../generated/prisma/client";
+import { DailyGame } from "../../../generated/prisma/client.js";
 
 function resolveGameImage(game: DailyGame, tries: number): string {
   if (tries === 1 || tries === 0) return game.blur100;

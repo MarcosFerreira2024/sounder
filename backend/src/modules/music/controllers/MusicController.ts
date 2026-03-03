@@ -1,16 +1,16 @@
 import { container } from "tsyringe";
 import { Request, Response } from "express";
-import { CreateMusic } from "../useCases/CreateMusic";
-import { GetMusics } from "../useCases/GetMusics";
-import { GetMusicById } from "../useCases/GetMusicById";
-import { normalizePagination } from "../../../shared/helpers/normalizePagination";
-import { UpdateMusic } from "../useCases/UpdateMusic";
-import { DeleteMusic } from "../useCases/DeleteMusic";
-import { handleAppError } from "../../../shared/helpers/handleAppError";
-import { LikeMusic } from "../useCases/LikeMusic";
-import { DeslikeMusic } from "../useCases/DeslikeMusic";
-import { AssignMusicToAlbum } from "../useCases/AssignMusicToAlbum";
-import { UserMusicRecommendations } from "../useCases/UserMusicRecommendations";
+import { CreateMusic } from "../useCases/CreateMusic.js";
+import { GetMusics } from "../useCases/GetMusics.js";
+import { GetMusicById } from "../useCases/GetMusicById.js";
+import { normalizePagination } from "../../../shared/helpers/normalizePagination.js";
+import { UpdateMusic } from "../useCases/UpdateMusic.js";
+import { DeleteMusic } from "../useCases/DeleteMusic.js";
+import { handleAppError } from "../../../shared/helpers/handleAppError.js";
+import { LikeMusic } from "../useCases/LikeMusic.js";
+import { DeslikeMusic } from "../useCases/DeslikeMusic.js";
+import { AssignMusicToAlbum } from "../useCases/AssignMusicToAlbum.js";
+import { UserMusicRecommendations } from "../useCases/UserMusicRecommendations.js";
 
 class MusicController {
   async getRecommended(req: Request, res: Response) {

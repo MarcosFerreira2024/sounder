@@ -1,4 +1,4 @@
-import { ArtistAccountStatus } from "../../../generated/prisma/enums";
+import { ArtistAccountStatus } from "../../../generated/prisma/enums.js";
 
 type artistsQueryFilters = {
   id?: string | undefined;

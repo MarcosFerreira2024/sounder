@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { MusicController } from "../controllers/MusicController";
-import { deserializeUser } from "../../../middleware/deserializeUser";
-import { requireAuth } from "../../../middleware/requireAuth";
-import { validate } from "../../../middleware/validateSchema";
-import { musicId, createMusicBody, updateMusicBody } from "../schemas/schema";
+import { MusicController } from "../controllers/MusicController.js";
+import { deserializeUser } from "../../../middleware/deserializeUser.js";
+import { requireAuth } from "../../../middleware/requireAuth.js";
+import { validate } from "../../../middleware/validateSchema.js";
+import { musicId, createMusicBody, updateMusicBody } from "../schemas/schema.js";
 import { z } from "zod";
-import { zodErrorMessages } from "../../../shared/constants/errors";
-import { uploadWithErrorHandler } from "../../../middleware/uploadWithErrorHandler";
-import { uploadLrc } from "../../../libs/multer";
+import { zodErrorMessages } from "../../../shared/constants/errors.js";
+import { uploadWithErrorHandler } from "../../../middleware/uploadWithErrorHandler.js";
+import { uploadLrc } from "../../../libs/multer.js";
 
 export function musicRoutes(): Router {
   const router = Router();

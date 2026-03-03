@@ -3,8 +3,8 @@ import sharp from "sharp";
 import {
   IImageProcessingService,
   BlurImagesPaths,
-} from "./IImageProcessingService";
-import { IFileStorage } from "../../modules/file/IFileStorage";
+} from "./IImageProcessingService.js";
+import { IFileStorage } from "../../modules/file/IFileStorage.js";
 
 @injectable()
 export class ImageProcessingService implements IImageProcessingService {

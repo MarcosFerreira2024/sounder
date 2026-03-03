@@ -1,4 +1,4 @@
-import { MusicReaction } from "../../../generated/prisma/enums";
+import { MusicReaction } from "../../../generated/prisma/enums.js";
 
 interface IMusicActionRepository {
   upsert(musicAction: {

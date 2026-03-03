@@ -1,7 +1,7 @@
-import { Game } from "../../../generated/prisma/client";
-import { prisma } from "../../../libs/prismaClient";
-import { getTodayRange } from "../../../shared/helpers/getTodayRange";
-import { IGameRepository } from "../interfaces/IGameRepository";
+import { Game } from "../../../generated/prisma/client.js";
+import { prisma } from "../../../libs/prismaClient.js";
+import { getTodayRange } from "../../../shared/helpers/getTodayRange.js";
+import { IGameRepository } from "../interfaces/IGameRepository.js";
 
 class GameRepository implements IGameRepository {
 

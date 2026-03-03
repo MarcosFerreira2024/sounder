@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { IGameSessionRepository } from "../interfaces/IGameSessionRepository";
-import { AppUser } from "../../../shared/types/user";
-import { IDailyGameRepository } from "../interfaces/IDailyGameRepository";
-import { resolveGameImage } from "../helper/resolveGameImage";
-import { IGameRepository } from "../interfaces/IGameRepository";
-import { IGameModesRepository } from "../interfaces/IGameModesRepository";
-import { DailyGame } from "../../../generated/prisma/client";
+import { IGameSessionRepository } from "../interfaces/IGameSessionRepository.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { IDailyGameRepository } from "../interfaces/IDailyGameRepository.js";
+import { resolveGameImage } from "../helper/resolveGameImage.js";
+import { IGameRepository } from "../interfaces/IGameRepository.js";
+import { IGameModesRepository } from "../interfaces/IGameModesRepository.js";
+import { DailyGame } from "../../../generated/prisma/client.js";
 
 export type GameState =
   | {

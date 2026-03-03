@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { convertBufferToTensor, model } from "../libs/nsfwJs";
+import { convertBufferToTensor, model } from "../libs/nsfwJs.js";
 
 export async function VerifyNSFWContent(
   req: Request,

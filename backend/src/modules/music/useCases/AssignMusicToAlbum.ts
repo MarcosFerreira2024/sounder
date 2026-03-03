@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { IAlbumRepository } from "../../album/interfaces/IAlbumRepository";
-import { IMusicRepository } from "../interfaces/IMusicRepository";
-import { AppUser } from "../../../shared/types/user";
-import { isAdmin } from "../../../shared/rules/isAdmin";
-import { canChangeMusic } from "../rules/canChangeMusic";
+import { IAlbumRepository } from "../../album/interfaces/IAlbumRepository.js";
+import { IMusicRepository } from "../interfaces/IMusicRepository.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { isAdmin } from "../../../shared/rules/isAdmin.js";
+import { canChangeMusic } from "../rules/canChangeMusic.js";
 
 @injectable()
 class AssignMusicToAlbum {

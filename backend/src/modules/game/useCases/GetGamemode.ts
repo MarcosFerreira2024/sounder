@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { gameModesQueryFilters, IGameModesRepository } from "../interfaces/IGameModesRepository";
-import { GameMode } from "../../../generated/prisma/client";
+import { gameModesQueryFilters, IGameModesRepository } from "../interfaces/IGameModesRepository.js";
+import { GameMode } from "../../../generated/prisma/client.js";
 
 
 @injectable()

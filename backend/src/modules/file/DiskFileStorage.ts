@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import crypto from "crypto";
-import { IFileStorage } from "./IFileStorage";
+import { IFileStorage } from "./IFileStorage.js";
 
 export class DiskFileStorage implements IFileStorage {
   async download(filePath: string) {

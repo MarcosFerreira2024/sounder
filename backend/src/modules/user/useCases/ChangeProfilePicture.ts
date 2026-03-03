@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { IUserRepository } from "../interfaces/IUserRepository";
-import { isAdmin } from "../../../shared/rules/isAdmin";
-import { User } from "../../../generated/prisma/client";
-import { AppUser } from "../../../shared/types/user";
-import { IFileStorage } from "../../file/IFileStorage";
+import { IUserRepository } from "../interfaces/IUserRepository.js";
+import { isAdmin } from "../../../shared/rules/isAdmin.js";
+import { User } from "../../../generated/prisma/client.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { IFileStorage } from "../../file/IFileStorage.js";
 
 type ChangeProfilePictureDTO = {
   user: AppUser;

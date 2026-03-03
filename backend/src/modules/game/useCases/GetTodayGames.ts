@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { IGameRepository } from "../interfaces/IGameRepository";
-import { Game } from "../../../generated/prisma/client";
+import { IGameRepository } from "../interfaces/IGameRepository.js";
+import { Game } from "../../../generated/prisma/client.js";
 
 @injectable()
 class GetTodayGames {

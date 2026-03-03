@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { AppUser } from "../../../shared/types/user";
-import { IFollowRepository } from "../interfaces/IFollowRepository";
+import { AppUser } from "../../../shared/types/user.js";
+import { IFollowRepository } from "../interfaces/IFollowRepository.js";
 
 @injectable()
 class GetFollowCount {

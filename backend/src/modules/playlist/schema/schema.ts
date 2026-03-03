@@ -3,8 +3,8 @@ import {
   playlistId,
   userId,
   musicIdParam,
-} from "../../../shared/schema/schema";
-import { zodErrorMessages } from "../../../shared/constants/errors";
+} from "../../../shared/schema/schema.js";
+import { zodErrorMessages } from "../../../shared/constants/errors.js";
 
 export const playlistSchema = z.object({
   name: z

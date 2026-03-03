@@ -1,5 +1,5 @@
-import { UserRole } from "../../generated/prisma/enums";
-import { AppUser } from "../types/user";
+import { UserRole } from "../../generated/prisma/enums.js";
+import { AppUser } from "../types/user.js";
 
 function isArtist(user?:AppUser): boolean {
 

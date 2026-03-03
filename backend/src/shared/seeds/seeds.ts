@@ -1,8 +1,8 @@
-import { seedGenres } from "../../modules/music/seed/musicGenres";
-import { mainUserPlaylist } from "../../modules/playlist/seed/mainUserPlaylist";
-import { mainUser } from "../../modules/user/seed/mainUser";
-import { mockUsers } from "../../modules/user/seed/mockUsers";
-import { seedArtists } from "../../modules/artist/seeds/seedArtists";
+import { seedGenres } from "../../modules/music/seed/musicGenres.js";
+import { mainUserPlaylist } from "../../modules/playlist/seed/mainUserPlaylist.js";
+import { mainUser } from "../../modules/user/seed/mainUser.js";
+import { mockUsers } from "../../modules/user/seed/mockUsers.js";
+import { seedArtists } from "../../modules/artist/seeds/seedArtists.js";
 import dotenv from "dotenv";
 (async () => {
   console.log("Seeding data...");

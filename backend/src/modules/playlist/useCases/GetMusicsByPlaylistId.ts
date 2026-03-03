@@ -1,16 +1,16 @@
 import { inject, injectable } from "tsyringe";
-import { IPlaylistRepository } from "../interfaces/IPlaylistRepository";
-import { canSeePlaylist } from "../rules/canSeePlaylist";
+import { IPlaylistRepository } from "../interfaces/IPlaylistRepository.js";
+import { canSeePlaylist } from "../rules/canSeePlaylist.js";
 import { User } from "better-auth/types";
-import { Music } from "../../../generated/prisma/client";
-import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse";
+import { Music } from "../../../generated/prisma/client.js";
+import { normalizePaginatedResponse } from "../../../shared/helpers/normalizePaginatedResponse.js";
 import {
   LikedMusicsWithCover,
   PlaylistMusicItem,
   LikedPlaylistMusicItem,
-} from "../../music/interfaces/IMusicRepository";
-import { IMusicActionRepository } from "../../music/interfaces/IMusicActionRepository";
-import addLikeStatusToMusics from "../../../shared/helpers/addLikeStatusToMusics";
+} from "../../music/interfaces/IMusicRepository.js";
+import { IMusicActionRepository } from "../../music/interfaces/IMusicActionRepository.js";
+import addLikeStatusToMusics from "../../../shared/helpers/addLikeStatusToMusics.js";
 
 @injectable()
 class GetMusicsByPlaylistId {

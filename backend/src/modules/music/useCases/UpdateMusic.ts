@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { Music } from "../../../generated/prisma/client";
-import { IMusicRepository } from "../interfaces/IMusicRepository";
-import { AppUser } from "../../../shared/types/user";
-import { canChangeMusic } from "../rules/canChangeMusic";
+import { Music } from "../../../generated/prisma/client.js";
+import { IMusicRepository } from "../interfaces/IMusicRepository.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { canChangeMusic } from "../rules/canChangeMusic.js";
 
 @injectable()
 class UpdateMusic {

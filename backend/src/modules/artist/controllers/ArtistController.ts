@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { container } from "tsyringe";
-import { AssignUserAsArtist } from "../useCases/AssignUserAsArtist";
-import { handleAppError } from "../../../shared/helpers/handleAppError";
-import { normalizePagination } from "../../../shared/helpers/normalizePagination";
-import { FindArtists } from "../useCases/FindArtist";
+import { AssignUserAsArtist } from "../useCases/AssignUserAsArtist.js";
+import { handleAppError } from "../../../shared/helpers/handleAppError.js";
+import { normalizePagination } from "../../../shared/helpers/normalizePagination.js";
+import { FindArtists } from "../useCases/FindArtist.js";
 
 class ArtistController {
   async assignUserAsArtist(req: Request, res: Response) {

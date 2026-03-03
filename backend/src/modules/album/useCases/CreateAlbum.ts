@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { isAdmin } from "../../../shared/rules/isAdmin";
-import { IAlbumRepository } from "../interfaces/IAlbumRepository";
-import { IArtistRepository } from "../../artist/interfaces/IArtistRepository";
-import { AppUser } from "../../../shared/types/user";
-import { Album } from "../../../generated/prisma/client";
-import { canCreateAlbum } from "../rules/canCreateAlbum";
-import { IFileStorage } from "../../file/IFileStorage";
+import { isAdmin } from "../../../shared/rules/isAdmin.js";
+import { IAlbumRepository } from "../interfaces/IAlbumRepository.js";
+import { IArtistRepository } from "../../artist/interfaces/IArtistRepository.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { Album } from "../../../generated/prisma/client.js";
+import { canCreateAlbum } from "../rules/canCreateAlbum.js";
+import { IFileStorage } from "../../file/IFileStorage.js";
 
 type CreateAlbumDTO = {
   user: AppUser;

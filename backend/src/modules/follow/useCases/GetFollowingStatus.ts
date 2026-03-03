@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
-import { IFollowRepository } from "../interfaces/IFollowRepository";
-import { IUserRepository } from "../../user/interfaces/IUserRepository";
-import { AppUser } from "../../../shared/types/user";
+import { IFollowRepository } from "../interfaces/IFollowRepository.js";
+import { IUserRepository } from "../../user/interfaces/IUserRepository.js";
+import { AppUser } from "../../../shared/types/user.js";
 
 @injectable()
 class GetFollowingStatus {

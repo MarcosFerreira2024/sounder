@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
-import { AppUser } from "../../../shared/types/user";
-import { canChangeAlbum } from "../rules/canChangeAlbum";
-import { IAlbumRepository } from "../interfaces/IAlbumRepository";
-import { isAdmin } from "../../../shared/rules/isAdmin";
-import { Album } from "../../../generated/prisma/client";
-import { IArtistRepository } from "../../artist/interfaces/IArtistRepository";
+import { AppUser } from "../../../shared/types/user.js";
+import { canChangeAlbum } from "../rules/canChangeAlbum.js";
+import { IAlbumRepository } from "../interfaces/IAlbumRepository.js";
+import { isAdmin } from "../../../shared/rules/isAdmin.js";
+import { Album } from "../../../generated/prisma/client.js";
+import { IArtistRepository } from "../../artist/interfaces/IArtistRepository.js";
 
 @injectable()
 class UpdateAlbum{ 

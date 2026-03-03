@@ -1,5 +1,5 @@
-import { PlaylistMusicItem } from "../../modules/music/interfaces/IMusicRepository";
-import { IMusicActionRepository } from "../../modules/music/interfaces/IMusicActionRepository";
+import { PlaylistMusicItem } from "../../modules/music/interfaces/IMusicRepository.js";
+import { IMusicActionRepository } from "../../modules/music/interfaces/IMusicActionRepository.js";
 
 async function addLikeStatusToMusics(
   musicActionRepository: IMusicActionRepository,

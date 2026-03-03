@@ -1,6 +1,6 @@
-import { Playlist } from "../../../generated/prisma/client";
-import { PlaylistVisibility } from "../../../generated/prisma/enums";
-import { MusicWithCover, PlaylistMusicItem } from "../../music/interfaces/IMusicRepository";
+import { Playlist } from "../../../generated/prisma/client.js";
+import { PlaylistVisibility } from "../../../generated/prisma/enums.js";
+import { MusicWithCover, PlaylistMusicItem } from "../../music/interfaces/IMusicRepository.js";
 
 export type updatePayload = Partial<{
   image: string;

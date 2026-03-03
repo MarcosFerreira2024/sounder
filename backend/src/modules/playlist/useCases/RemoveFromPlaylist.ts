@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { IPlaylistRepository } from "../interfaces/IPlaylistRepository";
-import { IMusicRepository } from "../../music/interfaces/IMusicRepository";
-import { AppUser } from "../../../shared/types/user";
-import { isAdmin } from "../../../shared/rules/isAdmin";
-import { IMusicActionRepository } from "../../music/interfaces/IMusicActionRepository";
+import { IPlaylistRepository } from "../interfaces/IPlaylistRepository.js";
+import { IMusicRepository } from "../../music/interfaces/IMusicRepository.js";
+import { AppUser } from "../../../shared/types/user.js";
+import { isAdmin } from "../../../shared/rules/isAdmin.js";
+import { IMusicActionRepository } from "../../music/interfaces/IMusicActionRepository.js";
 
 @injectable()
 class RemoveFromPlaylist {

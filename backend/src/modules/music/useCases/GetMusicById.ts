@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { IMusicRepository } from "../interfaces/IMusicRepository";
-import { Music } from "../../../generated/prisma/client";
+import { IMusicRepository } from "../interfaces/IMusicRepository.js";
+import { Music } from "../../../generated/prisma/client.js";
 
 @injectable()
 class GetMusicById { 

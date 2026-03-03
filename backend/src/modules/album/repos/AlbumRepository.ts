@@ -1,11 +1,11 @@
-import { Album } from "../../../generated/prisma/client";
-import { prisma } from "../../../libs/prismaClient";
+import { Album } from "../../../generated/prisma/client.js";
+import { prisma } from "../../../libs/prismaClient.js";
 import {
   albumQueryFilters,
   AlbumWithAuthor,
   AlbumWithMusics,
   IAlbumRepository,
-} from "../interfaces/IAlbumRepository";
+} from "../interfaces/IAlbumRepository.js";
 
 class AlbumRepository implements IAlbumRepository {
   async getAlbumMusics(albumId: string): Promise<AlbumWithMusics | null> {

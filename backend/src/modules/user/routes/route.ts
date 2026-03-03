@@ -1,12 +1,12 @@
 import { Router, Request, Response } from "express";
-import { UserController } from "../controllers/UserController";
-import { deserializeUser } from "../../../middleware/deserializeUser";
-import { requireAuth } from "../../../middleware/requireAuth";
-import { validate } from "../../../middleware/validateSchema";
-import { uploadWithErrorHandler } from "../../../middleware/uploadWithErrorHandler";
-import { optionalId, userUpdateBody } from "../schemas/schema";
-import verifyRateLimit from "../../../middleware/verifyRateLimit";
-import { uploadImage } from "../../../libs/multer";
+import { UserController } from "../controllers/UserController.js";
+import { deserializeUser } from "../../../middleware/deserializeUser.js";
+import { requireAuth } from "../../../middleware/requireAuth.js";
+import { validate } from "../../../middleware/validateSchema.js";
+import { uploadWithErrorHandler } from "../../../middleware/uploadWithErrorHandler.js";
+import { optionalId, userUpdateBody } from "../schemas/schema.js";
+import verifyRateLimit from "../../../middleware/verifyRateLimit.js";
+import { uploadImage } from "../../../libs/multer.js";
 
 export function userRoutes(): Router {
   const router = Router();

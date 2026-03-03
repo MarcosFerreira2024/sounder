@@ -1,5 +1,5 @@
-import { isAdmin } from "../rules/isAdmin";
-import { AppUser } from "../types/user";
+import { isAdmin } from "../rules/isAdmin.js";
+import { AppUser } from "../types/user.js";
 
 function normalizePagination(
     page?: number,

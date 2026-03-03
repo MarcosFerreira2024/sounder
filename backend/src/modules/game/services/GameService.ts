@@ -1,7 +1,7 @@
 import { container, injectable } from "tsyringe";
-import { CreateDailyGame } from "../useCases/CreateDailyGame";
-import { CreateGamemode } from "../useCases/CreateGamemode";
-import { CreateGame } from "../useCases/CreateGame";
+import { CreateDailyGame } from "../useCases/CreateDailyGame.js";
+import { CreateGamemode } from "../useCases/CreateGamemode.js";
+import { CreateGame } from "../useCases/CreateGame.js";
 
 @injectable()
 class GameService {

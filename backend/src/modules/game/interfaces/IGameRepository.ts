@@ -1,4 +1,4 @@
-import { Game } from "../../../generated/prisma/client";
+import { Game } from "../../../generated/prisma/client.js";
 
 interface IGameRepository {
     create(dailyGameId: string,gamemodeId: string): Promise<Game>;

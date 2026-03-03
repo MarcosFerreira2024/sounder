@@ -1,9 +1,9 @@
-import { ArtistAccountStatus } from "../../../generated/prisma/enums";
-import { prisma } from "../../../libs/prismaClient";
+import { ArtistAccountStatus } from "../../../generated/prisma/enums.js";
+import { prisma } from "../../../libs/prismaClient.js";
 import {
   artistsQueryFilters,
   IArtistRepository,
-} from "../interfaces/IArtistRepository";
+} from "../interfaces/IArtistRepository.js";
 
 class ArtistRepository implements IArtistRepository {
   async assignUserAsArtist(userId: string): Promise<void> {
