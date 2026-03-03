@@ -1,6 +1,6 @@
 import { createAuthClient } from "better-auth/react";
 export const authClient = createAuthClient({
-  baseURL: "https://sounder-idh8.vercel.app/api/auth",
+  baseURL: "https://sounder-idh8.vercel.app",
   fetchOptions: {
     credentials: "include",
   },
