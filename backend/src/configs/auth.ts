@@ -12,10 +12,14 @@ export const auth = betterAuth({
   }),
 
   advanced: {
-    database: {
-      generateId: () => crypto.randomUUID(),
-    },
     useSecureCookies: true,
+  },
+
+  cookie: {
+    attributes: {
+      sameSite: "none",
+      secure: true,
+    },
   },
 
   user: {
@@ -45,16 +49,12 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      account: {
-        skipStateCookieCheck: true,
-      },
+      skipStateCookieCheck: true,
     },
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-      account: {
-        skipStateCookieCheck: true,
-      },
+      skipStateCookieCheck: true,
     },
   },
 

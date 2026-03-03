@@ -32,12 +32,20 @@ class Server {
   }
 
   private config(): void {
+    const trustedOrigins = process.env.TRUSTED_ORIGINS?.split(",") || [];
+
     this.app.use(
       cors({
-        origin: process.env.TRUSTED_ORIGINS?.split(",") || [],
-        allowedHeaders: ["Content-Type", "Authorization"],
+        origin: (origin, callback) => {
+          if (!origin || trustedOrigins.includes(origin)) {
+            callback(null, true);
+          } else {
+            callback(new Error("Not allowed by CORS"));
+          }
+        },
+        allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
         credentials: true,
-        methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
+        methods: ["GET", "POST", "PATCH", "DELETE", "PUT", "OPTIONS"],
       }),
     );
 
