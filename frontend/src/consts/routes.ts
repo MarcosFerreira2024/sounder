@@ -57,6 +57,7 @@ export const routes = {
   },
 
   music: {
+    getRecommendations: `${BACKEND_API_URL}/music/recommendations`,
     getMusicsByPlaylistId(playlistId: string) {
       return `${BACKEND_API_URL}/playlist/${playlistId}/musics`;
     },
