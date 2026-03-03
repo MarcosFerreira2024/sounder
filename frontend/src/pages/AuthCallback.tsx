@@ -20,7 +20,7 @@ export default function AuthCallback() {
         }
 
         if (session) {
-          window.location.href = "http://localhost:5173/";
+          window.location.href = window.location.origin;
         }
       } catch {
         navigate("/login");

@@ -9,7 +9,7 @@ function useLoginProviders() {
     try {
       await authClient.signIn.social({
         provider,
-        callbackURL: "http://localhost:5173/auth/callback",
+        callbackURL: window.location.origin + "/auth/callback",
       });
     } catch (error: any) {
       setNotification(error.message);

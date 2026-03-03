@@ -1,6 +1,6 @@
 import type { QueryType } from "../hooks/useSearch";
 
-export const BACKEND_API_URL = "http://localhost:3000/api";
+export const BACKEND_API_URL = "https://sounder-idh8.vercel.app/api";
 
 export const routes = {
   playlist: {
