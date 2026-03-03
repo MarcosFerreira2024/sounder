@@ -15,6 +15,7 @@ export const auth = betterAuth({
     database: {
       generateId: () => crypto.randomUUID(),
     },
+    useSecureCookies: true,
   },
   user: {
     additionalFields: {
