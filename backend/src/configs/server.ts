@@ -25,6 +25,7 @@ class Server {
 
     this.routes();
     setupScalar(this.app);
+    loadModel();
   }
 
   private config(): void {
@@ -59,10 +60,8 @@ class Server {
   }
 
   public run(): Application {
-    loadModel().then(() => {
-      this.app.listen(this.port, () => {
-        console.log(`Servidor rodando em http://localhost:${this.port}`);
-      });
+    this.app.listen(this.port, () => {
+      console.log(`Servidor rodando em http://localhost:${this.port}`);
     });
 
     return this.app;

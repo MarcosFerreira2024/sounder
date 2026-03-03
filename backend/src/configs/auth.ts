@@ -6,6 +6,7 @@ import crypto from "node:crypto";
 
 export const auth = betterAuth({
   secret: process.env.AUTH_SECRET as string,
+  baseURL: process.env.BETTER_AUTH_URL,
   database: new Pool({
     connectionString: process.env.DATABASE_URL,
   }),
@@ -54,7 +55,11 @@ export const auth = betterAuth({
     redirectUrl: process.env.PASSWORD_RESET_REDIRECT_URL as string,
   },
 
-  trustedOrigins: ["http://localhost:5173", "https://sounder-tawny.vercel.app"],
+  trustedOrigins: [
+    "http://localhost:5173",
+    "https://sounder-tawny.vercel.app",
+    "https://sounder-mots.vercel.app",
+  ],
 });
 type Session = typeof auth.$Infer.Session;
 export type { Session };

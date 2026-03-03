@@ -9,7 +9,7 @@ function setupScalar(app: Application) {
   });
 
   app.use(
-    "/reference",
+    "/api/reference",
     apiReference({
       spec: {
         url: "/openapi.json",
