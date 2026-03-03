@@ -58,12 +58,14 @@ class Server {
     this.app.use("/api/search", searchRoutes());
   }
 
-  public run(): void {
+  public run(): Application {
     loadModel().then(() => {
       this.app.listen(this.port, () => {
         console.log(`Servidor rodando em http://localhost:${this.port}`);
       });
     });
+
+    return this.app;
   }
 }
 
