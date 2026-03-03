@@ -102,7 +102,7 @@ const routes: AppRoute[] = [
   {
     path: "/auth/callback",
     Component: AuthCallback,
-    guard: "guest",
+    guard: "public",
   },
   {
     path: "*",
