@@ -16,12 +16,13 @@ export const auth = betterAuth({
       generateId: () => crypto.randomUUID(),
     },
     useSecureCookies: true,
-  },
 
-  cookie: {
-    attributes: {
+    defaultCookieAttributes: {
       sameSite: "none",
       secure: true,
+      httpOnly: true,
+      path: "/",
+      domain: "https://sounder-sigma.vercel.app",
     },
   },
 
