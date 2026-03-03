@@ -1,4 +1,3 @@
-import React from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
@@ -16,13 +15,6 @@ const queryClient = new QueryClient({
     },
   },
 });
-
-if (true) {
-  const mod = await import("@welldone-software/why-did-you-render");
-  mod.default(React, {
-    trackAllPureComponents: true,
-  });
-}
 
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
