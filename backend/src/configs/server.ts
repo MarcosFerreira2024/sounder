@@ -33,7 +33,7 @@ class Server {
   private config(): void {
     this.app.use(
       cors({
-        origin: ["https://sounder-tawny.vercel.app"],
+        origin: process.env.TRUSTED_ORIGINS?.split(",") || [],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,
         methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
