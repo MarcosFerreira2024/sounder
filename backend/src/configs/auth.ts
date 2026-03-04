@@ -6,7 +6,7 @@ import crypto from "node:crypto";
 
 export const auth = betterAuth({
   secret: process.env.AUTH_SECRET as string,
-  baseURL: process.env.BETTER_AUTH_URL,
+  baseURL: "https://sounder-sigma.vercel.app/api/auth",
   database: new Pool({
     connectionString: process.env.DATABASE_URL,
   }),
@@ -16,13 +16,6 @@ export const auth = betterAuth({
       generateId: () => crypto.randomUUID(),
     },
     useSecureCookies: true,
-
-    defaultCookieAttributes: {
-      sameSite: "none",
-      secure: true,
-      httpOnly: true,
-      path: "/",
-    },
   },
 
   user: {
@@ -33,44 +26,26 @@ export const auth = betterAuth({
         input: false,
         required: false,
       },
-
-      artist: {
-        type: "json",
-        input: false,
-        required: false,
-      },
+      artist: { type: "json", input: false, required: false },
     },
   },
 
   plugins: [openAPI()],
 
-  emailAndPassword: {
-    enabled: true,
-    requireEmailVerification: false,
-  },
-  appName: "Sounder",
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      account: {
-        skipStateCookieCheck: true,
-      },
+      skipStateCookieCheck: true,
     },
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-      account: {
-        skipStateCookieCheck: true,
-      },
+      skipStateCookieCheck: true,
     },
   },
 
-  passwordReset: {
-    redirectUrl: process.env.PASSWORD_RESET_REDIRECT_URL as string,
-  },
-
-  trustedOrigins: process.env.TRUSTED_ORIGINS?.split(",") || [],
+  trustedOrigins: ["https://sounder-sigma.vercel.app", "http://localhost:5173"],
 });
 
 type Session = typeof auth.$Infer.Session;
