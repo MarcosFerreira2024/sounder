@@ -6,7 +6,7 @@ import crypto from "node:crypto";
 
 export const auth = betterAuth({
   secret: process.env.AUTH_SECRET as string,
-  baseURL: "https://sounder-idh8.vercel.app",
+  baseURL: process.env.BETTER_AUTH_URL,
   database: new Pool({
     connectionString: process.env.DATABASE_URL,
   }),
@@ -70,10 +70,7 @@ export const auth = betterAuth({
     redirectUrl: process.env.PASSWORD_RESET_REDIRECT_URL as string,
   },
 
-  trustedOrigins: [
-    "https://sounder-sigma.vercel.app", // frontend produção
-    "http://localhost:5173", // frontend dev
-  ],
+  trustedOrigins: process.env.TRUSTED_ORIGINS?.split(",") || [],
 });
 
 type Session = typeof auth.$Infer.Session;
