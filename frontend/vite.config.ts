@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://sounder-backend.vercel.app",
+        target: "https://sounder-idh8.vercel.app",
         changeOrigin: true,
         secure: true,
         cookieDomainRewrite: "localhost",
