@@ -1,10 +1,12 @@
 {
-  "builds": [
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
+      "source": "/api/:path*",
+      "destination": "https://sounder-idh8.vercel.app/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  ],
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  ]
 }

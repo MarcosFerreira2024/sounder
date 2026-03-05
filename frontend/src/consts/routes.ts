@@ -1,5 +1,6 @@
 import type { QueryType } from "../hooks/useSearch";
 
+export const BACKEND_URL = ""; 
 export const BACKEND_API_URL = "/api";
 
 export const routes = {
