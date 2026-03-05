@@ -6,12 +6,14 @@ import InputLabel from "../ui/InputLabel";
 import { ModalWrapper } from "../ui/ModalWrapper";
 import { createPlaylist } from "../../actions/playlists/createPlaylist";
 import { useAppNotifications } from "../../contexts/NotificationsContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 type AddPlaylistModalProps = {
   onClose: () => void;
 };
 
 function AddModal({ onClose }: AddPlaylistModalProps) {
+  const queryClient = useQueryClient();
   const { setNotification, handleAppNotificationsError } =
     useAppNotifications();
   const { handleInputChange, handleUpload, isUploading, photo } = useUpload(
@@ -30,6 +32,8 @@ function AddModal({ onClose }: AddPlaylistModalProps) {
     if (!name) return setNotification("Preencha o nome da playlist");
     try {
       await createPlaylist(name, file);
+      queryClient.invalidateQueries({ queryKey: ["playlists"] });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
     } catch (error) {
       handleAppNotificationsError(error);
     } finally {
