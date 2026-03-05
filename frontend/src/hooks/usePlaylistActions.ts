@@ -4,8 +4,10 @@ import { useAppNotifications } from "../contexts/NotificationsContext";
 import useUpload from "./useUpload";
 import { updatePlaylist } from "../actions/playlists/updatePlaylist";
 import { deletePlaylist } from "../actions/playlists/deletePlaylist";
+import { useQueryClient } from "@tanstack/react-query";
 
 function usePlaylistActions(onClose?: () => void) {
+  const queryClient = useQueryClient();
   const { setNotification, handleAppNotificationsError } =
     useAppNotifications();
   const [name, setName] = useState("");
@@ -15,6 +17,8 @@ function usePlaylistActions(onClose?: () => void) {
       if (!name) return setNotification("Preencha o nome da playlist");
       try {
         await createPlaylist(name, file);
+        queryClient.invalidateQueries({ queryKey: ["playlists"] });
+        queryClient.invalidateQueries({ queryKey: ["categories"] });
         onClose!();
       } catch (error: any) {
         console.log(error);
@@ -29,6 +33,8 @@ function usePlaylistActions(onClose?: () => void) {
     setNotification("Excluindo playlist...");
     try {
       await deletePlaylist(id);
+      queryClient.invalidateQueries({ queryKey: ["playlists"] });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
       setNotification("Playlist excluída com sucesso");
     } catch (error: any) {
       handleAppNotificationsError(error);
@@ -40,6 +46,8 @@ function usePlaylistActions(onClose?: () => void) {
     setNotification("Renomeando playlist...");
     try {
       await updatePlaylist({ name }, id);
+      queryClient.invalidateQueries({ queryKey: ["playlists"] });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
       setNotification("Playlist renomeada com sucesso");
     } catch (error: any) {
       handleAppNotificationsError(error);
@@ -53,6 +61,8 @@ function usePlaylistActions(onClose?: () => void) {
     setNotification("Alterando visibilidade...");
     try {
       await updatePlaylist({ visibility }, id);
+      queryClient.invalidateQueries({ queryKey: ["playlists"] });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
       setNotification("Visibilidade alterada com sucesso");
     } catch (error: any) {
       handleAppNotificationsError(error);

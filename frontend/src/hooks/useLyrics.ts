@@ -34,18 +34,47 @@ export const useLyrics = ({
   const [isManualScrolling, setIsManualScrolling] = useState(false);
   const [rawLyrics, setRawLyrics] = useState("");
   const [parsedLyrics, setParsedLyrics] = useState<ParsedLyricLine[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (!lyrics || !lyrics.startsWith("http")) {
+      setRawLyrics("");
+      setParsedLyrics([]);
+      setIsLoading(false);
+      return;
+    }
+
     const fetchLyrics = async () => {
-      const res = await fetch(lyrics);
-      const text = await res.text();
-      setRawLyrics(text);
+      setIsLoading(true);
+      try {
+        const res = await fetch(lyrics);
+        if (!res.ok) throw new Error("Failed to fetch lyrics");
+        const text = await res.text();
+
+        if (
+          text.trim().startsWith("<!DOCTYPE") ||
+          text.trim().startsWith("<html")
+        ) {
+          setRawLyrics("");
+          setParsedLyrics([]);
+        } else {
+          setRawLyrics(text);
+        }
+      } catch (error) {
+        console.error("Error fetching lyrics:", error);
+        setRawLyrics("");
+        setParsedLyrics([]);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchLyrics();
   }, [lyrics]);
 
   function parseLRC(lrcContent: string): ParsedLyricLine[] {
+    if (!lrcContent) return [];
+
     const lines = lrcContent.split("\n");
     const result: ParsedLyricLine[] = [];
 
@@ -96,13 +125,11 @@ export const useLyrics = ({
     };
   }, []);
 
-  useEffect(() => {
-    console.log(isManualScrolling);
-  }, [isManualScrolling]);
-
   useLayoutEffect(() => {
     if (rawLyrics) {
       setParsedLyrics(parseLRC(rawLyrics));
+    } else {
+      setParsedLyrics([]);
     }
   }, [rawLyrics]);
 
@@ -185,5 +212,6 @@ export const useLyrics = ({
     isLineActive,
     handleResumeAutoScroll,
     offset,
+    isLoading,
   };
 };
