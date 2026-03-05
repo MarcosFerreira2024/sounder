@@ -29,6 +29,7 @@ export function Lyrics({
     isLineActive,
     isManualScrolling,
     handleResumeAutoScroll,
+    isLoading: isLyricsLoading,
   } = useLyrics({
     currentTime: songState.currentTime,
     seek: seekTo,
@@ -39,7 +40,9 @@ export function Lyrics({
     scrollContainerRef,
   });
 
-  if (loading) return <LyricsSkeleton />;
+  const showSkeleton = loading || isLyricsLoading;
+
+  if (showSkeleton) return <LyricsSkeleton />;
 
   return (
     <React.Fragment>
@@ -78,7 +81,10 @@ export function Lyrics({
               );
             })
           ) : (
-            <LyricsSkeleton />
+            <div className="flex flex-col items-center justify-center h-full text-neutral-500 gap-4 mt-20">
+              <h2 className="text-2xl font-inter">Carregando...</h2>
+              <p className="text-sm">Aguarde enquanto carregamos as letras.</p>
+            </div>
           )}
         </div>
       </div>

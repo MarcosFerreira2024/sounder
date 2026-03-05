@@ -46,13 +46,21 @@ function CollectionContent({
   const isAlbumEmpty =
     !loading && collectionType === "album" && collection?.tracks.length === 0;
 
-  if (isAlbumEmpty) {
+  const isPlaylistEmpty =
+    !loading && collectionType === "playlist" && collection?.tracks.length === 0;
+
+  if (isAlbumEmpty || isPlaylistEmpty) {
+    const emptyTitle = isAlbumEmpty ? "Álbum vazio :(" : "Playlist vazia :(";
+    const emptyMessage = isAlbumEmpty
+      ? "Este álbum não possui nenhuma música cadastrada no momento."
+      : "Esta playlist ainda não possui músicas. Adicione algumas para começar a ouvir!";
+
     return (
       <MainLayout>
         <div className="flex-1 min-h-[calc(100vh-180px)] flex flex-col items-center justify-center p-8 text-center gap-6">
-          <h1 className="text-3xl text-main ">Sem músicas :(</h1>
+          <h1 className="text-3xl text-main ">{emptyTitle}</h1>
           <p className="text-opacity max-w-md mx-auto">
-            Este álbum não possui nenhuma música cadastrada no momento.
+            {emptyMessage}
           </p>
         </div>
       </MainLayout>
