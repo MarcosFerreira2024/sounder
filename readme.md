@@ -148,7 +148,7 @@ Essa organização facilita:
 
 ## Status 
 
-Atualmente o projeto esta em desenvolvimento.
+Projeto esta concluido.
 
 
 
